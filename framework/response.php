@@ -27,13 +27,16 @@ class response {
         header($header);
     }
 
-    public static function headerRedirect($url) {
-        if (!headers_sent()) {
+    public static function headerRedirect($url, $seconds = 0) {
+        if (!headers_sent() && $seconds<=0) {
             self::header('Location: ' . $url);
         } else {
-            self::output('<meta http-equiv="refresh" content="0; url=' . $url . '" />');
+            self::output('<meta http-equiv="refresh" content="'.$seconds.'; url=' . $url . '" />');
         }
         exit;
+    }
+    public static function redirect($url, $seconds = 3) {
+        return self::headerRedirect($url, $seconds);
     }
 
     public static function outputJson($data) {

@@ -105,6 +105,15 @@ final class util {
             }
 
         }
+        if (!function_exists('de')) {
+
+            function de() {
+                $args = func_get_args();
+                call_user_func_array(array('rico', 'dump'), $args);
+                exit;
+            }
+
+        }
         //can be used instead of TConfig::get($key), as  c('default.domain')  ;
         if (!function_exists('config')) {
 

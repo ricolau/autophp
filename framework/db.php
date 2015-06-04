@@ -20,10 +20,10 @@ class db {
     }
 
     public static function instance($alias, $type = null) {
-        if (!isset(self::$_instance[$alias])) {
-            self::$_instance[$alias] = self::_getInstance($alias);
+        if (!isset(self::$_instance[$alias][$type])) {
+            self::$_instance[$alias][$type] = self::_getInstance($alias)->connect($type);
         }
-        return self::$_instance[$alias]->connect($type);
+        return self::$_instance[$alias][$type];
     }
 
     protected static function _getInstance($alias) {

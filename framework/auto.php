@@ -19,6 +19,7 @@ final class auto {
     private static $_isCliMode = false;
     private static $_hasRun = false;
     private static $_isDebugMode = false;
+    private static $_isDevMode = false;
 
     public static function hasRun() {
         return self::$_hasRun;
@@ -35,7 +36,7 @@ final class auto {
             self::$_isCliMode = true;
         }
         if (get_magic_quotes_gpc()) {
-            throw exception_base('magic quotes should be turned off~ ', exception_base::TYPE_MAGIC_QUOTES_ON);
+            throw new exception_base('magic quotes should be turned off~ ', exception_base::TYPE_MAGIC_QUOTES_ON);
         }
         if (!defined('APP_PATH')) {
             throw exception_base('APP_PATH not defined!', exception_base::TYPE_APP_PATH_NOT_DEFINED);
@@ -55,6 +56,14 @@ final class auto {
      */
     public static function isCliMode() {
         return self::$_isCliMode;
+    }
+    
+    public static function isDevMode(){
+        return self::$_isDevMode;
+    }
+    
+    public static function setDevMode($isDev = false){
+        self::$_isDevMode = $isDev;
     }
 
     /**
