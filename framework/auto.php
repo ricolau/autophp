@@ -20,6 +20,8 @@ final class auto {
     private static $_hasRun = false;
     private static $_isDebugMode = false;
     private static $_isDevMode = false;
+    
+    private static $_classPath = array();
 
     public static function hasRun() {
         return self::$_hasRun;
@@ -144,19 +146,48 @@ final class auto {
         'render_smarty'=>true,
     );
     protected static function _getClassPath($className) {
+        //framework class with no _ in class name
         if (!strpos($className, '_')) {
             $file = AUTOPHP_PATH . DS . $className . '.php';
             return $file;
         }
-        list($dir, $name) = explode('_', $className, 2);
-        $dir = strtolower($dir);
-        $name = strtolower($name);
+        list($dir1, $dir2, $name) = explode('_', $className, 3);
+        $dir1 = strtolower($dir1);
+        $dir2 = strtolower($dir2);
+        if($name===null){
+            $dir = $dir1;
+            $name  = $dir2;
+        }else{
+            $dir = $dir1 .DS. $dir2;
+            $name = strtolower($name);
+        }
+        //framework class with _ in class name
         if(isset(self::$_frameworkClass[$className])){
             $file = AUTOPHP_PATH . DS . $dir . DS . $name . '.php';
-        }else{
-            $file = APP_PATH . DS . 'classes' . DS . $dir . DS . $name . '.php';
+            return $file;
         }
+        //user class in APP_PATH
+        $file = APP_PATH . DS . 'classes' . DS . $dir . DS . $name . '.php';
+        if(file_exists($file)){
+            return $file;
+        }
+        //user class in self::$_classPath, as public class
+        $file = null;
+        if(self::$_classPath){
+            foreach(self::$_classPath as $path){
+                $tmp = $path  . DS . $dir . DS . $name . '.php';
+                if(file_exists($tmp)){
+                    $file = $tmp;
+                    break;
+                }
+            }
+        }
+ 
         return $file;
+    }
+    
+    public static function addClassPath($path){
+        self::$_classPath[] = $path;
     }
 
     /**
