@@ -10,7 +10,7 @@ abstract class render_abstract {
 
     abstract function assign($key, $val);
 
-    abstract function fetch($controllerName, $actionName);
+    abstract function fetch($path);
 
-    abstract function render($controllerName, $actionName);
+    abstract function render($path);
 }

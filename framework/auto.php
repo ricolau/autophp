@@ -30,9 +30,15 @@ final class auto {
     public static function run() {
         !defined('DS') && define('DS', DIRECTORY_SEPARATOR);
 
+	spl_autoload_register(array('auto', 'autoload'));
+        register_shutdown_function(array('auto', 'shutdownCall'), array());
+
         if (self::$_hasRun) {
             throw new exception_base('auto can not run twice!', exception_base::TYPE_AUTOPHP_HAS_RUN);
         }
+		
+
+
         self::$_hasRun = true;
         if (php_sapi_name() == 'cli') {
             self::$_isCliMode = true;
@@ -48,8 +54,7 @@ final class auto {
         }
         self::$runtimeStart = microtime(true);
 
-        spl_autoload_register(array('auto', 'autoload'));
-        register_shutdown_function(array('auto', 'shutdownCall'), array());
+        
     }
 
     /**

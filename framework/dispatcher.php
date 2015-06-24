@@ -10,10 +10,16 @@ class dispatcher {
 
     private static $_instance = null;
     private static $_uri = null;
+    private static $_defaultDir = 'default';
     private static $_defualtController = 'default';
     private static $_defualtAction = 'default';
+    private static $_currentDir = null;
     private static $_currentController = null;
     private static $_currentAction = null;
+    private static $_pathDeep = self::PATH_DEEP2;
+
+    const PATH_DEEP3 = 3;
+    const PATH_DEEP2 = 2;
 
     public static function instance() {
         if (!self::$_instance) {
@@ -26,12 +32,12 @@ class dispatcher {
         self::_httpRoute();
         /*
          *
-        if (!auto::isCliMode()) {
-            self::_httpRoute();
-        } else {
-            self::_cliRoute();
-        }
-        */
+          if (!auto::isCliMode()) {
+          self::_httpRoute();
+          } else {
+          self::_cliRoute();
+          }
+         */
         return self::$_instance;
     }
 
@@ -39,13 +45,33 @@ class dispatcher {
         $uri = self::$_instance->getUri();
         $uri = trim($uri, '/');
         if ($uri == '') {
+            if (self::$_pathDeep == self::PATH_DEEP3) {
+                $dirName = self::$_defaultDir;
+            }
             $controllerName = self::$_defualtController;
             $actionName = self::$_defualtAction;
         } else {
             $us = explode('/', $uri);
-            $controllerName = array_shift($us);
-            $actionName = array_shift($us);
-            $actionName = $actionName !== null ? $actionName : self::$_defualtAction;
+            
+            if (self::$_pathDeep == self::PATH_DEEP3) {
+                $dirName = array_shift($us);
+                if(count($us)>0){
+                    $controllerName = array_shift($us);
+                    if(count($us)>0){
+                        $actionName = array_shift($us);
+                    }else{
+                        $actionName = self::$_defualtAction;
+                    }
+                }else{
+                    $controllerName = self::$_defualtController;
+                    $actionName = self::$_defualtAction;
+                }
+            } else {
+                $controllerName = array_shift($us);
+                $actionName = array_shift($us);
+                $actionName = $actionName !== null ? $actionName : self::$_defualtAction;
+            }
+
 
             if (count($us) > 0) { // no default action
                 $data = array();
@@ -59,18 +85,22 @@ class dispatcher {
                 request::setParams($data, 'get');
             }
         }
+        $dirName= util::baseChars($dirName);
         $controllerName = util::baseChars($controllerName);
         $actionName = util::baseChars($actionName);
 
+        self::$_instance->setDirName($dirName);
         self::$_instance->setControllerName($controllerName);
         self::$_instance->setActionName($actionName);
         return;
     }
-/*
-    private static function _cliRoute() {
-        return null;
-    }
-*/
+
+    /*
+      private static function _cliRoute() {
+      return null;
+      }
+     */
+
     public function setUri($uri) {
         self::$_uri = $uri;
         return self::$_instance;
@@ -81,6 +111,15 @@ class dispatcher {
             self::$_uri = self::detectUri();
         }
         return self::$_uri;
+    }
+
+    public function setPathDeep($deep = self::PATH_DEEP2) {
+        self::$_pathDeep = ($deep== self::PATH_DEEP2) ? self::PATH_DEEP2 : self::PATH_DEEP3;
+        return self::$_instance;
+    }
+
+    public function getPathDeep() {
+        return self::$_pathDeep;
     }
 
     public static function detectUri() {
@@ -98,6 +137,23 @@ class dispatcher {
             }
         }
         return $uri;
+    }
+
+    public function setDefaultDir($dir = 'default') {
+        self::$_defaultDir = $dir;
+        return self::$_instance;
+    }
+
+    public function getControllerDir() {
+        return self::$_defualtDir;
+    }
+
+    public function getDirName() {
+        return self::$_currentDir;
+    }
+    public function setDirName($dirname = 'default') {
+        self::$_currentDir = $dirname;
+        return self::$_instance;
     }
 
     public function setDefaultController($controller = 'default') {
@@ -133,7 +189,11 @@ class dispatcher {
 
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
 
-        $className = 'controller_' . self::$_currentController;
+        if(self::$_pathDeep ==self::PATH_DEEP3){
+            $className = 'controller_' . self::$_currentDir.'_'.self::$_currentController;
+        }else{
+            $className = 'controller_' . self::$_currentController;
+        }
 
         if (!class_exists($className)) {
             throw new exception_404('controller not exist: ' . $className, exception_404::TYPE_CONTROLLER_NOT_EXIST);

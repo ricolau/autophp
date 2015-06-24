@@ -1,7 +1,7 @@
 <?php
 
 
-class controller_index extends controller{
+class controller_index_index extends controller{
     
     
     public function indexAction(){

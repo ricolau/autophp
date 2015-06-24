@@ -26,13 +26,24 @@ abstract class controller {
         $this->_render = $obj;
     }
 
-    public function render($controller = '', $action = '') {
+    public function render($path = '') {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
-        if ($controller === '' && $action === '') {
-            $controller = dispatcher::instance()->getControllerName();
-            $action = dispatcher::instance()->getActionName();
+        if ($path) {
+            $this->_render->render($path);
+            auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $controller . DS . $action . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
+            return;
         }
-        $this->_render->render($controller, $action);
+        $dir = dispatcher::instance()->getDirName();
+        $controller = dispatcher::instance()->getControllerName();
+        $action = dispatcher::instance()->getActionName();
+
+        if (dispatcher::instance()->getPathDeep() == dispatcher::PATH_DEEP3) {
+            $path = $dir . DS . $controller . DS . $action;
+        } else {
+            $path = $controller . DS . $action;
+        }
+        $this->_render->render($path);
+
         auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $controller . DS . $action . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
     }
 
@@ -40,10 +51,28 @@ abstract class controller {
         return $this->_render->slot($slot, $isDisplay);
     }
 
-    public function fetch() {
+    public function fetch($path = '') {
+        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        if ($path) {
+            $ret = $this->_render->fetch($path);
+            auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $controller . DS . $action . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
+
+            return $ret;
+        }
+        $dir = dispatcher::instance()->getDirName();
         $controller = dispatcher::instance()->getControllerName();
         $action = dispatcher::instance()->getActionName();
-        $this->_render->fetch($controller, $action);
+
+        if (dispatcher::instance()->getPathDeep() == dispatcher::PATH_DEEP3) {
+            $path = $dir . DS . $controller . DS . $action;
+        } else {
+            $path = $controller . DS . $action;
+        }
+
+        $ret = $this->_render->fetch($path);
+        auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $controller . DS . $action . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
+
+        return $ret;
     }
 
     public function forward($controller, $action) {

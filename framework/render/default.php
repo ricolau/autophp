@@ -22,14 +22,14 @@ class render_default extends render_abstract {
         $this->data[$key] = $val;
     }
 
-    public function render($controllerName, $actionName) {
-        auto::isDebugMode() && auto::dqueue('render data for ' . $controllerName . DS . $actionName, '<pre>' . rico::export($this->data) . '</pre>');
-        $data = $this->fetch($controllerName, $actionName);
+    public function render($path) {
+        auto::isDebugMode() && auto::dqueue('render data for ' . $path, '<pre>' . rico::export($this->data) . '</pre>');
+        $data = $this->fetch($path);
         response::output($data);
     }
 
-    public function fetch($controllerName, $actionName) {
-        $file = self::_getTplPath($controllerName, $actionName);
+    public function fetch($path) {
+        $file = self::_getTplPath($path);
         $data = self::_fetchTpl($file, $this->data);
         return $data;
     }
@@ -79,11 +79,9 @@ class render_default extends render_abstract {
         return $file;
     }
 
-    private static function _getTplPath($controllerName, $actionName) {
-        $controllerName = util::parseFilename($controllerName);
-        $actionName = util::parseFilename($actionName);
+    private static function _getTplPath($path) {
 
-        $fileName = $controllerName . DS . $actionName . '.php';
+        $fileName = $path . '.php';
         $file = APP_PATH . DS . 'view' . DS . 'template' . DS . $fileName;
 
         if (!file_exists($file)) {
