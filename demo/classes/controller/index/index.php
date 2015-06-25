@@ -35,7 +35,7 @@ class controller_index_index extends controller{
             
         }catch (exception_i18n $e){ //i18n 的异常，一般是由于语言包不存在
             $code = $e->getCode();
-            if($code == exception_i18n::TYPE_LANGUAGE_NOT_EXIST){
+            if($code == exception_i18n::type_language_not_exist){
                 echo "\r\n <br /> exception: language of ".i18n::language().' not exist!\r\n <br />';
             }
             echo $e->getMessage();
@@ -63,9 +63,9 @@ class controller_index_index extends controller{
             $this->render();
         } catch(exception_render $e){  //一般来说这个exception  不会有，模板放好了就行了么
             $code = $e->getCode();
-            if($code == exception_render::TYPE_TPL_NOT_EXIST){
+            if($code == exception_render::type_tpl_not_exist){
                 echo '\r\n <br /> exception: template not exist!\r\n <br />';
-            }elseif($code == exception_render::TYPE_SLOT_NOT_EXIST){
+            }elseif($code == exception_render::type_slot_not_exist){
                 echo '\r\n <br /> exception: template not exist!\r\n <br />';
             }
             echo $e->getMessage();

@@ -74,7 +74,7 @@ class render_default extends render_abstract {
         $file = APP_PATH . DS . 'view' . DS . 'slot' . DS . $name . '.php';
 
         if (!file_exists($file)) {
-            throw new exception_render('slot not exist: ' . $name, exception_render::TYPE_SLOT_NOT_EXIST);
+            throw new exception_render('slot not exist: ' . $name, exception_render::type_slot_not_exist);
         }
         return $file;
     }
@@ -85,7 +85,7 @@ class render_default extends render_abstract {
         $file = APP_PATH . DS . 'view' . DS . 'template' . DS . $fileName;
 
         if (!file_exists($file)) {
-            throw new exception_render('template not exist: ' . $fileName, exception_render::TYPE_TPL_NOT_EXIST);
+            throw new exception_render('template not exist: ' . $fileName, exception_render::type_tpl_not_exist);
         }
         return $file;
     }

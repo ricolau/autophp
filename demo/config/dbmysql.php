@@ -25,8 +25,8 @@ return array(
     'microspace' => array(
         'type' => 'mysqlpdo',
         'conf'=>array(
-            db_mysqlpdo::TYPE_SERVER_SLAVE => array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'database_name2'),
-            db_mysqlpdo::TYPE_SERVER_MASTER => array()
+            db_mysqlpdo::type_server_slave => array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'database_name2'),
+            db_mysqlpdo::type_server_master => array()
         )
 
     ),
@@ -34,8 +34,8 @@ return array(
     'entStock' => array(
         'type' => 'mysqlpdo',
         'conf'=>array(
-            db_mysqlpdo::TYPE_SERVER_SLAVE => array('host' => 'localhost', 'user' => 'database_username_slave', 'pwd' => '222222', 'dbname' => 'database_name22', 'charset' => 'utf8'),
-            db_mysqlpdo::TYPE_SERVER_MASTER => array('host' => 'localhost', 'user' => 'database_username', 'pwd' => '111111', 'dbname' => 'database_name1', 'charset' => 'utf8')
+            db_mysqlpdo::type_server_slave => array('host' => 'localhost', 'user' => 'database_username_slave', 'pwd' => '222222', 'dbname' => 'database_name22', 'charset' => 'utf8'),
+            db_mysqlpdo::type_server_master => array('host' => 'localhost', 'user' => 'database_username', 'pwd' => '111111', 'dbname' => 'database_name1', 'charset' => 'utf8')
 
         )
 

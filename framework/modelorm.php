@@ -8,14 +8,14 @@
  */
 class modelorm extends model{
 
-    const DB_TYPE_SLAVE = 'slave';
-    const DB_TYPE_MASTER = 'master';
-    const DB_TYPE_AUTO = 'auto';
+    const db_type_slave = 'slave';
+    const db_type_master = 'master';
+    const db_type_auto = 'auto';
 
     protected $_dbAlias = null;
     protected $_table = null;
     protected $_dbObj = array();
-    protected $_dbObjMode = self::DB_TYPE_AUTO;
+    protected $_dbObjMode = self::db_type_auto;
     // auto | master | slave
     protected $_currentDbCon = null;
     protected $_sql = null;
@@ -56,34 +56,34 @@ class modelorm extends model{
      */
     public function getPdo($type = null) {
         if ($type === null) {
-            $type = ($this->_dbObjMode !== self::DB_TYPE_MASTER) ? self::DB_TYPE_SLAVE : self::DB_TYPE_MASTER;
+            $type = ($this->_dbObjMode !== self::db_type_master) ? self::db_type_slave : self::db_type_master;
         }
-        if ($type != self::DB_TYPE_MASTER) {
-            return isset($this->_dbObj[self::DB_TYPE_SLAVE]) ? $this->_dbObj[self::DB_TYPE_SLAVE] :
-                ($this->_dbObj[self::DB_TYPE_SLAVE] = $this->_getPdoServerWithAlias($this->_dbAlias, self::DB_TYPE_SLAVE));
+        if ($type != self::db_type_master) {
+            return isset($this->_dbObj[self::db_type_slave]) ? $this->_dbObj[self::db_type_slave] :
+                ($this->_dbObj[self::db_type_slave] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_slave));
         } else {
-            return isset($this->_dbObj[self::DB_TYPE_MASTER]) ? $this->_dbObj[self::DB_TYPE_MASTER] :
-                ($this->_dbObj[self::DB_TYPE_MASTER] = $this->_getPdoServerWithAlias($this->_dbAlias, self::DB_TYPE_MASTER));
+            return isset($this->_dbObj[self::db_type_master]) ? $this->_dbObj[self::db_type_master] :
+                ($this->_dbObj[self::db_type_master] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_master));
         }
     }
 
-    protected function _getPdoServerWithAlias($alias, $type = self::DB_TYPE_SLAVE) {
+    protected function _getPdoServerWithAlias($alias, $type = self::db_type_slave) {
         $dataDriver = db::instance($alias, $type);
         return $dataDriver;
     }
 
-    public function setPdo($pdoObject, $type = self::DB_TYPE_SLAVE) {
+    public function setPdo($pdoObject, $type = self::db_type_slave) {
         $this->_dbObj[$type] = $pdoObject;
     }
 
     protected function _getPdoByMethodName($operationType = null) {
-        if ($this->_dbObjMode !== self::DB_TYPE_AUTO) {
+        if ($this->_dbObjMode !== self::db_type_auto) {
             return $this->getPdo($this->_dbObjMode);
         }
         if (in_array($operationType, array('insert', 'update', 'delete'))) {
-            return $this->getPdo(self::DB_TYPE_MASTER);
+            return $this->getPdo(self::db_type_master);
         } else {
-            return $this->getPdo(self::DB_TYPE_SLAVE);
+            return $this->getPdo(self::db_type_slave);
         }
     }
 
@@ -91,7 +91,7 @@ class modelorm extends model{
      * set database mode to master
      */
     public function setDbMaster() {
-        $this->_dbObjMode = self::DB_TYPE_MASTER;
+        $this->_dbObjMode = self::db_type_master;
         return $this;
     }
 
@@ -99,7 +99,7 @@ class modelorm extends model{
      * set database mode slave
      */
     public function setDbSlave() {
-        $this->_dbObjMode = self::DB_TYPE_SLAVE;
+        $this->_dbObjMode = self::db_type_slave;
         return $this;
     }
 
@@ -119,14 +119,14 @@ class modelorm extends model{
 
     private function _checkDanger($method) {
         if (empty($this->_sql['where']) && $this->_dangerCheck) {
-            $this->_raiseError('unsafe mode checked for method: ' . $method, exception_mysqlpdo::TYPE_HIGH_RISK_QUERY);
+            $this->_raiseError('unsafe mode checked for method: ' . $method, exception_mysqlpdo::type_high_risk_query);
         }
     }
 
     public function insert($data, $getLastInsertId = false) {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
         if (empty($data) || !is_array($data)) {
-            $this->_raiseError('insert query data empty~', exception_mysqlpdo::TYPE_INPUT_DATA_ERROR);
+            $this->_raiseError('insert query data empty~', exception_mysqlpdo::type_inpiut_data_error);
         }
         $fields = array_keys($data);
         $values = array_values($data);
@@ -158,7 +158,7 @@ class modelorm extends model{
     public function autoUpdate($data){
         $structure = $this->structure();
         if(!is_array($structure)){
-            $this->_raiseError('get data structure failed', exception_mysqlpdo::TYPE_INPUT_DATA_ERROR);
+            $this->_raiseError('get data structure failed', exception_mysqlpdo::type_inpiut_data_error);
         }
         foreach($data as $k=>$v){
             if(!in_array($k,$structure)) unset($data[$k]);
@@ -171,7 +171,7 @@ class modelorm extends model{
     public function autoInsert($data, $getLastInsertId = false){
         $structure = $this->structure();
         if(!is_array($structure)){
-            $this->_raiseError('get data structure failed', exception_mysqlpdo::TYPE_INPUT_DATA_ERROR);
+            $this->_raiseError('get data structure failed', exception_mysqlpdo::type_inpiut_data_error);
         }
         foreach($data as $k=>$v){
             if(!in_array($k,$structure)) unset($data[$k]);
@@ -185,7 +185,7 @@ class modelorm extends model{
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
         $this->_checkDanger(__FUNCTION__);
         if (empty($data) || !is_array($data)) {
-            $this->_raiseError('empty data for update function query', exception_mysqlpdo::TYPE_INPUT_DATA_ERROR);
+            $this->_raiseError('empty data for update function query', exception_mysqlpdo::type_inpiut_data_error);
         }
         $fields = array_keys($data);
         $values = array_values($data);
@@ -262,7 +262,7 @@ class modelorm extends model{
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
         $res = $sth->execute($values);
         if (!$res) {
-            $this->_raiseError('select query failed~', exception_mysqlpdo::TYPE_QUERY_ERROR);
+            $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
 
@@ -298,7 +298,7 @@ class modelorm extends model{
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
         $res = $sth->execute($values);
         if (!$res) {
-            $this->_raiseError('count query failed~', exception_mysqlpdo::TYPE_QUERY_ERROR);
+            $this->_raiseError('count query failed~', exception_mysqlpdo::type_query_error);
         }
         $count = $sth->fetchColumn();
         $this->_clearStat();
@@ -375,7 +375,7 @@ class modelorm extends model{
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
         $res = $sth->execute($data);
         if (!$res) {
-            $this->_raiseError('select query failed~', exception_mysqlpdo::TYPE_QUERY_ERROR);
+            $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
         $this->_clearStat();
@@ -393,7 +393,7 @@ class modelorm extends model{
         $sth = $this->_getPdoByMethodName()->prepare($sql);
         $res = $sth->execute(array());
         if (!$res) {
-            $this->_raiseError('select query failed~', exception_mysqlpdo::TYPE_QUERY_ERROR);
+            $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
         }
         $dt = $sth->fetchAll(PDO::FETCH_ASSOC);
         if(!$fullType && is_array($dt)){

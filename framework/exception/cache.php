@@ -8,8 +8,8 @@
  *
  */
 class exception_cache extends exception_base {
-    const TYPE_SERVER_NOT_EXIST = 1;
-    const TYPE_DRIVER_NOT_EXIST = 2;
-    const TYPE_SERVER_CONNECTION_ERROR = 3;
-    const TYPE_ARGUMENT_ERROR = 4;
+    const type_server_not_exist = 1;
+    const type_driver_not_exist = 2;
+    const type_server_connection_error = 3;
+    const type_argument_error = 4;
 }

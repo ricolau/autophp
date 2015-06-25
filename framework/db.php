@@ -8,9 +8,9 @@
  */
 
 class db {
-//    const SERVER_TYPE_SLAVE = 'slave';
-//    const SERVER_TYPE_MASTER = 'master';
-//    const SERVER_TYPE_AUTO = 'auto';
+//    const server_type_slave = 'slave';
+//    const server_type_master = 'master';
+//    const server_type_auto = 'auto';
 
     protected static $_conf = array();
     protected static $_instance = array();
@@ -28,16 +28,16 @@ class db {
 
     protected static function _getInstance($alias) {
         if (empty($alias) || empty(self::$_conf[$alias])) {
-            throw new exception_db('database conf: ' . $alias . ' not exist!', exception_db::TYPE_SERVER_NOT_EXIST);
+            throw new exception_db('database conf: ' . $alias . ' not exist!', exception_db::type_server_not_exist);
         }
         $driverType = self::$_conf[$alias]['type'];
         $driverClass = 'db_' . $driverType;
         if (!class_exists($driverClass)) {
-            throw new exception_db('database driver: ' . $driverClass . ' not exist!', exception_db::TYPE_DRIVER_NOT_EXIST);
+            throw new exception_db('database driver: ' . $driverClass . ' not exist!', exception_db::type_driver_not_exist);
         }
         $instance = new $driverClass($alias, self::$_conf[$alias]);
         if (!($instance instanceof db_abstract)) {
-            throw new exception_db('database driver: ' . $driverClass . ' must extends of db_abstract!', exception_db::TYPE_DRIVER_NOT_EXIST);
+            throw new exception_db('database driver: ' . $driverClass . ' must extends of db_abstract!', exception_db::type_driver_not_exist);
         }
         return $instance;
     }

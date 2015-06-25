@@ -41,13 +41,13 @@ class cache_memcache extends cache_abstract {
         $arguments = func_get_args();
         $argc = func_num_args();
         if ($argc < 3) {
-            throw new exception_cache('argument number error for: ' . __METHOD__, exception_cache::TYPE_ARGUMENT_ERROR);
+            throw new exception_cache('argument number error for: ' . __METHOD__, exception_cache::type_argument_error);
         }
         if ($argc == 3) {
             $arguments = array($arguments[0], $arguments[1], MEMCACHE_COMPRESSED, $arguments[2]);
         }
         if (!$this->_memcache) {
-            throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::TYPE_SERVER_CONNECTION_ERROR);
+            throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
         $ret = call_user_func_array(array($this->_memcache, 'set'), $arguments);
         auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, arguments: ' . var_export($arguments, true));
@@ -57,7 +57,7 @@ class cache_memcache extends cache_abstract {
     public function __call($funcName, $arguments) {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
         if (!$this->_memcache) {
-            throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::TYPE_SERVER_CONNECTION_ERROR);
+            throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
         $ret = call_user_func_array(array($this->_memcache, $funcName), $arguments);
         auto::isDebugMode() && auto::dqueue(__CLASS__ . '::' . $funcName, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, arguments: ' . var_export($arguments, true));

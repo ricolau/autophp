@@ -12,8 +12,8 @@ final class plugin {
     private static $_pluginsHasRun = array();
     private static $_allPlugins = array();
 
-    const TYPE_BEFORE_RUN = 'before_run';
-    const TYPE_AFTER_RUN = 'after_run';
+    const type_before_run = 'before_run';
+    const type_after_run = 'after_run';
 
     /**
      * add a plugin for run

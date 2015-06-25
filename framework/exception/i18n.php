@@ -8,6 +8,6 @@
  *
  */
 class exception_i18n extends exception_base {
-    const TYPE_LANGUAGE_NOT_EXIST = 1;
+    const type_language_not_exist = 1;
 
 }

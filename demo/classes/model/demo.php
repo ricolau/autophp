@@ -39,13 +39,13 @@ class model_demo extends modelorm{
             $errmsg = $e->getMessage();
             switch ($code)
             {
-                case exception_mysqlpdo::TYPE_CONF_ERROR:
+                case exception_mysqlpdo::type_conf_error:
                     //config error
                     break;
-                case exception_mysqlpdo::TYPE_HIGH_RISK_QUERY:
+                case exception_mysqlpdo::type_high_risk_query:
                     // high risk of your query, may effect the hole table
                     break;
-                case exception_mysqlpdo::TYPE_QUERY_ERROR:
+                case exception_mysqlpdo::type_query_error:
                     //query failed or some ...
                     break;
 
@@ -88,13 +88,13 @@ class model_demo extends modelorm{
             $errmsg = $e->getMessage();
             switch ($code)
             {
-                case exception_mysqlpdo::TYPE_CONF_ERROR:
+                case exception_mysqlpdo::type_conf_error:
                     //config error, you can do something here
                     break;
-                case exception_mysqlpdo::TYPE_HIGH_RISK_QUERY:
+                case exception_mysqlpdo::type_high_risk_query:
                     // high risk of your query, may effect the hole table
                     break;
-                case exception_mysqlpdo::TYPE_QUERY_ERROR:
+                case exception_mysqlpdo::type_query_error:
                     //query failed or some ...
                     break;
 
@@ -126,13 +126,13 @@ class model_demo extends modelorm{
             $errmsg = $e->getMessage();
             switch ($code)
             {
-                case exception_mysqlpdo::TYPE_CONF_ERROR:
+                case exception_mysqlpdo::type_conf_error:
                     //config error
                     break;
-                case exception_mysqlpdo::TYPE_HIGH_RISK_QUERY:
+                case exception_mysqlpdo::type_high_risk_query:
                     // high risk of your query, may effect the hole table
                     break;
-                case exception_mysqlpdo::TYPE_QUERY_ERROR:
+                case exception_mysqlpdo::type_query_error:
                     //query failed or some ...
                     break;
 

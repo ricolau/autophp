@@ -8,10 +8,10 @@
  */
 final class auto {
 
-    const VERSION = '1.3';
-    const AUTHOR = 'ricolau<ricolau@foxmail.com>';
-    const MODE_HTTP = 0;
-    const MODE_DAEMON = 1;
+    const version = '1.5';
+    const author = 'ricolau<ricolau@foxmail.com>';
+    const mode_http = 0;
+    const mode_cli = 1;
 
     public static $runtimeStart = 0;
     public static $runtimeEnd = 0;
@@ -34,7 +34,7 @@ final class auto {
         register_shutdown_function(array('auto', 'shutdownCall'), array());
 
         if (self::$_hasRun) {
-            throw new exception_base('auto can not run twice!', exception_base::TYPE_AUTOPHP_HAS_RUN);
+            throw new exception_base('auto can not run twice!', exception_base::type_autophp_has_run);
         }
 		
 
@@ -44,13 +44,13 @@ final class auto {
             self::$_isCliMode = true;
         }
         if (get_magic_quotes_gpc()) {
-            throw new exception_base('magic quotes should be turned off~ ', exception_base::TYPE_MAGIC_QUOTES_ON);
+            throw new exception_base('magic quotes should be turned off~ ', exception_base::type_magic_quotes_on);
         }
         if (!defined('APP_PATH')) {
-            throw exception_base('APP_PATH not defined!', exception_base::TYPE_APP_PATH_NOT_DEFINED);
+            throw exception_base('APP_PATH not defined!', exception_base::type_app_path_not_defined);
         }
         if (!defined('AUTOPHP_PATH')) {
-            throw exception_base('AUTOPHP_PATH not defined!', exception_base::TYPE_AUTOPHP_PATH_NOT_DEFINED);
+            throw exception_base('AUTOPHP_PATH not defined!', exception_base::type_autophp_path_not_defined);
         }
         self::$runtimeStart = microtime(true);
 
@@ -121,7 +121,7 @@ final class auto {
 
             if (!file_exists($file)) {
                 if(auto::isDebugMode()){
-                    throw new exception_base('class "'.$className.'" file not exist in path: '.$file, exception_base::ERROR);
+                    throw new exception_base('class "'.$className.'" file not exist in path: '.$file, exception_base::error);
                 }
             }else{
                 require $file;
@@ -226,12 +226,12 @@ final class auto {
         }
         $rn = "\n";
 
-        $hasNotRunPlugins = plugin::getHasNotRunPlugin(plugin::TYPE_BEFORE_RUN);
+        $hasNotRunPlugins = plugin::getHasNotRunPlugin(plugin::type_before_run);
         if ($hasNotRunPlugins) {
             $msg = array('title' => '<font color=red><b>Warning: some plugins NOT RUN(maybe "exit()" used! in your program?)</b></font>', 'msg' => var_export($hasNotRunPlugins, true));
             array_unshift(self::$_debugQueue, $msg);
         }
-        $hasNotRunPlugins2 = plugin::getHasNotRunPlugin(plugin::TYPE_AFTER_RUN);
+        $hasNotRunPlugins2 = plugin::getHasNotRunPlugin(plugin::type_after_run);
         if ($hasNotRunPlugins2) {
             $msg = array('title' => '<font color=red><b>Warning: some plugins NOT RUN(maybe "exit()" used in your program?)</b></font>', 'msg' => var_export($hasNotRunPlugins2, true));
             array_unshift(self::$_debugQueue, $msg);

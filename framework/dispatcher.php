@@ -16,10 +16,10 @@ class dispatcher {
     private static $_currentDir = null;
     private static $_currentController = null;
     private static $_currentAction = null;
-    private static $_pathDeep = self::PATH_DEEP2;
+    private static $_pathDeep = self::path_deep2;
 
-    const PATH_DEEP3 = 3;
-    const PATH_DEEP2 = 2;
+    const path_deep3 = 3;
+    const path_deep2 = 2;
 
     public static function instance() {
         if (!self::$_instance) {
@@ -45,7 +45,7 @@ class dispatcher {
         $uri = self::$_instance->getUri();
         $uri = trim($uri, '/');
         if ($uri == '') {
-            if (self::$_pathDeep == self::PATH_DEEP3) {
+            if (self::$_pathDeep == self::path_deep3) {
                 $dirName = self::$_defaultDir;
             }
             $controllerName = self::$_defualtController;
@@ -53,7 +53,7 @@ class dispatcher {
         } else {
             $us = explode('/', $uri);
             
-            if (self::$_pathDeep == self::PATH_DEEP3) {
+            if (self::$_pathDeep == self::path_deep3) {
                 $dirName = array_shift($us);
                 if(count($us)>0){
                     $controllerName = array_shift($us);
@@ -113,8 +113,8 @@ class dispatcher {
         return self::$_uri;
     }
 
-    public function setPathDeep($deep = self::PATH_DEEP2) {
-        self::$_pathDeep = ($deep== self::PATH_DEEP2) ? self::PATH_DEEP2 : self::PATH_DEEP3;
+    public function setPathDeep($deep = self::path_deep2) {
+        self::$_pathDeep = ($deep== self::path_deep2) ? self::path_deep2 : self::path_deep3;
         return self::$_instance;
     }
 
@@ -189,25 +189,25 @@ class dispatcher {
 
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
 
-        if(self::$_pathDeep ==self::PATH_DEEP3){
+        if(self::$_pathDeep ==self::path_deep3){
             $className = 'controller_' . self::$_currentDir.'_'.self::$_currentController;
         }else{
             $className = 'controller_' . self::$_currentController;
         }
 
         if (!class_exists($className)) {
-            throw new exception_404('controller not exist: ' . $className, exception_404::TYPE_CONTROLLER_NOT_EXIST);
+            throw new exception_404('controller not exist: ' . $className, exception_404::type_controller_not_exist);
         }
         $actionName = self::$_currentAction . 'Action';
         auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'start ---->>>>');
 
         $class = new ReflectionClass($className);
         if ($class->isAbstract()) {
-            throw new exception_404('can not run abstract class: ' . $className, exception_404::TYPE_CONTROLLER_IS_ABSTRACT);
+            throw new exception_404('can not run abstract class: ' . $className, exception_404::type_controller_is_abstract);
         }
         $method = $class->getMethod($actionName);
         if (!$method || !$method->isPublic()) {
-            throw new exception_404('no public method ' . $method . ' exist in class:' . $className, exception_404::TYPE_ACTION_NOT_PUBLIC);
+            throw new exception_404('no public method ' . $method . ' exist in class:' . $className, exception_404::type_action_not_public);
         }
         $method->invoke($class->newInstance());
         auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . (microtime(true) - $_debugMicrotime) . 's');

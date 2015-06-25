@@ -67,7 +67,7 @@ final class i18n {
             }
         }
         if ($tmp === null) {
-            throw new exception_i18n('language do not exist of:' . $alias, exception_i18n::TYPE_LANGUAGE_NOT_EXIST);
+            throw new exception_i18n('language do not exist of:' . $alias, exception_i18n::type_language_not_exist);
         }
         return $tmp;
     }

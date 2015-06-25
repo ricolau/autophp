@@ -8,8 +8,8 @@
  *
  */
 class exception_404 extends exception_base {
-    const TYPE_CONTROLLER_NOT_EXIST = -1;
-    const TYPE_ACTION_NOT_PUBLIC = -2;
-    const TYPE_CONTROLLER_IS_ABSTRACT = -3;
+    const type_controller_not_exist = -1;
+    const type_action_not_public = -2;
+    const type_controller_is_abstract = -3;
 
 }

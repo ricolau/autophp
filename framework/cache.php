@@ -25,12 +25,12 @@ class cache {
 
     protected static function _getInstance($alias) {
         if (empty($alias) || empty(self::$_conf[$alias])) {
-            throw new exception_cache('cache conf: ' . $alias . ' not exist!', exception_cache::TYPE_SERVER_NOT_EXIST);
+            throw new exception_cache('cache conf: ' . $alias . ' not exist!', exception_cache::type_server_not_exist);
         }
         $driverType = self::$_conf[$alias]['type'];
         $driverClass = 'cache_' . $driverType;
         if (!class_exists($driverClass)) {
-            throw new exception_cache('cache driver: ' . $driverClass . ' not exist!', exception_cache::TYPE_DRIVER_NOT_EXIST);
+            throw new exception_cache('cache driver: ' . $driverClass . ' not exist!', exception_cache::type_driver_not_exist);
         }
         $cacheServer = new $driverClass($alias, self::$_conf[$alias]);
         return $cacheServer->connect();

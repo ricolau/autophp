@@ -9,12 +9,12 @@
  */
 class exception_base extends Exception {
 
-    const TYPE_AUTOPHP_HAS_RUN = -1;
-    const TYPE_MAGIC_QUOTES_ON = -21;
-    const TYPE_APP_PATH_NOT_DEFINED = -2;
-    const TYPE_AUTOPHP_PATH_NOT_DEFINED = -3;
+    const type_autophp_has_run = -1;
+    const type_magic_quotes_on = -21;
+    const type_app_path_not_defined = -2;
+    const type_autophp_path_not_defined = -3;
 
-    const ERROR = -10;
+    const error = -10;
 
 
 

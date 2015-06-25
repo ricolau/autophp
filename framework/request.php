@@ -19,7 +19,7 @@ class request {
         if(!self::$_hasInit){
             self::$_hasInit = true;
         }else{
-            throw new exception_base('request can not be inited for twice~', exception_base::ERROR);
+            throw new exception_base('request can not be inited for twice~', exception_base::error);
         }
 
         self::$_antiXssMode = $antiXssModeOn;

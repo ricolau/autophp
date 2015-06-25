@@ -19,7 +19,7 @@ class render_smarty extends render_abstract {
             include_once $smartyFile;
         }
         if (class_exists('Smarty')) {
-            throw new exception_render('render engine of Smarty not exist!', exception_render::TYPE_RENDER_ENGIN_NOT_EXIST);
+            throw new exception_render('render engine of Smarty not exist!', exception_render::type_render_engine_not_exist);
         }
         $this->_smarty = new Smarty();
         $this->_smarty->template_dir = APP_PATH.DS.'view'.DS.'template';

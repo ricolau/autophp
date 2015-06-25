@@ -37,7 +37,7 @@ abstract class controller {
         $controller = dispatcher::instance()->getControllerName();
         $action = dispatcher::instance()->getActionName();
 
-        if (dispatcher::instance()->getPathDeep() == dispatcher::PATH_DEEP3) {
+        if (dispatcher::instance()->getPathDeep() == dispatcher::path_deep3) {
             $path = $dir . DS . $controller . DS . $action;
         } else {
             $path = $controller . DS . $action;
@@ -63,7 +63,7 @@ abstract class controller {
         $controller = dispatcher::instance()->getControllerName();
         $action = dispatcher::instance()->getActionName();
 
-        if (dispatcher::instance()->getPathDeep() == dispatcher::PATH_DEEP3) {
+        if (dispatcher::instance()->getPathDeep() == dispatcher::path_deep3) {
             $path = $dir . DS . $controller . DS . $action;
         } else {
             $path = $controller . DS . $action;
@@ -75,8 +75,8 @@ abstract class controller {
         return $ret;
     }
 
-    public function forward($controller, $action) {
-        dispatcher::instance()->setControllerName($controller)->setActionName($action)->run();
+    public function forward($path) {
+        dispatcher::instance()->setUri($path)->dispatch()->run();
     }
 
     public function assign($key, $val) {

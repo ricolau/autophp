@@ -7,9 +7,9 @@
  *
  */
 class exception_mysqlpdo extends exception_base {
-    const TYPE_CONF_ERROR = 1;
-    const TYPE_HIGH_RISK_QUERY = 10;
-    const TYPE_INPUT_DATA_ERROR = 21;
-    const TYPE_QUERY_ERROR = 22;
+    const type_conf_error = 1;
+    const type_high_risk_query = 10;
+    const type_inpiut_data_error = 21;
+    const type_query_error = 22;
 
 }

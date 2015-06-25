@@ -8,8 +8,8 @@
  *         db::instance($dbAlias)->connect(db_mysqlpdo::TYPE_SLAVE);
  */
 class db_mysqlpdo extends db_abstract {
-    const TYPE_SERVER_SLAVE = 0;
-    const TYPE_SERVER_MASTER = 1;
+    const type_server_slave = 0;
+    const type_server_master = 1;
 
     protected $_confs = null;
     protected $_pdoCon = null;
@@ -18,7 +18,7 @@ class db_mysqlpdo extends db_abstract {
 
     public function __construct($alias, $conf) {
         if (empty($conf)) {
-            throw new exception_mysqlpdo('bad conf data!', exception_mysqlpdo::TYPE_CONF_ERROR);
+            throw new exception_mysqlpdo('bad conf data!', exception_mysqlpdo::type_conf_error);
         }
         $this->_confs = $conf;
         $this->_alias = $alias;
@@ -44,7 +44,7 @@ class db_mysqlpdo extends db_abstract {
 */
     public function connect($type = null) {
         if($type===null){
-            throw new exception_mysqlpdo('no type specified for mysqlpdo connection!', exception_mysqlpdo::TYPE_CONF_ERROR);
+            throw new exception_mysqlpdo('no type specified for mysqlpdo connection!', exception_mysqlpdo::type_conf_error);
         }
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
         //$type = self::TYPE_SERVER_MASTER;
@@ -57,7 +57,7 @@ class db_mysqlpdo extends db_abstract {
 
     protected function _getPdo($type) {
         if (!isset($this->_confs['conf'][$type])) {
-            throw new exception_mysqlpdo('undefined pdo conf type:' . $type, exception_mysqlpdo::TYPE_CONF_ERROR);
+            throw new exception_mysqlpdo('undefined pdo conf type:' . $type, exception_mysqlpdo::type_conf_error);
         }
 
         $server = $this->_confs['conf'][$type];
