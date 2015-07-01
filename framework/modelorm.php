@@ -126,7 +126,7 @@ class modelorm extends model{
     public function insert($data, $getLastInsertId = false) {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
         if (empty($data) || !is_array($data)) {
-            $this->_raiseError('insert query data empty~', exception_mysqlpdo::type_inpiut_data_error);
+            $this->_raiseError('insert query data empty~', exception_mysqlpdo::type_input_data_error);
         }
         $fields = array_keys($data);
         $values = array_values($data);
@@ -140,9 +140,9 @@ class modelorm extends model{
         $res = $sth->execute($values);
 
         $this->_clearStat();
-        if (!$res) {
+        if ($res===false) {
             auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
-            return $res;
+            $this->_raiseError('insert query failed~', exception_mysqlpdo::type_query_error);
         }
         if ($getLastInsertId) {
             $lastInsertId = $db->lastInsertId();
@@ -158,7 +158,7 @@ class modelorm extends model{
     public function autoUpdate($data){
         $structure = $this->structure();
         if(!is_array($structure)){
-            $this->_raiseError('get data structure failed', exception_mysqlpdo::type_inpiut_data_error);
+            $this->_raiseError('get data structure failed', exception_mysqlpdo::type_input_data_error);
         }
         foreach($data as $k=>$v){
             if(!in_array($k,$structure)) unset($data[$k]);
@@ -171,7 +171,7 @@ class modelorm extends model{
     public function autoInsert($data, $getLastInsertId = false){
         $structure = $this->structure();
         if(!is_array($structure)){
-            $this->_raiseError('get data structure failed', exception_mysqlpdo::type_inpiut_data_error);
+            $this->_raiseError('get data structure failed', exception_mysqlpdo::type_input_data_error);
         }
         foreach($data as $k=>$v){
             if(!in_array($k,$structure)) unset($data[$k]);
@@ -185,7 +185,7 @@ class modelorm extends model{
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
         $this->_checkDanger(__FUNCTION__);
         if (empty($data) || !is_array($data)) {
-            $this->_raiseError('empty data for update function query', exception_mysqlpdo::type_inpiut_data_error);
+            $this->_raiseError('empty data for update function query', exception_mysqlpdo::type_input_data_error);
         }
         $fields = array_keys($data);
         $values = array_values($data);
@@ -204,6 +204,9 @@ class modelorm extends model{
         $sth = $this->_getPdoByMethodName(__FUNCTION__)
             ->prepare($sql);
         $affected_rows = $sth->execute($values);
+        if ($affected_rows===false) {
+            $this->_raiseError('update query failed~', exception_mysqlpdo::type_query_error);
+        }
 
         $this->_clearStat();
         auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
@@ -225,6 +228,9 @@ class modelorm extends model{
 
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
         $res = $sth->execute($values);
+        if ($res===false) {
+            $this->_raiseError('delete query failed~', exception_mysqlpdo::type_query_error);
+        }
 
         $this->_clearStat();
         auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
@@ -261,7 +267,7 @@ class modelorm extends model{
 
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
         $res = $sth->execute($values);
-        if (!$res) {
+        if ($res===false) {
             $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -297,7 +303,7 @@ class modelorm extends model{
         $this->_lastQuery = array($sql, $values);
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
         $res = $sth->execute($values);
-        if (!$res) {
+        if ($res===false) {
             $this->_raiseError('count query failed~', exception_mysqlpdo::type_query_error);
         }
         $count = $sth->fetchColumn();
