@@ -151,36 +151,17 @@ final class util {
         }
 
         if (!function_exists('url')) {
-
-            function url($controller, $action, $args = array(), $patternRest = false, $urlBase = '/', $domain = '') {
-                $url = '';
-                if ($domain != '') {
-                    $url .= 'http://' . $domain;
-                }
-                $url .= $urlBase . $controller . '/';
-                $url .= $action;
-                if (is_string($args) && $args !== '') {
-                    $url .= '?' . $args;
-                } elseif ($args && is_array($args)) {
-                    $tmp = http_build_query($args);
-                    if ($patternRest) {
-                        $tmp = str_replace(array('&', '='), '/', $tmp);
-                        $url .= '/' . $tmp;
-                    } else {
-                        $url .= '?' . $tmp;
-                    }
-                }
-                return $url;
+            function url($path,$args = array()) {
+                return url::get($path, $args);
             }
         }
 
         if (!function_exists('domain')) {
             function domain($domain = null) {
-                $domainKey = '__APP_SITE_DOMAIN__';
                 if ($domain === null) {
-                    return self::get($domainKey);
+                    return url::getDomain();
                 } else {
-                    return self::set($domainKey, $domain);
+                    return url::setDomain($domain);
                 }
             }
 
