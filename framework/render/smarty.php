@@ -31,13 +31,13 @@ class render_smarty extends render_abstract {
         $this->_smarty->assign($key, $val);
     }
 
-    public function render($controllerName, $actionName) {
-        $tplFile = $controllerName . DS . $actionName . '.tpl';
-        $data = $this->_smarty->display($tplFile);
+    public function render($path) {
+        $tplFile = $path . '.tpl';
+        $this->_smarty->display($tplFile);
     }
 
-    public function fetch($controllerName, $actionName) {
-        $tplFile = $controllerName . DS . $actionName . '.tpl';
+    public function fetch($path) {
+        $tplFile = $path . '.tpl';
         $data = $this->_smarty->fetch($tplFile);
         return $data;
     }
