@@ -33,7 +33,7 @@ abstract class controller {
             auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $controller . DS . $action . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
             return;
         }
-        $dir = dispatcher::instance()->getDirName();
+        $dir = dispatcher::instance()->getModuleName();
         $controller = dispatcher::instance()->getControllerName();
         $action = dispatcher::instance()->getActionName();
 
@@ -59,7 +59,7 @@ abstract class controller {
 
             return $ret;
         }
-        $dir = dispatcher::instance()->getDirName();
+        $dir = dispatcher::instance()->getModuleName();
         $controller = dispatcher::instance()->getControllerName();
         $action = dispatcher::instance()->getActionName();
 
