@@ -30,7 +30,7 @@ abstract class controller {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
         if ($path) {
             $this->_render->render($path);
-            auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $controller . DS . $action . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
+            auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $path . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
             return;
         }
         $dir = dispatcher::instance()->getModuleName();
@@ -44,7 +44,7 @@ abstract class controller {
         }
         $this->_render->render($path);
 
-        auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $controller . DS . $action . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
+        auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $path . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
     }
 
     public function slot($slot, $isDisplay = false) {
@@ -70,7 +70,7 @@ abstract class controller {
         }
 
         $ret = $this->_render->fetch($path);
-        auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $controller . DS . $action . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
+        auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $path . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
 
         return $ret;
     }
