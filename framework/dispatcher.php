@@ -10,10 +10,10 @@ class dispatcher {
 
     private static $_instance = null;
     private static $_uri = null;
-    private static $_defaultDir = 'default';
+    private static $_defaultModule = 'default';
     private static $_defualtController = 'default';
     private static $_defualtAction = 'default';
-    private static $_currentDir = null;
+    private static $_currentModule = null;
     private static $_currentController = null;
     private static $_currentAction = null;
     private static $_pathDeep = self::path_deep2;
@@ -46,7 +46,7 @@ class dispatcher {
         $uri = trim($uri, '/');
         if ($uri == '') {
             if (self::$_pathDeep == self::path_deep3) {
-                $dirName = self::$_defaultDir;
+                $moduleName = self::$_defaultModule;
             }
             $controllerName = self::$_defualtController;
             $actionName = self::$_defualtAction;
@@ -54,7 +54,7 @@ class dispatcher {
             $us = explode('/', $uri);
             
             if (self::$_pathDeep == self::path_deep3) {
-                $dirName = array_shift($us);
+                $moduleName = array_shift($us);
                 if(count($us)>0){
                     $controllerName = array_shift($us);
                     if(count($us)>0){
@@ -85,11 +85,11 @@ class dispatcher {
                 request::setParams($data, 'get');
             }
         }
-        $dirName= util::baseChars($dirName);
+        $moduleName= util::baseChars($moduleName);
         $controllerName = util::baseChars($controllerName);
         $actionName = util::baseChars($actionName);
 
-        self::$_instance->setDirName($dirName);
+        self::$_instance->setModuleName($moduleName);
         self::$_instance->setControllerName($controllerName);
         self::$_instance->setActionName($actionName);
         return;
@@ -139,20 +139,20 @@ class dispatcher {
         return $uri;
     }
 
-    public function setDefaultDir($dir = 'default') {
-        self::$_defaultDir = $dir;
+    public function setDefaultModule($module = 'default') {
+        self::$_defaultModule = $module;
         return self::$_instance;
     }
 
-    public function getControllerDir() {
-        return self::$_defualtDir;
+    public function getControllerModule() {
+        return self::$_defualtModule;
     }
 
-    public function getDirName() {
-        return self::$_currentDir;
+    public function getModuleName() {
+        return self::$_currentModule;
     }
-    public function setDirName($dirname = 'default') {
-        self::$_currentDir = $dirname;
+    public function setModuleName($moduleName = 'default') {
+        self::$_currentModule = $moduleName;
         return self::$_instance;
     }
 
@@ -190,7 +190,7 @@ class dispatcher {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
 
         if(self::$_pathDeep ==self::path_deep3){
-            $className = 'controller_' . self::$_currentDir.'_'.self::$_currentController;
+            $className = 'controller_' . self::$_currentModule.'_'.self::$_currentController;
         }else{
             $className = 'controller_' . self::$_currentController;
         }
