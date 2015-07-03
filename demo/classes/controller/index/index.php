@@ -32,6 +32,7 @@ class controller_index_index extends controller{
                 'time'=>date('Ymd H:i:s'),
                 'name'=>'ricolau',
             );
+            log::add('error', 'im test~!');
             
         }catch (exception_i18n $e){ //i18n 的异常，一般是由于语言包不存在
             $code = $e->getCode();

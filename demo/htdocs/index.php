@@ -40,6 +40,10 @@ try {
     $antiXssModeOn = true; //是否开启对 $_POST,  $_GET,  $_COOKIE 的防跨站处理
     $addslashesModeOn = true;
     request::init($antiXssModeOn, $addslashesModeOn);
+    
+    //add log conf
+    $logconf = config::get('log.default');
+    log::addLogger(new logger_default($logconf));
 
 
     //============================ 定义一些快捷的function 别名之类，此处非必须 ============================
