@@ -39,6 +39,7 @@ class http {
         $default_ua = 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2041.4 Safari/537.36';
         $useragent = $user_agent ? : $default_ua;
         curl_setopt($ci, CURLOPT_USERAGENT, $useragent);
+        
         curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, 3);
         curl_setopt($ci, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($ci, CURLOPT_RETURNTRANSFER, true);
