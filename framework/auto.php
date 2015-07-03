@@ -149,6 +149,8 @@ final class auto {
         'render_default'=>true,
         'render_abstract'=>true,
         'render_smarty'=>true,
+        'logger_abstract'=>true,
+        'logger_default'=>true,
     );
     protected static function _getClassPath($className) {
         //framework class with no _ in class name

@@ -125,7 +125,7 @@ final class util {
             }
 
         }
-
+ 
         //can be used instead of  echo htmlspecialchars()
         if (!function_exists('e') && !function_exists('eg')) {
             function e($string, $flags = ENT_COMPAT, $encoding = 'UTF-8', $double_encode = true) {

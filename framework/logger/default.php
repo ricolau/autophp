@@ -73,23 +73,22 @@ class logger_default extends logger_abstract {
             }
         }
         $rotation = $this->_getRotationByLevel($level);
-        if($rotation){
-            $rotation = $rotation.'.';
+        if(!$rotation){
+            $rotation = 'default';
         }
-        $dir = $this->_conf[$level];
+        $dir = $this->_conf[$level]['path'];
         
         if(!is_dir($dir)){
             $mk = @mkdir($dir, 777, true);
             if(!$mk){
                 if(auto::isDebugMode() || auto::isDevMode()){
                     auto::dqueue('<font color=red>warning</font>', 'failed for make log dir:'.$dir);
-                }else{
-                    return false;
                 }
+                return false;
             }
         }
         $logFile = $dir.DS.$rotation.'.log';
-        $msg = date('Y-m-d H:i:s')."\t".$level."\t".$msg;
+        $msg = date('Y-m-d H:i:s')."\t".$level."\t".$msg."\n";
         file_put_contents($logFile, $msg, FILE_APPEND);
     }
 }

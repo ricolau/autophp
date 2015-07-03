@@ -2,8 +2,8 @@
 
 /**
  * @author ricolau<ricolau@foxmail.com>
- * @version 2012-04
- * @desc default config file
+ * @version 2015-07-03
+ * @desc  log config file
  *
  */
 
