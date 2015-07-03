@@ -251,6 +251,9 @@ class modelorm extends model{
         if (is_array($sqlData)) {
             $values = util::array_merge($values, $sqlData);
         }
+        if (isset($this->_sql['groupby'])) {
+            $sql .= ' GROUP BY ' . $this->_sql['groupby'];
+        }
         if (isset($this->_sql['order'])) {
             $sql .= ' ORDER BY ' . $this->_sql['order'];
         }
@@ -350,6 +353,10 @@ class modelorm extends model{
 
     public function order($order) {
         $this->_sql['order'] = $order;
+        return $this;
+    }
+    public function groupby($groupby){
+        $this->_sql['groupby'] = $groupby;
         return $this;
     }
 
