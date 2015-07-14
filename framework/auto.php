@@ -145,6 +145,7 @@ final class auto {
         'exception_i18n'=>true,
         'exception_mysqlpdo'=>true,
         'exception_render'=>true,
+        'exception_logger'=>true,
         'plugin_abstract'=>true,
         'render_default'=>true,
         'render_abstract'=>true,

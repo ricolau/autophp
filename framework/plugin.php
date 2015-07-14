@@ -22,7 +22,7 @@ final class plugin {
      */
     public static function add($pluginName, $type = 'before_run') {
         self::$_plugins[$type][] = $pluginName;
-        self::$_allPlugins[$type] = $pluginName;
+        self::$_allPlugins[$type][] = $pluginName;
     }
 
     /**
