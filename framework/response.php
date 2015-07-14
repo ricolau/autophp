@@ -40,7 +40,7 @@ class response {
     }
 
     public static function outputJson($data) {
-        return self::output(StrFormat::jsonEncode($data));
+        return self::output(json_encode($data));
     }
 
     public static function output($str) {
