@@ -44,6 +44,7 @@ class dispatcher {
     private static function _httpRoute() {
         $uri = self::$_instance->getUri();
         $uri = trim($uri, '/');
+        $moduleName = null;
         if ($uri == '') {
             if (self::$_pathDeep == self::path_deep3) {
                 $moduleName = self::$_defaultModule;
@@ -205,6 +206,7 @@ class dispatcher {
         if ($class->isAbstract()) {
             throw new exception_404('can not run abstract class: ' . $className, exception_404::type_controller_is_abstract);
         }
+        
         $method = $class->getMethod($actionName);
         if (!$method || !$method->isPublic()) {
             throw new exception_404('no public method ' . $method . ' exist in class:' . $className, exception_404::type_action_not_public);

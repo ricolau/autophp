@@ -17,8 +17,17 @@ class cache_memcache extends cache_abstract {
     }
 
     public function connect() {
+
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
-        $this->_memcache = new Memcache();
+        
+        $memcacheClass = 'Memcache';
+        try{
+            auto::autoload($memcacheClass);
+        } catch (Exception $ex) {
+            throw new exception_cache('class not exist for '.$memcacheClass.', check your php extensions~', exception_cache::type_memcache_not_exist);
+        }
+       
+        $this->_memcache = new $memcacheClass();
         $servers = $this->_confs['servers'];
         foreach ($servers as $server) {
             $this->_memcache->addServer($server['host'], $server['port'], false, $server['weight']);
