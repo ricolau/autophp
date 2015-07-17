@@ -8,8 +8,8 @@
  *         db::instance($dbAlias)->connect(db_mysqlpdo::TYPE_SLAVE);
  */
 class db_mysqlpdo extends db_abstract {
-    const type_server_slave = 0;
-    const type_server_master = 1;
+    const type_server_slave = 'slave';
+    const type_server_master = 'master';
 
     protected $_confs = null;
     protected $_pdoCon = null;

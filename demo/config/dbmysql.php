@@ -10,14 +10,14 @@ return array(
     'default' => array(
         'type' => 'mysqlpdo', //定义数据库类型，将直接调用 db_mysqlpdo 驱动
         'conf'=>array(
-            0 => array(
+            db_mysqlpdo::type_server_slave => array(
                 'host' => 'localhost',
                 'user' => 'database_username',
                 'pwd' => 'database_password',
                 'dbname' => 'database_name',
                 'charset' => 'utf8'
             ),
-            1 => array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8')
+            db_mysqlpdo::type_server_master => array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8')
 
         ),
 
