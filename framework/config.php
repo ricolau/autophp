@@ -46,9 +46,13 @@ final class config {
             self::$_map[$alias] = self::_getDataByFilename($alias);
         }
         if (isset($tmp[1])) {
-            return isset(self::$_map[$alias][$tmp[1]]) ? self::$_map[$alias][$tmp[1]] : $default;
+            return (is_array(self::$_map[$alias]) && isset(self::$_map[$alias][$tmp[1]])) ? self::$_map[$alias][$tmp[1]] : $default;
         }
         return self::$_map[$alias] !== false ? self::$_map[$alias] : $default;
+    }
+    
+    public static function set($alias, $val = null){
+        self::$_map[$alias] = $val;
     }
 
     private static function _getDataByFilename($alias) {
