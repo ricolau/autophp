@@ -78,11 +78,14 @@ final class i18n {
         return vsprintf($tpl, $args);
     }
 
-    public static function language($language = null) {
-        if($language === null){
-            return self::$language;
+    public static function setLanguage($language = null) {
+        if($language !== null){
+            self::$language = $language;
         }
-        self::$language = $language;
+        
+    }
+    public static function getLanguage() {
+        return self::$language;
     }
 
 

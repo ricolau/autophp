@@ -81,9 +81,7 @@ class logger_default extends logger_abstract {
         if(!is_dir($dir)){
             $mk = @mkdir($dir, 777, true);
             if(!$mk){
-                if(auto::isDebugMode() || auto::isDevMode()){
-                    auto::dqueue('<font color=red>warning</font>', 'failed for make log dir:'.$dir);
-                }
+                auto::isDebugMode() && auto::dqueue('<font color=red>warning</font>', 'failed for make log dir:'.$dir);
                 return false;
             }
         }

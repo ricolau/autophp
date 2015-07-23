@@ -10,12 +10,12 @@ class controller_index2 extends controller{
             echo "\r\n <br /> hello, i'm indexAction in controller_index, nice 2 meet u! <br />\r\n ";
 
             echo "\r\n <br /> now set language to zh-cn! <br />\r\n ";
-            i18n::language('en-us');
+            i18n::setLanguage('en-us');
 
             echo "\r\n <br /> in english, my name is: ".i18n::get('author')." <br />\r\n ";
 
             echo "\r\n <br /> now set language to zh-cn! <br />\r\n ";
-            i18n::language('zh-cn');
+            i18n::setLanguage('zh-cn');
             echo "\r\n <br /> in chinese, my name is: ".i18n::get('author')." <br />\r\n ";
 
             $mDemo = new model_demo();
@@ -37,7 +37,7 @@ class controller_index2 extends controller{
         }catch (exception_i18n $e){ //i18n 的异常，一般是由于语言包不存在
             $code = $e->getCode();
             if($code == exception_i18n::type_language_not_exist){
-                echo "\r\n <br /> exception: language of ".i18n::language().' not exist!\r\n <br />';
+                echo "\r\n <br /> exception: language of ".i18n::getLanguage().' not exist!\r\n <br />';
             }
             echo $e->getMessage();
         }catch (Exception $e){//如果实在还是有exception，那就捕捉到这里吧，ignore 忽略处理的话。代码继续执行 $this->render()，不会白页。

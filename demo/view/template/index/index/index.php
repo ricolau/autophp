@@ -13,7 +13,7 @@
 
 ######## show i18n use here ################
 
-current language is: <?php echo i18n::language();?>
+current language is: <?php echo i18n::getLanguage();?>
 <br /><br />
 
 the author's gender is:<?php echo i18n::get('gender');?>
