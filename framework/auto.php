@@ -133,7 +133,7 @@ final class auto {
     protected static $_frameworkClass = array(
         'cache_abstract'=>true,
         'cache_memcache'=>true,
-        'cache_memcache'=>true,
+        'cache_memcached'=>true,
         'db_abstract'=>true,
         'db_mysqlpdo'=>true,
         'exception_404'=>true,
