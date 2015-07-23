@@ -1,6 +1,6 @@
 <?php
 /**
- * @description popular development for http request
+ * @description popular development for system shell
  * @author by ricolau<ricolau#foxmail.com>(replace # with @)
  * @version 2015-07-23
  *
