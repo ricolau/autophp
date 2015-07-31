@@ -135,6 +135,7 @@ final class auto {
         'cache_abstract'=>true,
         'cache_memcache'=>true,
         'cache_memcached'=>true,
+        'cache_redis'=>true,
         'db_abstract'=>true,
         'db_mysqlpdo'=>true,
         'exception_404'=>true,
