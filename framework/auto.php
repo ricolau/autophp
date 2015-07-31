@@ -120,9 +120,10 @@ final class auto {
             $file = self::_getClassPath($className);
 
             if (!file_exists($file)) {
-                if(auto::isDebugMode()){
-                    throw new exception_base('class "'.$className.'" file not exist in path: '.$file, exception_base::error);
-                }
+                //to enable multi autoloader~
+//                if(auto::isDebugMode()){
+//                    throw new exception_base('class "'.$className.'" file not exist in path: '.$file, exception_base::error);
+//                }
             }else{
                 require $file;
             }
