@@ -80,6 +80,8 @@ class db_mysqlpdo extends db_abstract {
                 throw $e;
             }
         }
+        //tell the mysql pdo do not stringfy field values!~!
+        $instance->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
         return $instance;
     }
 
