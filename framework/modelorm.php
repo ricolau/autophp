@@ -6,7 +6,7 @@
  * @desc model orm, must be based on pdo!
  *
  */
-class modelorm extends model{
+class modelorm extends model {
 
     const db_type_slave = 'slave';
     const db_type_master = 'master';
@@ -22,7 +22,6 @@ class modelorm extends model{
     protected $_dangerCheck = null;
     protected $_pages = null;
     protected $_lastQuery = null;
-    
     protected static $_tableStructure = array();
 
     public function __construct($dbAlias = null, $tablename = null) {
@@ -60,10 +59,10 @@ class modelorm extends model{
         }
         if ($type != self::db_type_master) {
             return isset($this->_dbObj[self::db_type_slave]) ? $this->_dbObj[self::db_type_slave] :
-                ($this->_dbObj[self::db_type_slave] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_slave));
+                    ($this->_dbObj[self::db_type_slave] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_slave));
         } else {
             return isset($this->_dbObj[self::db_type_master]) ? $this->_dbObj[self::db_type_master] :
-                ($this->_dbObj[self::db_type_master] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_master));
+                    ($this->_dbObj[self::db_type_master] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_master));
         }
     }
 
@@ -140,7 +139,7 @@ class modelorm extends model{
         $res = $sth->execute($values);
 
         $this->_clearStat();
-        if ($res===false) {
+        if ($res === false) {
             auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
             $this->_raiseError('insert query failed~', exception_mysqlpdo::type_query_error);
         }
@@ -155,33 +154,34 @@ class modelorm extends model{
         auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
         return $res;
     }
-    public function autoUpdate($data){
+
+    public function autoUpdate($data) {
         $structure = $this->structure();
-        if(!is_array($structure)){
+        if (!is_array($structure)) {
             $this->_raiseError('get data structure failed', exception_mysqlpdo::type_input_data_error);
         }
-        foreach($data as $k=>$v){
-            if(!in_array($k,$structure)) unset($data[$k]);
+        foreach ($data as $k => $v) {
+            if (!in_array($k, $structure))
+                unset($data[$k]);
         }
         $ret = $this->update($data);
         return $ret;
-        
     }
-    
-    public function autoInsert($data, $getLastInsertId = false){
+
+    public function autoInsert($data, $getLastInsertId = false) {
         $structure = $this->structure();
-        if(!is_array($structure)){
+        if (!is_array($structure)) {
             $this->_raiseError('get data structure failed', exception_mysqlpdo::type_input_data_error);
         }
-        foreach($data as $k=>$v){
-            if(!in_array($k,$structure)) unset($data[$k]);
+        foreach ($data as $k => $v) {
+            if (!in_array($k, $structure))
+                unset($data[$k]);
         }
         $ret = $this->insert($data, $getLastInsertId);
         return $ret;
-        
     }
 
-    public function update($data) {
+    public function update($data, $returnAffectedRows = false) {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
         $this->_checkDanger(__FUNCTION__);
         if (empty($data) || !is_array($data)) {
@@ -202,15 +202,17 @@ class modelorm extends model{
 
         $this->_lastQuery = array($sql, $values);
         $sth = $this->_getPdoByMethodName(__FUNCTION__)
-            ->prepare($sql);
-        $affected_rows = $sth->execute($values);
-        if ($affected_rows===false) {
+                ->prepare($sql);
+        $ret = $sth->execute($values);
+        if ($ret === false) {
             $this->_raiseError('update query failed~', exception_mysqlpdo::type_query_error);
         }
-
+        if ($returnAffectedRows) {
+            $ret = $sth->rowCount();
+        }
         $this->_clearStat();
         auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
-        return $affected_rows;
+        return $ret;
     }
 
     public function delete() {
@@ -228,7 +230,7 @@ class modelorm extends model{
 
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
         $res = $sth->execute($values);
-        if ($res===false) {
+        if ($res === false) {
             $this->_raiseError('delete query failed~', exception_mysqlpdo::type_query_error);
         }
 
@@ -270,7 +272,7 @@ class modelorm extends model{
 
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
         $res = $sth->execute($values);
-        if ($res===false) {
+        if ($res === false) {
             $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -280,6 +282,10 @@ class modelorm extends model{
         $this->_clearStat();
 
         return $res;
+    }
+
+    public function selectOne() {
+        return $this->getOne();
     }
 
     public function getOne() {
@@ -306,7 +312,7 @@ class modelorm extends model{
         $this->_lastQuery = array($sql, $values);
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
         $res = $sth->execute($values);
-        if ($res===false) {
+        if ($res === false) {
             $this->_raiseError('count query failed~', exception_mysqlpdo::type_query_error);
         }
         $count = $sth->fetchColumn();
@@ -337,6 +343,10 @@ class modelorm extends model{
         return $this;
     }
 
+    public function whereMatch($conditions) {
+        //TO DO    
+    }
+
     protected function _getWhere() {
         if ($this->_sql['where'] == '') {
             return '';
@@ -355,7 +365,8 @@ class modelorm extends model{
         $this->_sql['order'] = $order;
         return $this;
     }
-    public function groupby($groupby){
+
+    public function groupby($groupby) {
         $this->_sql['groupby'] = $groupby;
         return $this;
     }
@@ -365,7 +376,7 @@ class modelorm extends model{
      * @param type $sql
      * @return type
      */
-    public function query($sql) {
+    public function query($sql, $data) {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
 
         $subSql = strtolower(trim(substr(trim($sql), 0, 7)));
@@ -373,12 +384,15 @@ class modelorm extends model{
         $queryType = isset($updateType[$subSql]) ? 'update' : 'select';
 
         $this->_lastQuery = $sql;
-        $dt = $this->_getPdoByMethodName($queryType)->query($sql);
+
+        $db = $this->_getPdoByMethodName($queryType);
+        $sth = $db->prepare($sql);
+        $res = $sth->execute($data);
 
         auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
-        return $dt;
+        return $res;
     }
-
+    
     public function queryFetch($sql, $data = array(), $forceMaster = false) {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
         $this->_lastQuery = array($sql, $data);
@@ -395,13 +409,13 @@ class modelorm extends model{
         auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
         return $res;
     }
-    
-    public function structure($fullType = false){
+
+    public function structure($fullType = false) {
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
-        if(isset(self::$_tableStructure[$this->_dbAlias][$this->_table])){
+        if (isset(self::$_tableStructure[$this->_dbAlias][$this->_table])) {
             return self::$_tableStructure[$this->_dbAlias][$this->_table];
         }
-        $sql = "DESC ".$this->_table;
+        $sql = "DESC " . $this->_table;
         $this->_lastQuery = $sql;
         $sth = $this->_getPdoByMethodName()->prepare($sql);
         $res = $sth->execute(array());
@@ -409,14 +423,14 @@ class modelorm extends model{
             $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
         }
         $dt = $sth->fetchAll(PDO::FETCH_ASSOC);
-        if(!$fullType && is_array($dt)){
+        if (!$fullType && is_array($dt)) {
             $fields = array();
-            foreach($dt as $v){
+            foreach ($dt as $v) {
                 $fields[] = $v['Field'];
             }
             $dt = $fields;
         }
-        
+
 
         self::$_tableStructure[$this->_dbAlias][$this->_table] = $dt;
         auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
