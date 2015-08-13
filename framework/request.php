@@ -159,10 +159,10 @@ class request {
             return false;
 
         if ($type == 'get') {
-            $_GET = util::array_merge($_GET, $data);
+            //$_GET = util::array_merge($_GET, $data);
             self::$_getData = util::array_merge(self::$_getData, self::_formatDeep($data));
         } else {
-            $_POST = util::array_merge($_POST, $data);
+            //$_POST = util::array_merge($_POST, $data);
             self::$_postData = util::array_merge(self::$_postData, self::_formatDeep($data));
         }
     }
