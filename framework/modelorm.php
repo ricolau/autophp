@@ -343,8 +343,60 @@ class modelorm extends model {
         return $this;
     }
 
-    public function whereMatch($conditions) {
-        //TO DO    
+    public function whereMatch($match = array(), $in = array(), $notIn = array(), $like=array(), $between = array()) {
+        /**
+         * where a=1 and b=2 and c in (123,34,3,5) and b not in (3,2,4) and x like '435%' and y between y1 and y2,     group by a order by b desc limit 20
+         * *
+         * array('match'=>array(), 'in'=>array(), 'like'=>array() )
+         * 
+         * @return string
+         */
+        $sql = '1';
+        $whereData = array();
+        if($match && is_array($match)){
+            foreach($match as $k=>$v){
+                $sql .= ' AND '.$k.' = ? ';
+                $whereData[] = $v;
+            }
+        }
+        if($in && is_array($in)){
+            foreach($in as $k=>$v){
+                if(!is_array($v)){
+                    continue;
+                }
+                $insteads = array_fill(0, count($v), '?');
+                $sql .= ' AND '.$k.' IN( '.implode(',',$insteads).') ';
+                $whereData = util::array_merge($whereData, $v);
+            }
+        }
+        if($notIn && is_array($notIn)){
+            foreach($notIn as $k=>$v){
+                if(!is_array($v)){
+                    continue;
+                }
+                $insteads = array_fill(0, count($v), '?');
+                $sql .= ' AND '.$k.' NOT IN( '.implode(',',$insteads).') ';
+                $whereData = util::array_merge($whereData, $v);
+            }
+        }
+        if($like && is_array($like)){
+            foreach($like as $k=>$v){
+                $sql .= ' AND '.$k.' LIKE ?  ';
+                $whereData[] = $v;
+            }
+        }
+        
+        if($between && is_array($between)){
+            foreach($between as $k=>$v){
+                $sql .= ' AND ( '.$k.' BETWEEN ? AND ? )';
+                $whereData[] = $v[0];
+                $whereData[] = $v[1];
+            }
+        }
+        $this->_sql['where'] = $sql;
+        $this->_sql['whereData'] = $whereData;
+        return $this;
+         
     }
 
     protected function _getWhere() {
