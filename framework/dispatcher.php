@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@foxmail.com>
- * @version 2012-04
+ * @version 2015-08-31
  * @desc autophp dispatcher
  *
  */
@@ -53,17 +53,17 @@ class dispatcher {
             $actionName = self::$_defualtAction;
         } else {
             $us = explode('/', $uri);
-            
+
             if (self::$_pathDeep == self::path_deep3) {
                 $moduleName = array_shift($us);
-                if(count($us)>0){
+                if (count($us) > 0) {
                     $controllerName = array_shift($us);
-                    if(count($us)>0){
+                    if (count($us) > 0) {
                         $actionName = array_shift($us);
-                    }else{
+                    } else {
                         $actionName = self::$_defualtAction;
                     }
-                }else{
+                } else {
                     $controllerName = self::$_defualtController;
                     $actionName = self::$_defualtAction;
                 }
@@ -86,7 +86,7 @@ class dispatcher {
                 request::setParams($data, 'get');
             }
         }
-        $moduleName= util::baseChars($moduleName);
+        $moduleName = util::baseChars($moduleName);
         $controllerName = util::baseChars($controllerName);
         $actionName = util::baseChars($actionName);
 
@@ -115,7 +115,7 @@ class dispatcher {
     }
 
     public function setPathDeep($deep = self::path_deep2) {
-        self::$_pathDeep = ($deep== self::path_deep2) ? self::path_deep2 : self::path_deep3;
+        self::$_pathDeep = ($deep == self::path_deep2) ? self::path_deep2 : self::path_deep3;
         return self::$_instance;
     }
 
@@ -132,6 +132,8 @@ class dispatcher {
                 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 if (false !== $request_uri) {
                     $uri = $request_uri;
+                } elseif ($_SERVER['REQUEST_URI'] && strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+                    $uri = strstr($_SERVER['REQUEST_URI'], '?', true);
                 }
             } else {
                 $uri = $_SERVER['PHP_SELF'];
@@ -152,6 +154,7 @@ class dispatcher {
     public function getModuleName() {
         return self::$_currentModule;
     }
+
     public function setModuleName($moduleName = 'default') {
         self::$_currentModule = $moduleName;
         return self::$_instance;
@@ -190,9 +193,9 @@ class dispatcher {
 
         auto::isDebugMode() && $_debugMicrotime = microtime(true);
 
-        if(self::$_pathDeep ==self::path_deep3){
-            $className = 'controller_' . self::$_currentModule.'_'.self::$_currentController;
-        }else{
+        if (self::$_pathDeep == self::path_deep3) {
+            $className = 'controller_' . self::$_currentModule . '_' . self::$_currentController;
+        } else {
             $className = 'controller_' . self::$_currentController;
         }
 
@@ -206,7 +209,7 @@ class dispatcher {
         if ($class->isAbstract()) {
             throw new exception_404('can not run abstract class: ' . $className, exception_404::type_controller_is_abstract);
         }
-        
+
         $method = $class->getMethod($actionName);
         if (!$method || !$method->isPublic()) {
             throw new exception_404('no public method ' . $method . ' exist in class:' . $className, exception_404::type_action_not_public);

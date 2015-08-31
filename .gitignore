@@ -1,0 +1,31 @@
+﻿
+#苹果系统忽略文件
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+#windows系统忽略文件
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# PHPStorm忽略文件
+.idea/
+
+# NetBeans忽略文件
+nbproject/*
