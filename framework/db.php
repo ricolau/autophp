@@ -19,8 +19,8 @@ class db {
         self::$_conf[$alias] = $conf;
     }
 
-    public static function instance($alias, $type = null) {
-        if (!isset(self::$_instance[$alias][$type])) {
+    public static function instance($alias, $type = null, $newConnection = false) {
+        if (!isset(self::$_instance[$alias][$type]) || $newConnection) {
             self::$_instance[$alias][$type] = self::_getInstance($alias)->connect($type);
         }
         return self::$_instance[$alias][$type];
