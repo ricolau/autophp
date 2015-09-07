@@ -204,12 +204,8 @@ class request {
             return self::formatText($data);
         } else {
             foreach ($data as $key => $val) {
-                $key2 = self::_formatDeep($key);
+                $key = self::_formatDeep($key);
                 $val = self::_formatDeep($val);
-                if($key2!=$key) {
-                    unset($data[$key]);
-                    $key = $key2;
-                }
                 $data[$key] = $val;
             }
             return $data;
@@ -240,6 +236,11 @@ class request {
             $ip = "unknown";
         }
         return($ip);
+    }
+    
+    public static function isAjax(){
+        return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+           
     }
 
 }
