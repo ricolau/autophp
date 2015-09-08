@@ -73,6 +73,7 @@ class modelorm extends model {
 
     public function setPdo($pdoObject, $type = self::db_type_slave) {
         $this->_dbObj[$type] = $pdoObject;
+        return $this;
     }
 
     protected function _getPdoByMethodName($operationType = null) {
