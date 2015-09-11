@@ -155,7 +155,7 @@ class http {
                         curl_setopt($ci, CURLOPT_POSTFIELDS, $params);
                         $headers[] = 'Expect: ';
                     } else {
-                        curl_setopt($ci, CURLOPT_POSTFIELDS, http_build_query($params));
+                        curl_setopt($ci, CURLOPT_POSTFIELDS, is_array($params)?http_build_query($params):$params);
                     }
                 }
                 break;
