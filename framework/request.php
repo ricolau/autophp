@@ -204,8 +204,12 @@ class request {
             return self::formatText($data);
         } else {
             foreach ($data as $key => $val) {
-                $key = self::_formatDeep($key);
+                $key2 = self::_formatDeep($key);
                 $val = self::_formatDeep($val);
+				if($key2!=$key) {
+                     unset($data[$key]);
+                     $key = $key2;
+                }
                 $data[$key] = $val;
             }
             return $data;
