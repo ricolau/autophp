@@ -49,11 +49,12 @@ final class util {
 
     /**
      * 此处不要用正则，正则表达式效率太差
+     * 用这个方法，得到的不是正则替换的期望值，但是还是可以用的
      * @param type $str
      * @return type
      */
     public static function baseChars($str, $onlyCharacterBase = false) {
-        $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-0123456789';
+        $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/\_-0123456789';
         if ($onlyCharacterBase) {
             $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         }
@@ -61,7 +62,7 @@ final class util {
         if ($left === '') {
             return $str;
         } else {
-            $ret = trim($str, $left);
+            $ret = str_replace($left,'',$str);
         }
         return $ret;
     }
