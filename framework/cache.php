@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@foxmail.com>
- * @version 2014-03
+ * @version 2015-11
  * @desc cache
  *
  */
@@ -16,8 +16,8 @@ class cache {
         self::$_conf[$alias] = $conf;
     }
 
-    public static function instance($alias) {
-        if (self::$_instance[$alias] === null) {
+    public static function instance($alias, $forceNewInstance = false) {
+        if (self::$_instance[$alias] === null || $forceNewInstance) {
             self::$_instance[$alias] = self::_getInstance($alias);
         }
         return self::$_instance[$alias];
