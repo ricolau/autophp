@@ -62,7 +62,8 @@ final class util {
         if ($left === '') {
             return $str;
         } else {
-            $ret = str_replace($left,'',$str);
+            //$ret = str_replace($left,'',$str);
+            $ret = '';//return empty value, 2015-11-16
         }
         return $ret;
     }
