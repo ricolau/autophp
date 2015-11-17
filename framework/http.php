@@ -23,9 +23,13 @@ class http {
       timeout = 10
      */
     public static function requestHigh($args) {
+        if (!function_exists('curl_init')){
+            throw new exception_base('curl module not exist~!');
+        }
         if (!$args || !$args['url']) {
             return false;
         }
+        auto::isDebugMode() && $_debugMicrotime = microtime(true);
         extract($args);
 
         $method = $method ? : 'GET';
@@ -95,12 +99,13 @@ class http {
             $ret['info'] = $info;
             $ret['response']['header'] = substr($response, 0, $info['header_size']);
             $ret['response']['content'] = substr($response, $info['header_size']);
-
-            curl_close($ci);
-            return $ret;
+            
+            $response = $ret;
         }
 
         curl_close($ci);
+        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($args, true).",  \n  responsed:".$response);
+
         return $response;
     }
 
@@ -120,8 +125,11 @@ class http {
      * @return type
      */
     public static function request($url, $params = array(), $method = 'GET', $timeout = 10, $cookie = '', $referer = null, $extheaders = array(), $multi = false, $proxy = null) {
-        if (!function_exists('curl_init'))
-            exit('Need to open the curl extension');
+        if (!function_exists('curl_init')){
+            throw new exception_base('curl module not exist~!');
+        }
+        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+
         $method = strtoupper($method);
         $ci = curl_init();
         curl_setopt($ci, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko/20100101 Firefox/11.0');
@@ -176,6 +184,13 @@ class http {
 
         $response = curl_exec($ci);
         curl_close($ci);
+        
+        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . 
+                var_export(array('url'=>$url,'method'=>$method,'params'=>$params,'timeout'=>$timeout,'cookie'=>$cookie,'referer'=>$referer,'extheaders'=>$extheaders,
+                    'multi'=>$multi,'proxy'=>$proxy),
+                        true) .",  \n  responsed:".$response//end var_export
+                );
+
         return $response;
     }
 
