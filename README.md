@@ -10,10 +10,15 @@ light php framework with autoload strategy
 see initial example: [https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L42](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L42)
 
 examples for use:
+
 request::get('name'); //equals to $_GET['name']
+
 request::get('id','int');//equals to intval($_GET['id'])
+
 request::getAll();   //equals to $_GET
 
 request::post('name');//equals to $_POST['name']
+
 request::post('id','int');//equals to intval($_POST['id'])
+
 request::postAll();   //equals to $_POST
