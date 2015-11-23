@@ -14,8 +14,8 @@ see initial example: [https://github.com/ricolau/autophp/blob/master/demo/htdocs
 * examples for use:<br />
  - request::get('name'); //equals to $_GET['name']<br />
  - request::get('id','int');//equals to intval($_GET['id'])<br />
- - request::getAll();   //equals to $_GET<br />
- - request::post('name');//equals to $_POST['name']<br /><br />
+ - request::getAll();   //equals to $_GET<br /><br />
+ - request::post('name');//equals to $_POST['name']<br />
  - request::post('id','int');//equals to intval($_POST['id'])<br />
  - request::postAll();   //equals to $_POST
 
