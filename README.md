@@ -4,6 +4,19 @@ light php framework with autoload strategy
 
 ##demos for use:
 
+
+###url dispatcher:
+
+the dispatcher supports url analyzation
+
+
+* level 2 depth url support:
+  - config the depth for dispatcher [example](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L79)
+* level 3 depth url support:
+
+#### uri detector:
+ see [dispatcher::detectUri()](https://github.com/ricolau/autophp/blob/master/framework/dispatcher.php#L126)
+
 ###get http request parameters: 
 (mainly equest to oroginal php $_GET or $_POST, but may use addslashes() or  htmlspecialchars() deal for input data, depends on the initial setting of framework~)
 see initial example: [https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L42](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L42)
@@ -26,8 +39,6 @@ use [config::get()]() to get configured data, as [example](https://github.com/ri
 
 ###get cache server:
 
-
-###url dispatcher:
 
 
 ###database modelorm:
