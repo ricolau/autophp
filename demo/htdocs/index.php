@@ -77,7 +77,7 @@ try {
     // 开始路由和执行
     dispatcher::instance()->//获取实例
             setPathDeep(dispatcher::path_deep2)->
-            setDefaultModule('index')->//设置默认的controller ，当controller 为空的时候执行
+//            setDefaultModule('index')->//default module, no need for  dispatcher::path_deep2
             setDefaultController('index')->//设置默认的controller ，当controller 为空的时候执行
             setDefaultAction('index')->//设置默认的action ，action 为空的时候执行
             //setControllerName('index')->setActionName('index')->
