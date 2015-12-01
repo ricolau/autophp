@@ -1,8 +1,8 @@
 #autophp
 
-light php framework with autoload strategy
+这是一个使用autoload 的轻量级framework
 
-##demos for use:
+##d使用案例:
 
 
 ###url dispatcher路由:
@@ -10,9 +10,9 @@ light php framework with autoload strategy
 the dispatcher supports url analyzation
 
 
-* level 2 depth url support:
+* 对于2级深度的url 解析:
   - config the depth for dispatcher [example](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L79)
-* level 3 depth url support:
+* 3级别深度的url 解析:
 
 #### uri detector:
  see [dispatcher::detectUri()](https://github.com/ricolau/autophp/blob/master/framework/dispatcher.php#L126)
