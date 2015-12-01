@@ -1,5 +1,7 @@
 #autophp
 
+[简体中文](https://github.com/ricolau/autophp/blob/master/README_zh-cn.md)
+
 light php framework with autoload strategy
 
 ##demos for use:
