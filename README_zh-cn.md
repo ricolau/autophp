@@ -52,14 +52,15 @@
   
 * 对于path_deep = 2（层）级深度的url 解析:
  - 链式解析调用：<br />
-  dispatcher::instance()->           //获取实例
+ <code>dispatcher::instance()->           //获取实例
             setPathDeep(dispatcher::path_deep2)->           //设置url解析深度，2层<br />
             setDefaultController('index')->           //设置默认的controller ，当controller 为空的时候执行 <br /> 
             setDefaultAction('index')->           //设置默认的action ，action 为空的时候执行 <br />
-            setUri($uri)->           //设置uri，可以随意设置任意 uri，注意要设置为  /controller/action  类似的格式才会被解析正确 <br />
+            setUri($uri)->           //设置uri，可以随意设置任意 uri，注意要设置为  /controller/action 
+类似的格式才会被解析正确 <br />
             dispatch()->           //开始路由，获取到底要执行哪个controller 和 action，准备就绪 <br />
-            run();                          //开始执行上一步路由后的 controller 和 action <br />
-
+            run();     ·                     //开始执行上一步路由后的 controller 和 action <br />
+</code>
 * 对于 path_deep = 3（层）级别深度的url 解析:
  - 3层比2层，会在controller 之上多了一层module 层（注意不是model！）。对应的 classes、view/template 等都需要多出来一层！
  - 链式解析调用：<br />
