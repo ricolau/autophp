@@ -14,19 +14,36 @@
  * require 'auto.php';//load 框架代码
  * auto::run();//app入口启动方式：
  * 关闭php的 magic_quota 通过 php.ini 
+ * 创建classes 目录的 controller、model 等目录，比如 [https://github.com/ricolau/autophp/tree/master/demo/classes](https://github.com/ricolau/autophp/tree/master/demo/classes)
  * 完整的示例请见[https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php)
 
 
-##使用案例:
+### app 目录树解释：
+ * classes  ，class定义
+ - classes/controller,  controller class定义文件
+ - classes/model， model class定义
+ - classes/plugin， 插件class定义
+ * config , config 目录，用于放配置文件
+ * daemon ，用于放置守护进程或者crontab 等脚本
+ * htdocs， http请求默认的目录
+ - htdocs/index.php http 请求默认的唯一入口，所有的url 都rewrite 到这个文件上来
+ * i18n， 多语言支持文件夹，用于放语言包，形式基本和 config 类似
+ * view， 模板层，所有的模板放在这里
+ - view/slot slot文件目录，用于存储slot 内容
+ - view/template 模板文件目录
+ - view/template/index/index.php  ，示例用，默认为 controller=index & action=index 时的模板引用
+ 
+
+##关键class定义和引用:
 
 ###url dispatcher路由:
 
 the dispatcher supports url analyzation
 
 
-* 对于2级深度的url 解析:
+* 对于2（层）级深度的url 解析:
   - config the depth for dispatcher [example](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L79)
-* 3级别深度的url 解析:
+* 3（层）级别深度的url 解析:
 
 #### uri detector:
  see [dispatcher::detectUri()](https://github.com/ricolau/autophp/blob/master/framework/dispatcher.php#L126)
