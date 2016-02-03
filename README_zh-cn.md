@@ -4,21 +4,18 @@
 
 
 ### 概念定义：
-* app，是指一个有唯一入口的http 的site，一般指一个网站。
-* framework，是指 framework 目录下的所有文件构成。
+ * app，是指一个有唯一入口的http 的site，一般指一个网站。
+ * framework，是指 framework 目录下的所有文件构成。
 
 
-### framework 引入方式：require 'auto.php';
-### app入口启动方式：auto::run();
-### 前置定义：
-* 在启动app 之前，需要定义以下内容：
- - AUTOPHP_PATH，framework 的磁盘路径，比如：define('AUTOPHP_PATH', '/usr/local/php/framework');
- - APP_PATH, app 的磁盘路径，比如 define('AUTOPHP_PATH', dirname(APP_PATH) . '/framework');
- - 关闭php的 magic_quota 通过 php.ini 
- - 示例请见[https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php)
+### 新建一个app的步骤：
+ * 定义 AUTOPHP_PATH，framework 的磁盘路径，比如：define('AUTOPHP_PATH', '/usr/local/php/framework');
+ * 定义 APP_PATH, app 的磁盘路径，比如 define('AUTOPHP_PATH', dirname(APP_PATH) . '/framework');
+ * require 'auto.php';//load 框架代码
+ * auto::run();//app入口启动方式：
+ * 关闭php的 magic_quota 通过 php.ini 
+ * 完整的示例请见[https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php)
 
-### 
-* AUTOPHP_PATH
 
 ##使用案例:
 
