@@ -44,10 +44,46 @@
  - 缺点：无法强制控制class 的实例化场合，比如无法强制控制只能在 model层才能调用cache、导致control 等层都可以随意调用cache，甚至model 和view 层也可以调用 request 获取用户请求参数。这个就要靠代码规范来约束了。
  - 缺点2：无法实现工厂模式，关于类的工厂化，可以参考 util::set() 等来实现。
 
-### url dispatcher路由:
-* 对于2（层）级深度的url 解析:
-  - config the depth for dispatcher [example](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L79)
-* 3（层）级别深度的url 解析:
+### url 路由相关:
+* dispatcher 路由：
+ - path_deep，表示url 解析深度。
+ - url 解析，默认为2层级的url 深度解析，也可以定制为3层级的url 深度解析支持（最大3级）。
+ - url 解析深度设置： [示例](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L79)
+  
+* 对于path_deep = 2（层）级深度的url 解析:
+ - 链式解析调用：<br />
+  dispatcher::instance()->           //获取实例
+            setPathDeep(dispatcher::path_deep2)->           //设置url解析深度，2层<br />
+            setDefaultController('index')->           //设置默认的controller ，当controller 为空的时候执行 <br /> 
+            setDefaultAction('index')->           //设置默认的action ，action 为空的时候执行 <br />
+            setUri($uri)->           //设置uri，可以随意设置任意 uri，注意要设置为  /controller/action  类似的格式才会被解析正确 <br />
+            dispatch()->           //开始路由，获取到底要执行哪个controller 和 action，准备就绪 <br />
+            run();                          //开始执行上一步路由后的 controller 和 action <br />
+* 对于 path_deep = 3（层）级别深度的url 解析:
+- 3层比2层，会在controller 之上多了一层module 层（注意不是model！）。对应的 classes、view/template 等都需要多出来一层！
+- 链式解析调用：<br />
+  dispatcher::instance()->           //获取实例
+            setPathDeep(dispatcher::path_deep3)->           //设置url 解析深度为3层 <br />
+            setDefaultModule('index')->                //设置默认的module
+            setDefaultController('index')->           //设置默认的controller ，当controller 为空的时候执行 <br /> 
+            setDefaultAction('index')->           //设置默认的action ，action 为空的时候执行 <br />
+            setUri($uri)->           //设置uri，可以随意设置任意 uri，注意要设置为  /controller/action  类似的格式才会被解析正确 <br />
+            dispatch()->           //开始路由，获取到底要执行哪个controller 和 action，准备就绪 <br />
+            run();                          //开始执行上一步路由后的 controller 和 action <br />
+* 404异常，url 找不到对应的controller、action 用来执行时，
+- 会抛出异常exception_404，可以在调用dispatcher::run() 的时候捕获。
+* 大于path_deep 的url 处理：
+- 对于大于 path_deep 的url，dispatcher 会按照key/value 的方式放到 $_GET 中，也就是 request::get() 的方式可以获取。
+- 比如当path_deep=2时：<br />
+    /view/detail/id/251/name/rico   的url 会被解析到 controller=view, action=detail 中执行。然后将 id=251&name=rico当作 http url get的方式获取的参数放到 request 中，通过 request::get('id'),  request::get('name') 的方式可以获取到。
+
+* 其他方法：
+- 获取当前正在执行的 module（只针对3层目录结构有效）：dispatcher::instance()->getModuleName();
+- 获取当前正在执行的 controller：dispatcher::instance()->getControllerName();
+- 获取当前正在执行的 action：dispatcher::instance()->getActionName();
+* 高级方法：
+- dispatcher::setUri() ，在当前版本中，框架没有提供比较优雅的router 等正则方案，但是并不意味着不能支持优雅的实现。<br />
+比如： /view/51 ，可以通过php coding的代码来解析此url 并转化为 /view/detail/id/51 的路径，通过 setUri() 的形式设置，然后dispatcher 解析并执行。
 
 ### uri detector:
  * 用来获取request uri 的方法，请见： [dispatcher::detectUri()](https://github.com/ricolau/autophp/blob/master/framework/dispatcher.php#L126)
@@ -67,11 +103,11 @@
  
 
 
-###获取 config 配置信息:
- * 使用 [config::get()]() 用来获取config 的数据, 比如config::get('default.sitename'); 将会获取 APP_PATH/config/default.php 中下标为 sitename 的数组键值，若没有将返回null；[示例](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L45)
- * config 新特性，多目录的config 支持：从 version 1.5 开始，可以支持多个config 目录的配置了，（默认支持 APP_PATH./config/*） 目录下的文件，如果想支持更多文件，可以在htdocs/index.php 中加入更多config 目录 
- - 添加多个config 目录：如config::addPath('/usr/local/phpenv/conf/') 、config::addPath('/usr/local/phpenv/conf2/') 等。
- - 优先级：会优先从 APP_PATH./config/ 目录去寻找，找不到则按照配置顺序依次寻找其他目录。
+### 使用config 类获取配置:
+* 使用 [config::get()]() 用来获取config 的数据, 比如config::get('default.sitename'); 将会获取 APP_PATH/config/default.php<br /> 中下标为 sitename 的数组键值，若没有将返回null；[示例](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L45)<br />
+* config 新特性，多目录的config 支持：从 version 1.5 开始，可以支持多个config 目录的配置了，（默认支持 APP_PATH./config/* 目录下的文件） 。<br />
+ - 如果想支持更多文件，可以在htdocs/index.php 中加入更多config 目录。添加多个config<br /> 目录：如config::addPath('/usr/local/phpenv/conf/') 、config::addPath('/usr/local/phpenv/conf2/') 等。<br />
+ - 优先级：会优先从 APP_PATH./config/ 目录去寻找，找不到则按照配置顺序依次寻找其他目录。<br />
 
 ###get cache server:
 
