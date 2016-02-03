@@ -3,14 +3,14 @@
 这是一个使用autoload 的轻量级framework
 
 
-## 概念定义：
+### 概念定义：
 * app，是指一个有唯一入口的http 的site，一般指一个网站。
 * framework，是指 framework 目录下的所有文件构成。
 
 
-## framework 引入方式：require 'auto.php';
-## app入口启动方式：auto::run();
-## 前置定义：
+### framework 引入方式：require 'auto.php';
+### app入口启动方式：auto::run();
+### 前置定义：
 * 在启动app 之前，需要定义以下内容：
  - AUTOPHP_PATH，framework 的磁盘路径，比如：define('AUTOPHP_PATH', '/usr/local/php/framework');
  - APP_PATH, app 的磁盘路径，比如 define('AUTOPHP_PATH', dirname(APP_PATH) . '/framework');
