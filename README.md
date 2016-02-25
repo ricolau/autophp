@@ -1,7 +1,8 @@
 #autophp
 
-[>>简体中文版](https://github.com/ricolau/autophp/blob/master/README.md)
 [>>English Introduction](https://github.com/ricolau/autophp/blob/master/README_en.md)
+
+[>>简体中文版介绍](https://github.com/ricolau/autophp/blob/master/README.md)
 
 这是一个使用autoload 的轻量级framework
 
