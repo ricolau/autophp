@@ -1,6 +1,7 @@
 #autophp
 
-[>>简体中文版](https://github.com/ricolau/autophp/blob/master/README_zh-cn.md)
+[>>简体中文版](https://github.com/ricolau/autophp/blob/master/README.md)
+[>>English Introduction](https://github.com/ricolau/autophp/blob/master/README_en.md)
 
 light php framework with autoload strategy
 
