@@ -63,25 +63,29 @@ class db_mysqlpdo extends db_abstract {
         $server = $this->_confs['conf'][$type];
         $dsn = 'mysql:dbname=' . $server['dbname'] . ';host=' . $server['host'] . ';port=' . $server['port'];
 
-        $con = self::_connect($dsn, $server['user'], $server['pwd']);
+        $options = (isset($server['options']) && is_array($server['options']))? $server['options'] :array();
+        $con = self::_connect($dsn, $server['user'], $server['pwd'],$options);
         if (isset($server['charset']) && $server['charset']) {
             $con->query('SET NAMES ' . $server['charset']);
         }
         return $con;
     }
 
-    protected static function _connect($dsn, $user, $pwd, $dwp = array()) {
+    protected static function _connect($dsn, $user, $pwd, $options = array()) {
         try {
-            $instance = new PDO($dsn, $user, $pwd, $dwp);
+            $instance = new PDO($dsn, $user, $pwd, $options);
         } catch (PDOException $e) {
             try {
-                $instance = new PDO($dsn, $user, $pwd, $dwp);
+                $instance = new PDO($dsn, $user, $pwd, $options);
             } catch (PDOException $e) {
                 throw $e;
             }
         }
-        //tell the mysql pdo do not stringfy field values!~!
-        $instance->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
+        if(!isset($options[PDO::ATTR_EMULATE_PREPARES])){
+            //tell the mysql pdo do not stringfy field values!~!
+            $instance->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
+        }
+        
         return $instance;
     }
 

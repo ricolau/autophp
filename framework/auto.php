@@ -8,7 +8,7 @@
  */
 final class auto {
 
-    const version = '1.5';
+    const version = '1.5.11';
     const author = 'ricolau<ricolau@foxmail.com>';
     const mode_http = 0;
     const mode_cli = 1;
