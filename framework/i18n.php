@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author ricolau<ricolau@foxmail.com>
+ * @author ricolau<ricolau@qq.com>
  * @version 2014-03-18
  * @desc comm i18n pack, i18n = internationalization = 20letters
  *

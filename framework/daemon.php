@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author ricolau<ricolau@foxmail.com>
+ * @author ricolau<ricolau@qq.com>
  * @version 2012-04
  * @desc daemon abstract
  *

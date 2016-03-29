@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author ricolau<ricolau@foxmail.com>
+ * @author ricolau<ricolau@qq.com>
  * @version 2014-03
  * @desc http request lib
  *

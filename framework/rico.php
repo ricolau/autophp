@@ -3,7 +3,7 @@
 /**
  * @description popular development tools
  *                just use for debug please!
- * @author by ricolau<ricolau@foxmail.com>
+ * @author by ricolau<ricolau@qq.com>
  * @version 2014-02-13
  * @usage
  *      rico::export()

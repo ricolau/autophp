@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author ricolau<ricolau@foxmail.com>
+ * @author ricolau<ricolau@qq.com>
  * @version 2014-03-19
  * @desc autophp utils, just some tools here~
  *
@@ -94,7 +94,7 @@ final class util {
         if (!function_exists('a')) {
 
             function a() {
-                echo 'yeah, dear, im RicoLau<ricolau@foxmail.com>, i leave this!';
+                echo 'yeah, dear, im RicoLau<ricolau@qq.com>, i leave this!';
             }
 
         }

@@ -1,15 +1,15 @@
 <?php
 
 /**
- * @author ricolau<ricolau@foxmail.com>
+ * @author ricolau<ricolau@qq.com>
  * @version 2014-03-20
  * @desc autophp auto, check running enviroment and more closer to base layer
  *
  */
 final class auto {
 
-    const version = '1.5.11';
-    const author = 'ricolau<ricolau@foxmail.com>';
+    const version = '1.6';
+    const author = 'ricolau<ricolau@qq.com>';
     const mode_http = 0;
     const mode_cli = 1;
 

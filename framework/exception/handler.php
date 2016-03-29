@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author ricolau<ricolau@foxmail.com>
+ * @author ricolau<ricolau@qq.com>
  * @version 2012-04
  * @desc exception_Handler base and demo
  * @desc 本class 只做示例用，请自己定义自己的handler

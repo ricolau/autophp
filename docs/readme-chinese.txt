@@ -12,7 +12,7 @@ function name 驼峰命名，多个单词间不分隔，通过驼峰区分
 
                 last update at 2014-07-20
 
-                by ricolau@foxmail.com
+                by ricolau@qq.com
 
 #################### 部署方式##############################
 
