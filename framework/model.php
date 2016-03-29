@@ -2,17 +2,12 @@
 
 /**
  * @author ricolau<ricolau@foxmail.com>
- * @version 2012-04
- * @desc model abstract
+ * @version 2016-03-29
+ * @desc model orm, must be based on pdo!
  *
  */
-class model {
-    public function __construct() {
-        $this->_init();
-    }
+class model extends base {
 
-    protected function _init() {
-
-    }
+   
+    
 }
-

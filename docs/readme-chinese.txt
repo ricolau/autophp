@@ -152,4 +152,4 @@ debug 手动布码方式和示例：
 @ cookie set: response::setCookie() // arguments same with php original setcookie function
 
 @ mysql	：	使用pdo扩展来操作mysql
-@面向数据库的ORM封装，modelorm , 通过传递2个参数简单创建数据库表映射对象，更简洁的实现 CURD 操作
+@面向数据库的ORM封装，orm , 通过传递2个参数简单创建数据库表映射对象，更简洁的实现 CURD 操作

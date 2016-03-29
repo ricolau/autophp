@@ -119,7 +119,7 @@
 
 
 
-###database modelorm:
+###database orm:
 
 
 
@@ -129,9 +129,9 @@
 * 比如:
  - 数据库的config 文件配置: [https://github.com/ricolau/autophp/blob/master/demo/config/dbmysql.php](https://github.com/ricolau/autophp/blob/master/demo/config/dbmysql.php)
  - 把数据库的config 文件读取，并配置别名: [https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L57](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L57)
- - 获取数据库连接:[https://github.com/ricolau/autophp/blob/master/framework/modelorm.php#L70](https://github.com/ricolau/autophp/blob/master/framework/modelorm.php#L70)
+ - 获取数据库连接:[https://github.com/ricolau/autophp/blob/master/framework/orm.php#L70](https://github.com/ricolau/autophp/blob/master/framework/orm.php#L70)
 
- - 使用 modelorm: 比较推荐使用 modelorm 而不是直接使用db连接，尤其是对于 mysql pdo 的支持
+ - 使用 orm: 比较推荐使用 orm 而不是直接使用db连接，尤其是对于 mysql pdo 的支持
 
 
 

@@ -2,21 +2,15 @@
 
 /**
  * @author ricolau<ricolau@foxmail.com>
- * @version 2012-04
+ * @version 2016-03-29
  * @desc controller abstract
  *
  */
-abstract class controller {
+abstract class controller extends base {
 
     protected $_render = null;
 
-    /**
-     * controller entrance function
-     */
-    public function __construct() {
-
-        $this->_init();
-    }
+    
 
     protected function _init() {
         $this->_render = new render_default();

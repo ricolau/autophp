@@ -3,7 +3,7 @@
 /**
  * 如果需要读取 mysql，建议继承 orm model
  */
-class model_demo extends modelorm{
+class model_demo extends orm{
     protected $_dbAlias = 'default';
     protected $_table = 'ent_package';
     
@@ -77,7 +77,7 @@ class model_demo extends modelorm{
             //$data =  $this->queryFetch('desc ent_package;');
 
             //第二种调用得到 ORM 的方式！可以得到任意 db 和table 的orm 实例
-            $data = modelorm::instance($this->_dbAlias)->table($this->_table)->where('package_id > 5')->getOne();
+            $data = orm::instance($this->_dbAlias)->table($this->_table)->where('package_id > 5')->getOne();
             if($data){
                 $expire = 16;
                 echo "\r\n <br /> set redis! \r\n <br /> ";
@@ -120,7 +120,7 @@ class model_demo extends modelorm{
     public function updateInfo($id, $price=1){
         $data = array('price'=>$price);
         try{
-            $ret = modelorm::instance($this->_dbAlias)->table($this->_table)->where('package_id = ?', array($id))->update($data);
+            $ret = orm::instance($this->_dbAlias)->table($this->_table)->where('package_id = ?', array($id))->update($data);
             }catch(exception_mysqlpdo $e){
             $code = $e->getCode();
             $errmsg = $e->getMessage();

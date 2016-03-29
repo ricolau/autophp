@@ -45,7 +45,7 @@ use [config::get()]() to get configured data, as [example](https://github.com/ri
 
 
 
-###database modelorm:
+###database orm:
 
 
 
@@ -55,9 +55,9 @@ use [db:instance()](https://github.com/ricolau/autophp/blob/master/framework/db.
 * etc:
  - config database: [https://github.com/ricolau/autophp/blob/master/demo/config/dbmysql.php](https://github.com/ricolau/autophp/blob/master/demo/config/dbmysql.php)
  - add config to database wrapper class db: [https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L57](https://github.com/ricolau/autophp/blob/master/demo/htdocs/index.php#L57)
- - get databse connection:[https://github.com/ricolau/autophp/blob/master/framework/modelorm.php#L70](https://github.com/ricolau/autophp/blob/master/framework/modelorm.php#L70)
+ - get databse connection:[https://github.com/ricolau/autophp/blob/master/framework/orm.php#L70](https://github.com/ricolau/autophp/blob/master/framework/orm.php#L70)
 
- - use modelorm: mostly you may use modelorm for database package especially mysql_pdo,
+ - use orm: mostly you may use orm for database package especially mysql_pdo,
 
 
 

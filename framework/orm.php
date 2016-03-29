@@ -2,11 +2,11 @@
 
 /**
  * @author ricolau<ricolau@foxmail.com>
- * @version 2014-03-18
- * @desc model orm, must be based on pdo!
+ * @version 2016-03-29
+ * @desc orm, must be based on pdo!
  *
  */
-class modelorm extends model {
+class orm extends base {
 
     const db_type_slave = 'slave';
     const db_type_master = 'master';
@@ -48,7 +48,7 @@ class modelorm extends model {
 
     /**
      * @usage
-     *      after                           modelORM::instance($dbAlias)->getPdo(db_mysqlpdo::TYPE_SERVER_MASTER);  to get your pdo object
+     *      after                           orm::instance($dbAlias)->getPdo(db_mysqlpdo::TYPE_SERVER_MASTER);  to get your pdo object
      *          this equals to              new db_mysqlpdo($alias, $conf)->connectSlave();
      * @param type $type
      * @return type
