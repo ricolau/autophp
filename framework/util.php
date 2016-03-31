@@ -2,12 +2,14 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2014-03-19
+ * @version 2016-03-31
  * @desc autophp utils, just some tools here~
  *
  */
 final class util {
     private static $_vars;
+    
+    private static $_classSingleton = array();
 
     /**
      * @description to set a value for a special key
@@ -169,6 +171,24 @@ final class util {
 
         }
 
+    }
+    /**
+     * singleton class factory~
+     * @param type $className
+     * @return \className
+     */
+    public static function classFactory($className){
+        if(!$className){
+            return null;
+        }
+        if(isset(self::$_classSingleton[$className]) && self::$_classSingleton[$className]){
+            return self::$_classSingleton[$className];
+        }
+        if(auto::autoload($className)){
+            return new $className();
+        }
+        return null;
+        
     }
 
 

@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2014-03-20
+ * @version 2016-3-31
  * @desc autophp auto, check running enviroment and more closer to base layer
  *
  */
@@ -277,6 +277,10 @@ final class auto {
     public static function dqueue($title, $msg) {
         self::$_debugQueue[] = array('title' => $title, 'msg' => $msg);
     }
-
+    
+    public static function dqueueExport(){
+        return self::$_debugQueue;
+    }
+    
 
 }
