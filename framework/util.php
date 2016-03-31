@@ -185,7 +185,8 @@ final class util {
             return self::$_classSingleton[$className];
         }
         if(auto::autoload($className)){
-            return new $className();
+            self::$_classSingleton[$className] =  new $className();
+            return self::$_classSingleton[$className];
         }
         return null;
         
