@@ -184,7 +184,7 @@ final class util {
         if(isset(self::$_classSingleton[$className]) && self::$_classSingleton[$className]){
             return self::$_classSingleton[$className];
         }
-        if(auto::autoload($className)){
+        if(class_exists($className)){
             self::$_classSingleton[$className] =  new $className();
             return self::$_classSingleton[$className];
         }
