@@ -11,8 +11,8 @@ class dispatcher {
     private static $_instance = null;
     private static $_uri = null;
     private static $_defaultModule = 'default';
-    private static $_defualtController = 'default';
-    private static $_defualtAction = 'default';
+    private static $_defaultController = 'default';
+    private static $_defaultAction = 'default';
     private static $_currentModule = null;
     private static $_currentController = null;
     private static $_currentAction = null;
@@ -49,8 +49,8 @@ class dispatcher {
             if (self::$_pathDeep == self::path_deep3) {
                 $moduleName = self::$_defaultModule;
             }
-            $controllerName = self::$_defualtController;
-            $actionName = self::$_defualtAction;
+            $controllerName = self::$_defaultController;
+            $actionName = self::$_defaultAction;
         } else {
             $us = explode('/', $uri);
 
@@ -61,16 +61,16 @@ class dispatcher {
                     if (count($us) > 0) {
                         $actionName = array_shift($us);
                     } else {
-                        $actionName = self::$_defualtAction;
+                        $actionName = self::$_defaultAction;
                     }
                 } else {
-                    $controllerName = self::$_defualtController;
-                    $actionName = self::$_defualtAction;
+                    $controllerName = self::$_defaultController;
+                    $actionName = self::$_defaultAction;
                 }
             } else {
                 $controllerName = array_shift($us);
                 $actionName = array_shift($us);
-                $actionName = $actionName !== null ? $actionName : self::$_defualtAction;
+                $actionName = $actionName !== null ? $actionName : self::$_defaultAction;
             }
 
 
@@ -148,7 +148,7 @@ class dispatcher {
     }
 
     public function getControllerModule() {
-        return self::$_defualtModule;
+        return self::$_defaultModule;
     }
 
     public function getModuleName() {
@@ -161,12 +161,12 @@ class dispatcher {
     }
 
     public function setDefaultController($controller = 'default') {
-        self::$_defualtController = $controller;
+        self::$_defaultController = $controller;
         return self::$_instance;
     }
 
     public function setDefaultAction($action = 'default') {
-        self::$_defualtAction = $action;
+        self::$_defaultAction = $action;
         return self::$_instance;
     }
 
