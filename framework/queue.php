@@ -29,7 +29,7 @@ final class queue {
         if(!isset(self::$_queue[$k])){
             return null;
         }
-        $out = array_pop(self::$_queue[$k]);
+        $out = array_shift(self::$_queue[$k]);
         return $out;
         
     }
