@@ -26,7 +26,7 @@ final class queue {
         if($k===null){
             return null;
         }
-        if(!isset(self::$_queue[$k])){
+        if(!isset(self::$_queue[$k]) || empty(self::$_queue[$k])){
             return null;
         }
         $out = array_shift(self::$_queue[$k]);
