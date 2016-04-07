@@ -79,7 +79,7 @@ class logger_default extends logger_abstract {
         $dir = $this->_conf[$level]['path'];
         
         if(!is_dir($dir)){
-            $mk = @mkdir($dir, 777, true);
+            $mk = @mkdir($dir, 0777, true);
             if(!$mk){
                 auto::isDebugMode() && auto::dqueue('<font color=red>warning</font>', 'failed for make log dir:'.$dir);
                 return false;
