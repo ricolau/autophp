@@ -3,7 +3,7 @@
 /**
  * @author ricolau<ricolau@qq.com>
  * @version 2014-03-18
- * @desc exception_Mysqlpdo
+ * @desc exception_mysqlpdo
  *
  */
 class exception_mysqlpdo extends exception_base {

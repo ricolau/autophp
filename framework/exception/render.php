@@ -3,8 +3,7 @@
 /**
  * @author ricolau<ricolau@qq.com>
  * @version 2014-03
- * @desc exception_auto
- *        generally throw from auto only!
+ * @desc exception_render
  *
  */
 class exception_render extends exception_base {

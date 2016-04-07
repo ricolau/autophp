@@ -3,7 +3,7 @@
 /**
  * @author ricolau<ricolau@qq.com>
  * @version 2016-03-29
- * @desc controller abstract
+ * @desc controller base
  *
  */
 abstract class controller extends base {

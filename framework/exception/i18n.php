@@ -3,8 +3,7 @@
 /**
  * @author ricolau<ricolau@qq.com>
  * @version 2012-04
- * @desc TException_404
- *         when 404 action occured
+ * @desc exception_i18n
  *
  */
 class exception_i18n extends exception_base {

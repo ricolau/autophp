@@ -1,7 +1,7 @@
 <?php
 /**
  * @description popular development for system shell
- * @author by ricolau<ricolau#foxmail.com>(replace # with @)
+ * @author by ricolau<ricolau@qq.com>
  * @version 2015-07-23
  *
 */

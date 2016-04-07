@@ -3,7 +3,7 @@
 /**
  * @author ricolau<ricolau@qq.com>
  * @version 2015-11
- * @desc cache
+ * @desc cache wrapper
  *
  */
 

@@ -3,8 +3,7 @@
 /**
  * @author ricolau<ricolau@qq.com>
  * @version 2012-04
- * @desc exception_404
- *         when 404 action occured
+ * @desc exception_cache
  *
  */
 class exception_cache extends exception_base {

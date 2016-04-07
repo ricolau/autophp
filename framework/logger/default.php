@@ -2,8 +2,8 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2015-07-03
- * @desc memcache
+ * @version 2016-04-07
+ * @desc logger
  *
  */
 
