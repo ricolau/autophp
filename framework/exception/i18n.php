@@ -3,10 +3,11 @@
 /**
  * @author ricolau<ricolau@qq.com>
  * @version 2012-04
- * @desc exception_i18n
+ * @desc TException_404
+ *         when 404 action occured
  *
  */
 class exception_i18n extends exception_base {
-    const type_language_not_exist = 1;
+    const type_language_not_exist = -1;
 
 }
