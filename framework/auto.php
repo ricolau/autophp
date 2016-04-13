@@ -8,13 +8,13 @@
  */
 final class auto {
 
-    const version = '1.6';
+    const version = '1.6.1';
     const author = 'ricolau<ricolau@qq.com>';
     const mode_http = 0;
     const mode_cli = 1;
 
-    public static $runtimeStart = 0;
-    public static $runtimeEnd = 0;
+    private static $_runtimeStart = 0;
+    private static $_runtimeEnd = 0;
 
     private static $_isCliMode = false;
     private static $_hasRun = false;
@@ -52,7 +52,7 @@ final class auto {
         if (!defined('AUTOPHP_PATH')) {
             throw exception_base('AUTOPHP_PATH not defined!', exception_base::type_autophp_path_not_defined);
         }
-        self::$runtimeStart = microtime(true);
+        self::$_runtimeStart = microtime(true);
 
         
     }
@@ -148,6 +148,7 @@ final class auto {
         'exception_mysqlpdo'=>true,
         'exception_render'=>true,
         'exception_logger'=>true,
+        'exception_msg'=>true,
         'plugin_abstract'=>true,
         'render_default'=>true,
         'render_abstract'=>true,
@@ -215,6 +216,10 @@ final class auto {
         }
         return $ret;
     }
+    
+    public static function getRuntimeStart(){
+        return self::$_runtimeStart;
+    }
 
 
     public static function shutdownCall() {
@@ -244,8 +249,8 @@ final class auto {
 
 
         //total cost
-        auto::$runtimeEnd = microtime(true);
-        $msg = array('title' => 'total runtime cost', 'msg' => (auto::$runtimeEnd - auto::$runtimeStart));
+        auto::$_runtimeEnd = microtime(true);
+        $msg = array('title' => 'total runtime cost', 'msg' => (auto::$_runtimeEnd - auto::$_runtimeStart));
         array_unshift(self::$_debugQueue, $msg);
 
         if (auto::isCliMode()) {
