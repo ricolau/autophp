@@ -19,6 +19,8 @@ final class auto {
     private static $_isCliMode = false;
     private static $_hasRun = false;
     private static $_isDebugMode = false;
+    private static $_showDebugConsole = false;
+    
     private static $_isDevMode = false;
     
     private static $_classPath = array();
@@ -36,8 +38,6 @@ final class auto {
         if (self::$_hasRun) {
             throw new exception_base('auto can not run twice!', exception_base::type_autophp_has_run);
         }
-		
-
 
         self::$_hasRun = true;
         if (php_sapi_name() == 'cli') {
@@ -88,11 +88,12 @@ final class auto {
      * set debug mode
      * @return type
      */
-    public static function setDebugMode($debugMode = false) {
+    public static function setDebugMode($debugMode = false, $showDebugConsole = true) {
         if ($debugMode === true) {
             ini_set('display_errors', true);
             error_reporting(E_ALL ^ E_NOTICE);
         }
+        self::$_showDebugConsole = $showDebugConsole;
         return self::$_isDebugMode = $debugMode;
     }
 
@@ -223,11 +224,11 @@ final class auto {
 
 
     public static function shutdownCall() {
-        if(self::$shutdownFunction){
+        if(self::$shutdownFunction && is_callable(self::$shutdownFunction)){
             call_user_func(self::$shutdownFunction);
             return;
         }
-        if (!auto::isDebugMode()) {
+        if (!auto::isDebugMode() || !self::$_showDebugConsole) {
             return;
         }
         //do not output debug info when ajax request
