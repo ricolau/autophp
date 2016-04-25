@@ -55,11 +55,13 @@ class http {
             curl_setopt($ci, CURLOPT_PROXY, $proxy);
         }
 
-        if ($cookie)
+        if ($cookie){
             curl_setopt($ci, CURLOPT_COOKIE, $cookie);
+        }
 
-        if ($referer)
+        if ($referer){
             curl_setopt($ci, CURLOPT_REFERER, $referer);
+        }
 
         $headers = (array) $extheaders;
         switch ($method) {
@@ -73,7 +75,7 @@ class http {
                         curl_setopt($ci, CURLOPT_POSTFIELDS, $params);
                         $headers[] = 'Expect: ';
                     } else {
-                        curl_setopt($ci, CURLOPT_POSTFIELDS, http_build_query($params));
+                        curl_setopt($ci, CURLOPT_POSTFIELDS, is_array($params) ? http_build_query($params) : $params);
                     }
                 }
                 break;
@@ -144,11 +146,13 @@ class http {
             curl_setopt($ci, CURLOPT_PROXY, $proxy);
         }
 
-        if ($cookie)
+        if ($cookie){
             curl_setopt($ci, CURLOPT_COOKIE, $cookie);
+        }
 
-        if ($referer)
+        if ($referer){
             curl_setopt($ci, CURLOPT_REFERER, $referer);
+        }
 
 
         $headers = (array) $extheaders;
