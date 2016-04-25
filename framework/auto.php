@@ -2,13 +2,13 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-3-31
+ * @version 2016-4-25
  * @desc autophp auto, check running enviroment and more closer to base layer
  *
  */
 final class auto {
 
-    const version = '1.6.1';
+    const version = '1.6.2';
     const author = 'ricolau<ricolau@qq.com>';
     const mode_http = 0;
     const mode_cli = 1;

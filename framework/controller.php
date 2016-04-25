@@ -21,10 +21,12 @@ abstract class controller extends base {
     }
 
     public function render($path = '') {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         if ($path) {
             $this->_render->render($path);
-            auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
+            
+            ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
+            
             return;
         }
         $dir = dispatcher::instance()->getModuleName();
@@ -38,7 +40,7 @@ abstract class controller extends base {
         }
         $this->_render->render($path);
 
-        auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
     }
 
     public function slot($slot, $isDisplay = false) {
@@ -46,11 +48,12 @@ abstract class controller extends base {
     }
 
     public function fetch($path = '') {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         if ($path) {
             $ret = $this->_render->fetch($path);
-            auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
 
+            ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
+            
             return $ret;
         }
         $dir = dispatcher::instance()->getModuleName();
@@ -64,8 +67,9 @@ abstract class controller extends base {
         }
 
         $ret = $this->_render->fetch($path);
-        auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . (microtime(true) - $_debugMicrotime) . 's ');
 
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
+        
         return $ret;
     }
 

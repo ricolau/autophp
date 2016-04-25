@@ -29,7 +29,7 @@ class http {
         if (!$args || !$args['url']) {
             return false;
         }
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         extract($args);
 
         $method = $method ? : 'GET';
@@ -104,7 +104,7 @@ class http {
         }
 
         curl_close($ci);
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($args, true).",  \n  responsed:".$response);
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $args) && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($args, true).",  \n  responsed:".$response);
 
         return $response;
     }
@@ -128,7 +128,7 @@ class http {
         if (!function_exists('curl_init')){
             throw new exception_base('curl module not exist~!');
         }
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
 
         $method = strtoupper($method);
         $ci = curl_init();
@@ -185,10 +185,12 @@ class http {
         $response = curl_exec($ci);
         curl_close($ci);
         
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . 
-                var_export(array('url'=>$url,'method'=>$method,'params'=>$params,'timeout'=>$timeout,'cookie'=>$cookie,'referer'=>$referer,'extheaders'=>$extheaders,
-                    'multi'=>$multi,'proxy'=>$proxy),
-                        true) .",  \n  responsed:".$response//end var_export
+        $tmpArgs = array('url'=>$url,'method'=>$method,'params'=>$params,'timeout'=>$timeout,'cookie'=>$cookie,'referer'=>$referer,'extheaders'=>$extheaders,
+                    'multi'=>$multi,'proxy'=>$proxy);
+        
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $tmpArgs) &&
+                auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . 
+                var_export($tmpArgs,true) .",  \n  responsed:".$response//end var_export
                 );
 
         return $response;

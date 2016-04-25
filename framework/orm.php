@@ -124,7 +124,7 @@ class orm extends base {
     }
 
     public function insert($data, $getLastInsertId = false) {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         if (empty($data) || !is_array($data)) {
             $this->_raiseError('insert query data empty~', exception_mysqlpdo::type_input_data_error);
         }
@@ -141,18 +141,19 @@ class orm extends base {
 
         $this->_clearStat();
         if ($res === false) {
-            auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+            
+            ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
             $this->_raiseError('insert query failed~', exception_mysqlpdo::type_query_error);
         }
         if ($getLastInsertId) {
             $lastInsertId = $db->lastInsertId();
             //有时候table 可能没有primary key
             if ($lastInsertId) {
-                auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+                ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
                 return $lastInsertId;
             }
         }
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
         return $res;
     }
 
@@ -183,7 +184,7 @@ class orm extends base {
     }
 
     public function update($data, $returnAffectedRows = false) {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         $this->_checkDanger(__FUNCTION__);
         if (empty($data) || !is_array($data)) {
             $this->_raiseError('empty data for update function query', exception_mysqlpdo::type_input_data_error);
@@ -212,12 +213,12 @@ class orm extends base {
             $ret = $sth->rowCount();
         }
         $this->_clearStat();
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
         return $ret;
     }
 
     public function delete() {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         $this->_checkDanger(__FUNCTION__);
 
         $values = array();
@@ -236,7 +237,7 @@ class orm extends base {
         }
 
         $this->_clearStat();
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
         return $res;
     }
 
@@ -246,7 +247,7 @@ class orm extends base {
     }
 
     public function select() {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         $where = $this->_getWhere();
         $sql = $where['sql'];
         $sqlData = $where['data'];
@@ -278,7 +279,7 @@ class orm extends base {
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
 
         $this->_clearStat();
 
@@ -298,7 +299,7 @@ class orm extends base {
     }
 
     public function count($key = '') {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         $countKey = empty($key) ? '*' : $key;
 
         $where = $this->_getWhere();
@@ -318,7 +319,7 @@ class orm extends base {
         }
         $count = $sth->fetchColumn();
         $this->_clearStat();
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
 
         return $count;
     }
@@ -430,7 +431,7 @@ class orm extends base {
      * @return type
      */
     public function query($sql, $data) {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
 
         $subSql = strtolower(trim(substr(trim($sql), 0, 7)));
         $updateType = array('insert' => true, 'update' => true, 'delete' => true, 'replace' => true);
@@ -442,12 +443,12 @@ class orm extends base {
         $sth = $db->prepare($sql);
         $res = $sth->execute($data);
 
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
         return $res;
     }
     
     public function queryFetch($sql, $data = array(), $forceMaster = false) {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         $this->_lastQuery = array($sql, $data);
         if ($forceMaster) {
             $this->setDbMaster();
@@ -459,12 +460,12 @@ class orm extends base {
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
         $this->_clearStat();
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
         return $res;
     }
 
     public function structure($fullType = false) {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         if (isset(self::$_tableStructure[$this->_dbAlias][$this->_table])) {
             return self::$_tableStructure[$this->_dbAlias][$this->_table];
         }
@@ -486,7 +487,7 @@ class orm extends base {
 
 
         self::$_tableStructure[$this->_dbAlias][$this->_table] = $dt;
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
         return $dt;
     }
 

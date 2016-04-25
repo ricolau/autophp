@@ -191,7 +191,7 @@ class dispatcher {
     public function run() {
         plugin::run('before_run');
 
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
 
         if (self::$_pathDeep == self::path_deep3) {
             $className = 'controller_' . self::$_currentModule . '_' . self::$_currentController;
@@ -215,7 +215,8 @@ class dispatcher {
             throw new exception_404('no public method ' . $method . ' exist in class:' . $className, exception_404::type_action_not_public);
         }
         $method->invoke($class->newInstance());
-        auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . (microtime(true) - $_debugMicrotime) . 's');
+        
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('controller'=>$className,'action'=>$actionName)) && auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . $timeCost . 's');
 
         plugin::run('after_run');
     }

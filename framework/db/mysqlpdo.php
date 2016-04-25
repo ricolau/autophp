@@ -25,7 +25,7 @@ class db_mysqlpdo extends db_abstract {
     }
 /*
     protected function _connectSlave() {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         $type = self::TYPE_SERVER_SLAVE;
         //every time run "new db_mysqlpdo($conf)->connect($type)" would reconnect the mysql database!
         $this->_pdoCon = $this->_getPdo($type);
@@ -34,7 +34,7 @@ class db_mysqlpdo extends db_abstract {
     }
 
     protected function _connectMaster() {
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         $type = self::TYPE_SERVER_MASTER;
         //every time run "new db_mysqlpdo($conf)->connect($type)" would reconnect the mysql database!
         $this->_pdoCon = $this->_getPdo($type);
@@ -46,11 +46,12 @@ class db_mysqlpdo extends db_abstract {
         if($type===null){
             throw new exception_mysqlpdo('no type specified for mysqlpdo connection!', exception_mysqlpdo::type_conf_error);
         }
-        auto::isDebugMode() && $_debugMicrotime = microtime(true);
+        $_debugMicrotime = microtime(true);
         //$type = self::TYPE_SERVER_MASTER;
         //every time run "new db_mysqlpdo($conf)->connect($type)" would reconnect the mysql database!
         $this->_pdoCon = $this->_getPdo($type);
-        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+        
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
         return $this->_pdoCon;
 
     }

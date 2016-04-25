@@ -33,10 +33,10 @@ final class plugin {
         if (isset(self::$_plugins[$type]) && is_array(self::$_plugins[$type])) {
             while (self::$_plugins[$type]) {
                 $plugin = array_shift(self::$_plugins[$type]);
-                auto::isDebugMode() && $_debugMicrotime = microtime(true);
+                $_debugMicrotime = microtime(true);
                 auto::isDebugMode() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'start ---->>>>');
                 self::_execPlugin($plugin);
-                auto::isDebugMode() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . (microtime(true) - $_debugMicrotime) . 's');
+                ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('plugin'=>$plugin)) && auto::isDebugMode() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . $timeCost . 's');
                 self::$_pluginsHasRun[] = $plugin;
             }
         }
