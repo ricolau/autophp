@@ -32,7 +32,7 @@ class cache_memcache extends cache_abstract {
         foreach ($servers as $server) {
             $this->_memcache->addServer($server['host'], $server['port'], false, $server['weight']);
         }
-        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
 
         //return $this->_memcache;
         return $this;
@@ -59,7 +59,7 @@ class cache_memcache extends cache_abstract {
             throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
         $ret = call_user_func_array(array($this->_memcache, 'set'), $arguments);
-        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, arguments: ' . var_export($arguments, true));
+        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, arguments: ' . var_export($arguments, true));
         return $ret;
     }
 
@@ -69,7 +69,7 @@ class cache_memcache extends cache_abstract {
             throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
         $ret = call_user_func_array(array($this->_memcache, $funcName), $arguments);
-        auto::isDebugMode() && auto::dqueue(__CLASS__ . '::' . $funcName, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, arguments: ' . var_export($arguments, true));
+        auto::isDebugMode() && auto::debugMsg(__CLASS__ . '::' . $funcName, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, arguments: ' . var_export($arguments, true));
         return $ret;
     }
 

@@ -104,7 +104,7 @@ class http {
         }
 
         curl_close($ci);
-        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($args, true).",  \n  responsed:".$response);
+        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . var_export($args, true).",  \n  responsed:".$response);
 
         return $response;
     }
@@ -185,7 +185,7 @@ class http {
         $response = curl_exec($ci);
         curl_close($ci);
         
-        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . 
+        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's of query: ' . 
                 var_export(array('url'=>$url,'method'=>$method,'params'=>$params,'timeout'=>$timeout,'cookie'=>$cookie,'referer'=>$referer,'extheaders'=>$extheaders,
                     'multi'=>$multi,'proxy'=>$proxy),
                         true) .",  \n  responsed:".$response//end var_export

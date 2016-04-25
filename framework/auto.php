@@ -24,6 +24,8 @@ final class auto {
     private static $_isDevMode = false;
     
     private static $_classPath = array();
+    
+    private static $_performance = array();
 
     public static function hasRun() {
         return self::$_hasRun;
@@ -107,7 +109,7 @@ final class auto {
 
     public static $shutdownFunction = null;
 
-    protected static $_debugQueue = array();
+    protected static $_debugMsg = array();
 
 
     public static function autoload($className) {
@@ -201,6 +203,15 @@ final class auto {
     public static function addClassPath($path){
         self::$_classPath[] = $path;
     }
+    
+    public static function performance($tag, $timecost, $info = array()){
+        
+        self::$_performance[] = array('time'=>time(),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
+        
+    }
+    public static function performanceExport(){
+        return self::$_performance;
+    }
 
     /**
      * @desc 此处和 util::baseChars() 重合，因为一般autoload 的时候还没有加载到 util，所以此处故意冗余
@@ -240,26 +251,26 @@ final class auto {
         $hasNotRunPlugins = plugin::getHasNotRunPlugin(plugin::type_before_run);
         if ($hasNotRunPlugins) {
             $msg = array('title' => '<font color=red><b>Warning: some plugins NOT RUN(maybe "exit()" used! in your program?)</b></font>', 'msg' => var_export($hasNotRunPlugins, true));
-            array_unshift(self::$_debugQueue, $msg);
+            array_unshift(self::$_debugMsg, $msg);
         }
         $hasNotRunPlugins2 = plugin::getHasNotRunPlugin(plugin::type_after_run);
         if ($hasNotRunPlugins2) {
             $msg = array('title' => '<font color=red><b>Warning: some plugins NOT RUN(maybe "exit()" used in your program?)</b></font>', 'msg' => var_export($hasNotRunPlugins2, true));
-            array_unshift(self::$_debugQueue, $msg);
+            array_unshift(self::$_debugMsg, $msg);
         }
 
 
         //total cost
         auto::$_runtimeEnd = microtime(true);
         $msg = array('title' => 'total runtime cost', 'msg' => (auto::$_runtimeEnd - auto::$_runtimeStart));
-        array_unshift(self::$_debugQueue, $msg);
+        array_unshift(self::$_debugMsg, $msg);
 
         if (auto::isCliMode()) {
             $output = '
 #################### debug info : ####################
 (you can turn this off by "auto::setDebugMode(false)")
                 ';
-            foreach (self::$_debugQueue as $item) {
+            foreach (self::$_debugMsg as $item) {
                 $tstr = '
 >>>>>>' . $item['title'] . '>>>>>> ' . $item['msg'];
                 $output .= $tstr;
@@ -271,7 +282,7 @@ final class auto {
             $output = '<style>.autophp_debug_span{width:100%;display:block;border-bottom: dashed 1px gray;margin: 3px 0 3px 0;padding:3px 0 3px 0;font-size: 14px;font-family: Arial}</style>
                 <fieldset>
                 <span  class="autophp_debug_span"><b>debug info : </b> (you can turn this off by "auto::setDebugMode(false)")</span>';
-            foreach (self::$_debugQueue as $item) {
+            foreach (self::$_debugMsg as $item) {
                 $tstr = '<span class="autophp_debug_span"><font color=blue>' . $item['title'] . ': </font>' . $item['msg'] . '</span>';
                 $output .= $tstr;
             }
@@ -280,12 +291,12 @@ final class auto {
 
         echo $output;
     }
-    public static function dqueue($title, $msg) {
-        self::$_debugQueue[] = array('title' => $title, 'msg' => $msg);
+    public static function debugMsg($title, $msg) {
+        self::$_debugMsg[] = array('title' => $title, 'msg' => $msg);
     }
     
-    public static function dqueueExport(){
-        return self::$_debugQueue;
+    public static function debugMsgExport(){
+        return self::$_debugMsg;
     }
     
 

@@ -23,7 +23,7 @@ class render_default extends render_abstract {
     }
 
     public function render($path) {
-        auto::isDebugMode() && auto::dqueue('render data for ' . $path, '<pre>' . rico::export($this->data) . '</pre>');
+        auto::isDebugMode() && auto::debugMsg('render data for ' . $path, '<pre>' . rico::export($this->data) . '</pre>');
         $data = $this->fetch($path);
         response::output($data);
     }

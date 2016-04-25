@@ -25,7 +25,7 @@ class cache_redis extends cache_abstract {
             );
         }
         $this->_redis->connect($this->_confs['host'], $this->_confs['port']);
-        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
 
         return $this;
     }
@@ -37,7 +37,7 @@ class cache_redis extends cache_abstract {
             throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
         $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
-        auto::isDebugMode() && auto::dqueue(__CLASS__ . '::' . $funcName, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, arguments: ' . var_export($arguments, true));
+        auto::isDebugMode() && auto::debugMsg(__CLASS__ . '::' . $funcName, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, arguments: ' . var_export($arguments, true));
         return $ret;
     }
 

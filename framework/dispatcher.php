@@ -203,7 +203,7 @@ class dispatcher {
             throw new exception_404('controller not exist: ' . $className, exception_404::type_controller_not_exist);
         }
         $actionName = self::$_currentAction . 'Action';
-        auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'start ---->>>>');
+        auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'start ---->>>>');
 
         $class = new ReflectionClass($className);
         if ($class->isAbstract()) {
@@ -215,7 +215,7 @@ class dispatcher {
             throw new exception_404('no public method ' . $method . ' exist in class:' . $className, exception_404::type_action_not_public);
         }
         $method->invoke($class->newInstance());
-        auto::isDebugMode() && auto::dqueue(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . (microtime(true) - $_debugMicrotime) . 's');
+        auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . (microtime(true) - $_debugMicrotime) . 's');
 
         plugin::run('after_run');
     }

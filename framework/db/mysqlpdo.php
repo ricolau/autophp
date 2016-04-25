@@ -50,7 +50,7 @@ class db_mysqlpdo extends db_abstract {
         //$type = self::TYPE_SERVER_MASTER;
         //every time run "new db_mysqlpdo($conf)->connect($type)" would reconnect the mysql database!
         $this->_pdoCon = $this->_getPdo($type);
-        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+        auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
         return $this->_pdoCon;
 
     }

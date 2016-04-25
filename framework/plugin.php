@@ -34,9 +34,9 @@ final class plugin {
             while (self::$_plugins[$type]) {
                 $plugin = array_shift(self::$_plugins[$type]);
                 auto::isDebugMode() && $_debugMicrotime = microtime(true);
-                auto::isDebugMode() && auto::dqueue(__METHOD__ . " ('$plugin') ", 'start ---->>>>');
+                auto::isDebugMode() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'start ---->>>>');
                 self::_execPlugin($plugin);
-                auto::isDebugMode() && auto::dqueue(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . (microtime(true) - $_debugMicrotime) . 's');
+                auto::isDebugMode() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . (microtime(true) - $_debugMicrotime) . 's');
                 self::$_pluginsHasRun[] = $plugin;
             }
         }
