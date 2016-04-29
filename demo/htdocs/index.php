@@ -34,7 +34,10 @@ try {
     //如果需要，定义一些（个数不限）在 action 执行之前预执行 和 后执行的程序
     plugin::add('plugin_wbinit', plugin::type_before_run);
     plugin::add('plugin_backEnd', plugin::type_after_run);
-    //plugin::add('Plugin_Requestend', plugin::TYPE_AFTER_RUN);
+    
+    plugin::add('plugin_dbconnecterror','error::db_mysqlpdo::_connect');
+
+    
     //============================ 对request 的数据进行处理 ============================
     //（必要）此处主要是为了提高一些获取效率，进行一次读入，同时也对原生 $_POST 等做了销毁
     $antiXssModeOn = true; //是否开启对 $_POST,  $_GET,  $_COOKIE 的防跨站处理
@@ -42,7 +45,7 @@ try {
     request::init($antiXssModeOn, $addslashesModeOn);
     
     //add log conf
-    $logconf = config::get('log.default');
+    $logconf = config::get('logger.default');
     log::addLogger(new logger_default($logconf));
 
 

@@ -65,20 +65,25 @@ class db_mysqlpdo extends db_abstract {
         $dsn = 'mysql:dbname=' . $server['dbname'] . ';host=' . $server['host'] . ';port=' . $server['port'];
 
         $options = (isset($server['options']) && is_array($server['options']))? $server['options'] :array();
-        $con = self::_connect($dsn, $server['user'], $server['pwd'],$options);
+        $con = $this->_connect($dsn, $server['user'], $server['pwd'],$options);
         if (isset($server['charset']) && $server['charset']) {
             $con->query('SET NAMES ' . $server['charset']);
         }
         return $con;
     }
 
-    protected static function _connect($dsn, $user, $pwd, $options = array()) {
+    protected function _connect($dsn, $user, $pwd, $options = array()) {
         try {
             $instance = new PDO($dsn, $user, $pwd, $options);
         } catch (PDOException $e) {
             try {
                 $instance = new PDO($dsn, $user, $pwd, $options);
             } catch (PDOException $e) {
+                $ptx = new plugin_context(__METHOD__, array('conf'=>$this->_confs,'alias'=>$this->_alias,'exception'=>&$e));
+                plugin::run('error::'.__METHOD__,$ptx);
+                if($ptx->breakOut){
+                    return $ptx->breakOut;
+                }
                 throw $e;
             }
         }

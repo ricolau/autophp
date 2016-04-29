@@ -12,7 +12,7 @@ class model_demo extends orm{
     
     //model construct 会自动调用 _init()
     protected function _init(){
-        $this->_cacheServer1 = cache::instance('mc1');;
+        //$this->_cacheServer1 = cache::instance('mc1');;
     }
     
     

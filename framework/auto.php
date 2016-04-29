@@ -153,6 +153,7 @@ final class auto {
         'exception_logger'=>true,
         'exception_msg'=>true,
         'plugin_abstract'=>true,
+        'plugin_context'=>true,
         'render_default'=>true,
         'render_abstract'=>true,
         'render_smarty'=>true,
@@ -207,6 +208,7 @@ final class auto {
     public static function performance($tag, $timecost, $info = array()){
         
         self::$_performance[] = array('time'=>time(),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
+        return true;
         
     }
     public static function performanceExport(){

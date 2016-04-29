@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2014-03
+ * @version 2016-04-29
  * @desc autophp plugin tool
  *
  */
@@ -29,13 +29,13 @@ final class plugin {
      * run plugins of this type
      * @param type $type
      */
-    public static function run($type) {
+    public static function run($type, plugin_context &$ptx) {
         if (isset(self::$_plugins[$type]) && is_array(self::$_plugins[$type])) {
             while (self::$_plugins[$type]) {
                 $plugin = array_shift(self::$_plugins[$type]);
                 $_debugMicrotime = microtime(true);
                 auto::isDebugMode() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'start ---->>>>');
-                self::_execPlugin($plugin);
+                self::_execPlugin($plugin, $ptx);
                 ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('plugin'=>$plugin)) && auto::isDebugMode() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . $timeCost . 's');
                 self::$_pluginsHasRun[] = $plugin;
             }
@@ -46,7 +46,7 @@ final class plugin {
      * run a plugin
      * @param type $plugin
      */
-    private static function _execPlugin($className) {
+    private static function _execPlugin($className, &$ptx) {
         if (!class_exists($className)){
             throw new exception_base('class not exist:' . $className, -1);
         }
@@ -62,7 +62,7 @@ final class plugin {
         if (!$method || !$method->isPublic()) {
             throw new exception_base('no public method main exist in:' . $className, -1);
         }
-        $method->invoke($class->newInstance());
+        $method->invoke($class->newInstance(), $ptx);
     }
 
 

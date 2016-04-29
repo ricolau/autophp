@@ -24,9 +24,16 @@ class cache_redis extends cache_abstract {
                 exception_cache::type_server_connection_error
             );
         }
-        $this->_redis->connect($this->_confs['host'], $this->_confs['port']);
-        
+        $con = $this->_redis->connect($this->_confs['host'], $this->_confs['port']);
         ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+
+        if(!$con){
+            $ptx = new plugin_context(__METHOD__, array('conf'=>$this->_confs,'alias'=>$this->_alias));
+            plugin::run('error::'.__METHOD__,$ptx);
+            if($ptx->breakOut){
+                return $ptx->breakOut;
+            }
+        }
 
         return $this;
     }
