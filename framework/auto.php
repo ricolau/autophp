@@ -2,13 +2,13 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-4-25
+ * @version 2016-5-18
  * @desc autophp auto, check running enviroment and more closer to base layer
  *
  */
 final class auto {
 
-    const version = '1.6.2';
+    const version = '1.6.3';
     const author = 'ricolau<ricolau@qq.com>';
     const mode_http = 0;
     const mode_cli = 1;
@@ -99,15 +99,15 @@ final class auto {
         return self::$_isDebugMode = $debugMode;
     }
 
-    public static function register_shutdown_function($callback = null){
-        if(!$callback){
-            return;
-        }
-        self::$shutdownFunction = $callback;
-    }
+//    public static function register_shutdown_function($callback = null){
+//        if(!$callback){
+//            return;
+//        }
+//        self::$shutdownFunction = $callback;
+//    }
 
 
-    public static $shutdownFunction = null;
+//    public static $shutdownFunction = null;
 
     protected static $_debugMsg = array();
 
@@ -237,10 +237,10 @@ final class auto {
 
 
     public static function shutdownCall() {
-        if(self::$shutdownFunction && is_callable(self::$shutdownFunction)){
-            call_user_func(self::$shutdownFunction);
-            return;
-        }
+//        if(self::$shutdownFunction && is_callable(self::$shutdownFunction)){
+//            call_user_func(self::$shutdownFunction);
+//            return;
+//        }
         if (!auto::isDebugMode() || !self::$_showDebugConsole) {
             return;
         }
