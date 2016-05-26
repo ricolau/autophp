@@ -2,11 +2,15 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2014-03
+ * @version 2016-05-26
  * @desc redis
  *
  */
 class cache_redis extends cache_abstract {
+    
+    protected static $_reentrantRecords = array();
+    protected static $_reentrantTimesLimit = 5;
+    
 
     protected $_redis = null;
 
@@ -44,8 +48,27 @@ class cache_redis extends cache_abstract {
         if (!$this->_redis) {
             throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
-        $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
-        
+        try{
+            $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
+        }catch (RedisException  $e){
+            //设置重入次数上限,防止程序陷入死循环重入崩溃
+            $seqid = md5(serialize($arguments).$funcName);
+            if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid]>=self::$_reentrantTimesLimit){
+                throw $e;
+            }
+            if(!isset(self::$_reentrantTimes[$seqid])){
+                self::$_reentrantTimes[$seqid] =0;
+                
+            }
+            self::$_reentrantTimes[$seqid] += 1;
+            
+            $ptx = new plugin_context(__METHOD__, array('conf'=>$this->_confs,'alias'=>$this->_alias,'exception'=>&$e,'obj'=>&$this));
+            plugin::run('error::'.__CLASS__.'::'.$funcName,$ptx);
+            if($ptx->breakOut){
+                return $ptx->breakOut;
+            }
+            throw $e;
+        }
         ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebugMode() && auto::debugMsg(__CLASS__ . '::' . $funcName, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
         
         return $ret;
