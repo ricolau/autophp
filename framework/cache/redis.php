@@ -8,7 +8,7 @@
  */
 class cache_redis extends cache_abstract {
     
-    protected static $_reentrantRecords = array();
+    protected static $_reentrantTimes = array();
     protected static $_reentrantTimesLimit = 5;
     
 

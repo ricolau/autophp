@@ -12,7 +12,7 @@ class db_mysqlpdo extends db_abstract {
     const type_server_master = 'master';
 
      
-    protected static $_reentrantRecords = array();
+    protected static $_reentrantTimes = array();
     protected static $_reentrantTimesLimit = 3;
     
 
