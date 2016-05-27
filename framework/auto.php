@@ -12,6 +12,9 @@ final class auto {
     const author = 'ricolau<ricolau@qq.com>';
     const mode_http = 1;
     const mode_cli = 2;
+    
+    const performance_data_size = 128;
+
 
     private static $_runtimeStart = 0;
     private static $_runtimeEnd = 0;
@@ -205,14 +208,21 @@ final class auto {
         self::$_classPath[] = $path;
     }
     
+    
     public static function performance($tag, $timecost, $info = array()){
-        
+        if(count(self::$_performance)>self::performance_data_size){
+            array_shift(self::$_performance);
+        }
         self::$_performance[] = array('time'=>time(),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
         return true;
-        
     }
-    public static function performanceExport(){
+    public static function performanceGet(){
         return self::$_performance;
+    }
+    public static function performanceGetClean(){
+        $tmp =  self::$_performance;
+        self::$_performance = array();
+        return $tmp;
     }
 
     /**
