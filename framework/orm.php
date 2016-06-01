@@ -137,6 +137,9 @@ class orm extends base {
 
         $db = $this->_getPdoByMethodName(__FUNCTION__);
         $sth = $db->prepare($sql);
+        if($sth===false){
+            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+        }
         $res = $sth->execute($values);
 
         $this->_clearStat();
@@ -205,6 +208,9 @@ class orm extends base {
         $this->_lastQuery = array($sql, $values);
         $sth = $this->_getPdoByMethodName(__FUNCTION__)
                 ->prepare($sql);
+        if($sth===false){
+            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+        }
         $ret = $sth->execute($values);
         if ($ret === false) {
             $this->_raiseError('update query failed~', exception_mysqlpdo::type_query_error);
@@ -231,6 +237,9 @@ class orm extends base {
         $this->_lastQuery = array($sql, $sqlData);
 
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
+        if($sth===false){
+            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+        }
         $res = $sth->execute($values);
         if ($res === false) {
             $this->_raiseError('delete query failed~', exception_mysqlpdo::type_query_error);
@@ -273,6 +282,9 @@ class orm extends base {
         $this->_lastQuery = array($sql, $values);
 
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
+        if($sth===false){
+            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+        }
         $res = $sth->execute($values);
         if ($res === false) {
             $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
@@ -313,6 +325,9 @@ class orm extends base {
         $sql = "SELECT COUNT({$countKey}) FROM " . $this->_table . $sql;
         $this->_lastQuery = array($sql, $values);
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
+        if($sth===false){
+            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+        }
         $res = $sth->execute($values);
         if ($res === false) {
             $this->_raiseError('count query failed~', exception_mysqlpdo::type_query_error);
@@ -441,6 +456,9 @@ class orm extends base {
 
         $db = $this->_getPdoByMethodName($queryType);
         $sth = $db->prepare($sql);
+        if($sth===false){
+            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+        }
         $res = $sth->execute($data);
 
         ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
@@ -454,6 +472,9 @@ class orm extends base {
             $this->setDbMaster();
         }
         $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
+        if($sth===false){
+            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+        }
         $res = $sth->execute($data);
         if (!$res) {
             $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
@@ -472,6 +493,9 @@ class orm extends base {
         $sql = "DESC " . $this->_table;
         $this->_lastQuery = $sql;
         $sth = $this->_getPdoByMethodName()->prepare($sql);
+        if($sth===false){
+            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+        }
         $res = $sth->execute(array());
         if (!$res) {
             $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
