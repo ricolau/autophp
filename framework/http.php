@@ -35,8 +35,9 @@ class http {
         $method = $method ? : 'GET';
         $timeout = $timeout ? : 5;
 
-        if (!function_exists('curl_init'))
+        if (!function_exists('curl_init')){
             exit('Need to open the curl extension');
+        }
 
         $method = strtoupper($method);
         $ci = curl_init();
@@ -78,6 +79,11 @@ class http {
                         curl_setopt($ci, CURLOPT_POSTFIELDS, is_array($params) ? http_build_query($params) : $params);
                     }
                 }
+                break;
+            case 'PUT':
+            case 'PATCH':
+                curl_setopt($ci, CURLOPT_POSTFIELDS, is_array($params) ? http_build_query($params) : $params);
+                curl_setopt($ci, CURLOPT_CUSTOMREQUEST, $method);
                 break;
             case 'DELETE':
             case 'GET':
