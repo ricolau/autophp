@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-04-05
+ * @version 2016-06-21
  * @desc autophp queue
  *
  */
@@ -33,9 +33,7 @@ final class queue {
         return $out;
         
     }
-    
-    
-    
+
     public static function isEmpty($k){
         if($k===null){
             return null;
@@ -74,10 +72,16 @@ final class queue {
         if(!isset(self::$_queue[$k])){
             return null;
         }
-        $tmp = self::$_queue[$k];
-        self::$_queue[$k] = array();
-        return $tmp;
+        //$tmp = self::$_queue[$k];
+        //self::$_queue[$k] = array();
+        return self::$_queue[$k];
         
+    }
+    
+    public static function dumpClear($k){
+        $tmp = self::dump($k);
+        self::clear($k);
+        return $tmp;
     }
 
 

@@ -29,25 +29,6 @@ class db_mysqlpdo extends db_abstract {
         $this->_confs = $conf;
         $this->_alias = $alias;
     }
-/*
-    protected function _connectSlave() {
-        $_debugMicrotime = microtime(true);
-        $type = self::TYPE_SERVER_SLAVE;
-        //every time run "new db_mysqlpdo($conf)->connect($type)" would reconnect the mysql database!
-        $this->_pdoCon = $this->_getPdo($type);
-        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
-        return $this->_pdoCon;
-    }
-
-    protected function _connectMaster() {
-        $_debugMicrotime = microtime(true);
-        $type = self::TYPE_SERVER_MASTER;
-        //every time run "new db_mysqlpdo($conf)->connect($type)" would reconnect the mysql database!
-        $this->_pdoCon = $this->_getPdo($type);
-        auto::isDebugMode() && auto::dqueue(__METHOD__, 'cost ' . (microtime(true) - $_debugMicrotime) . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
-        return $this->_pdoCon;
-    }
-*/
     public function connect($type = null) {
         if($type===null){
             throw new exception_mysqlpdo('no type specified for mysqlpdo connection!', exception_mysqlpdo::type_conf_error);
@@ -108,29 +89,6 @@ class db_mysqlpdo extends db_abstract {
         }
         return $instance;
     }
-//
-//    protected function _connect($type,$dsn, $user, $pwd, $options = array()) {
-//        try {
-//            $instance = new PDO($dsn, $user, $pwd, $options);
-//        } catch (PDOException $e) {
-//            try {
-//                $instance = new PDO($dsn, $user, $pwd, $options);
-//            } catch (PDOException $e) {
-//                $ptx = new plugin_context(__METHOD__, array('conf'=>$this->_confs,'alias'=>$this->_alias,'type'=>$type,'exception'=>&$e,'obj'=>&$this));
-//                plugin::run('error::'.__METHOD__,$ptx);
-//                if($ptx->breakOut){
-//                    return $ptx->breakOut;
-//                }
-//                throw $e;
-//            }
-//        }
-//        if(!isset($options[PDO::ATTR_EMULATE_PREPARES])){
-//            //tell the mysql pdo do not stringfy field values!~!
-//            $instance->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
-//        }
-//        
-//        return $instance;
-//    }
 
 }
 

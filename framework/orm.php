@@ -22,6 +22,9 @@ class orm extends base {
     protected $_dangerCheck = null;
     protected $_pages = null;
     protected $_lastQuery = null;
+    
+    protected $_queryObj = null;
+            
     protected static $_tableStructure = array();
 
     public function __construct($dbAlias = null, $tablename = null) {
@@ -135,8 +138,8 @@ class orm extends base {
         $sql = 'INSERT INTO ' . $this->_table . '(' . implode(',', $fields) . ') VALUE(' . implode(',', $insteads) . ')';
         $this->_lastQuery = array($sql, $values);
 
-        $db = $this->_getPdoByMethodName(__FUNCTION__);
-        $sth = $db->prepare($sql);
+        $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
+        $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
@@ -149,7 +152,7 @@ class orm extends base {
             $this->_raiseError('insert query failed~', exception_mysqlpdo::type_query_error);
         }
         if ($getLastInsertId) {
-            $lastInsertId = $db->lastInsertId();
+            $lastInsertId = $this->_queryObj->lastInsertId();
             //有时候table 可能没有primary key
             if ($lastInsertId) {
                 ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
@@ -206,8 +209,8 @@ class orm extends base {
         }
 
         $this->_lastQuery = array($sql, $values);
-        $sth = $this->_getPdoByMethodName(__FUNCTION__)
-                ->prepare($sql);
+        $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
+        $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
@@ -236,7 +239,8 @@ class orm extends base {
         }
         $this->_lastQuery = array($sql, $sqlData);
 
-        $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
+        $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
+        $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
@@ -281,7 +285,8 @@ class orm extends base {
         $sql = 'SELECT ' . $fields . ' FROM ' . $this->_table . $sql;
         $this->_lastQuery = array($sql, $values);
 
-        $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
+        $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
+        $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
@@ -324,7 +329,8 @@ class orm extends base {
 
         $sql = "SELECT COUNT({$countKey}) FROM " . $this->_table . $sql;
         $this->_lastQuery = array($sql, $values);
-        $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
+        $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
+        $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
@@ -360,6 +366,15 @@ class orm extends base {
         return $this;
     }
 
+    /**
+     * 
+     * @param array $match as = array('name'=>'rico', 'age'=>20)
+     * @param array $in as = array(12,5,68,58)
+     * @param array $notIn as = array(12, 545, 6, 878)
+     * @param array $like as = array('name'=>'rico%', 'address'=>'haidian area%')
+     * @param array $between as = array('age'=>array(12, 23), ...)
+     * @return \orm
+     */
     public function whereMatch($match = array(), $in = array(), $notIn = array(), $like=array(), $between = array()) {
         /**
          * where a=1 and b=2 and c in (123,34,3,5) and b not in (3,2,4) and x like '435%' and y between y1 and y2,     group by a order by b desc limit 20
@@ -454,8 +469,8 @@ class orm extends base {
 
         $this->_lastQuery = $sql;
 
-        $db = $this->_getPdoByMethodName($queryType);
-        $sth = $db->prepare($sql);
+        $this->_queryObj = $this->_getPdoByMethodName($queryType);
+        $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
@@ -471,7 +486,8 @@ class orm extends base {
         if ($forceMaster) {
             $this->setDbMaster();
         }
-        $sth = $this->_getPdoByMethodName(__FUNCTION__)->prepare($sql);
+        $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
+        $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
@@ -485,6 +501,11 @@ class orm extends base {
         return $res;
     }
 
+    /**
+     * get table structure
+     * @param type $fullType
+     * @return type
+     */
     public function structure($fullType = false) {
         $_debugMicrotime = microtime(true);
         if (isset(self::$_tableStructure[$this->_dbAlias][$this->_table])) {
@@ -492,7 +513,8 @@ class orm extends base {
         }
         $sql = "DESC " . $this->_table;
         $this->_lastQuery = $sql;
-        $sth = $this->_getPdoByMethodName()->prepare($sql);
+        $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
+        $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
@@ -521,6 +543,14 @@ class orm extends base {
      */
     public function getLastQuery() {
         return $this->_lastQuery;
+    }
+    
+    /**
+     * get last query pdo object
+     * @return type
+     */
+    public function getLastQueryPdo(){
+        return $this->_queryObj;
     }
 
     public static function magicInstance($dbAlias, $tablename) {
