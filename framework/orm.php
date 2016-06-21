@@ -460,7 +460,7 @@ class orm extends base {
      * @param type $sql
      * @return type
      */
-    public function query($sql, $data) {
+    public function query($sql, $data, $returnAffectedRows = false) {
         $_debugMicrotime = microtime(true);
 
         $subSql = strtolower(trim(substr(trim($sql), 0, 7)));
@@ -475,6 +475,9 @@ class orm extends base {
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($data);
+        if($res && $returnAffectedRows){
+            $res = $sth->rowCount();
+        }
 
         ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $this->_lastQuery)  && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
         return $res;
