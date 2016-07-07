@@ -25,7 +25,7 @@
  * $text = i18n::vget($key, $fill);
  * //output "hello world, you are a boy"
  */
-final class i18n {
+class i18n {
     public static $language = null;
 
     protected static $_languageData = array();

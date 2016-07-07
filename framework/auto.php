@@ -2,13 +2,13 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-05-26
+ * @version 2016-07-07
  * @desc autophp auto, check running enviroment and more closer to base layer
  *
  */
 final class auto {
 
-    const version = '1.6.4';
+    const version = '1.6.5';
     const author = 'ricolau<ricolau@qq.com>';
     const mode_http = 1;
     const mode_cli = 2;
@@ -251,6 +251,13 @@ final class auto {
 //            call_user_func(self::$shutdownFunction);
 //            return;
 //        }
+        
+        $ptx = new plugin_context(__METHOD__,array());
+        plugin::run('shutdown', $ptx);
+        if($ptx->breakOut!==null){
+            return $ptx->breakOut;
+        }
+        
         if (!auto::isDebugMode() || !self::$_showDebugConsole) {
             return;
         }
