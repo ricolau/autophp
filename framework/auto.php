@@ -1,18 +1,18 @@
 <?php
-
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-07-07
+ * @version 2016-07-12
  * @desc autophp auto, check running enviroment and more closer to base layer
+ * @link https://github.com/ricolau/autophp
  *
  */
-final class auto {
+class auto {
 
     const version = '1.6.5';
     const author = 'ricolau<ricolau@qq.com>';
     const mode_http = 1;
     const mode_cli = 2;
-    
+
     const performance_data_size = 128;
 
 
@@ -23,11 +23,11 @@ final class auto {
     private static $_hasRun = false;
     private static $_isDebugMode = false;
     private static $_showDebugConsole = false;
-    
+
     private static $_isDevMode = false;
-    
+
     private static $_classPath = array();
-    
+
     private static $_performance = array();
 
     public static function hasRun() {
@@ -37,7 +37,7 @@ final class auto {
     public static function run() {
         !defined('DS') && define('DS', DIRECTORY_SEPARATOR);
 
-	spl_autoload_register(array('auto', 'autoload'));
+        spl_autoload_register(array('auto', 'autoload'));
         register_shutdown_function(array('auto', 'shutdownCall'), array());
 
         if (self::$_hasRun) {
@@ -59,7 +59,7 @@ final class auto {
         }
         self::$_runtimeStart = microtime(true);
 
-        
+
     }
 
     /**
@@ -69,11 +69,11 @@ final class auto {
     public static function isCliMode() {
         return self::$_isCliMode;
     }
-    
+
     public static function isDevMode(){
         return self::$_isDevMode;
     }
-    
+
     public static function setDevMode($isDev = false){
         self::$_isDevMode = $isDev;
     }
@@ -200,15 +200,15 @@ final class auto {
                 }
             }
         }
- 
+
         return $file;
     }
-    
+
     public static function addClassPath($path){
         self::$_classPath[] = $path;
     }
-    
-    
+
+
     public static function performance($tag, $timecost, $info = array()){
         if(count(self::$_performance)>self::performance_data_size){
             array_shift(self::$_performance);
@@ -240,7 +240,7 @@ final class auto {
         }
         return $ret;
     }
-    
+
     public static function getRuntimeStart(){
         return self::$_runtimeStart;
     }
@@ -251,13 +251,13 @@ final class auto {
 //            call_user_func(self::$shutdownFunction);
 //            return;
 //        }
-        
+
         $ptx = new plugin_context(__METHOD__,array());
         plugin::run('shutdown', $ptx);
         if($ptx->breakOut!==null){
             return $ptx->breakOut;
         }
-        
+
         if (!auto::isDebugMode() || !self::$_showDebugConsole) {
             return;
         }
@@ -313,10 +313,10 @@ final class auto {
     public static function debugMsg($title, $msg) {
         self::$_debugMsg[] = array('title' => $title, 'msg' => $msg);
     }
-    
+
     public static function debugMsgExport(){
         return self::$_debugMsg;
     }
-    
+
 
 }
