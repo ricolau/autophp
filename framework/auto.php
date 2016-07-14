@@ -1,14 +1,14 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-07-12
+ * @version 2016-07-14
  * @desc autophp auto, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
  *
  */
 class auto {
 
-    const version = '1.6.5';
+    const version = '1.6.6';
     const author = 'ricolau<ricolau@qq.com>';
     const mode_http = 1;
     const mode_cli = 2;
