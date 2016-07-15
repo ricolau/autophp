@@ -37,10 +37,10 @@ class orm extends base {
         $this->_clearStat();
         parent::__construct();
     }
-
-    public static function instance($dbAlias) {
-        return new self($dbAlias);
-    }
+//
+//    public static function instance($dbAlias) {
+//        return new self($dbAlias);
+//    }
 
     private function _clearStat() {
         $this->_sql = array();

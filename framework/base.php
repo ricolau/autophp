@@ -6,7 +6,7 @@
  * @desc base class
  *
  */
-abstract class base {
+class base {
     
     private static $_singleton = array();
     
