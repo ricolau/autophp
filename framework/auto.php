@@ -12,8 +12,6 @@ class auto {
     const author = 'ricolau<ricolau@qq.com>';
     const sapi_type_http = 1;
     const sapi_type_cli = 2;
-
-
     
     const mode_dev = 'dev';
     const mode_test = 'test';
@@ -304,7 +302,7 @@ class auto {
             return;
         }
         $rn = "\n";
-
+/*
         $hasNotRunPlugins = plugin::getHasNotRunPlugin(plugin::type_before_run);
         if ($hasNotRunPlugins) {
             $msg = array('title' => '<font color=red><b>Warning: some plugins NOT RUN(maybe "exit()" used! in your program?)</b></font>', 'msg' => var_export($hasNotRunPlugins, true));
@@ -315,7 +313,7 @@ class auto {
             $msg = array('title' => '<font color=red><b>Warning: some plugins NOT RUN(maybe "exit()" used in your program?)</b></font>', 'msg' => var_export($hasNotRunPlugins2, true));
             array_unshift(self::$_debugMsg, $msg);
         }
-
+*/
 
         //total cost
         auto::$_runtimeEnd = microtime(true);

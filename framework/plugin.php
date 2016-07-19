@@ -32,8 +32,7 @@ final class plugin {
      */
     public static function run($type, plugin_context &$ptx) {
         if (isset(self::$_plugins[$type]) && is_array(self::$_plugins[$type])) {
-            while (self::$_plugins[$type]) {
-                $plugin = array_shift(self::$_plugins[$type]);
+            foreach (self::$_plugins[$type] as $plugin) {
                 $_debugMicrotime = microtime(true);
                 auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'start ---->>>>');
                 self::_execPlugin($plugin, $ptx);
@@ -80,6 +79,7 @@ final class plugin {
     }
 
     public static function getHasNotRunPlugin($type) {
+        return null;
         if (!$type) {
             return;
         }
