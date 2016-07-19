@@ -25,7 +25,7 @@ abstract class controller extends base {
         if ($path) {
             $this->_render->render($path);
             
-            ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
             
             return;
         }
@@ -40,7 +40,7 @@ abstract class controller extends base {
         }
         $this->_render->render($path);
 
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
     }
 
     public function slot($slot, $isDisplay = false) {
@@ -52,7 +52,7 @@ abstract class controller extends base {
         if ($path) {
             $ret = $this->_render->fetch($path);
 
-            ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
             
             return $ret;
         }
@@ -68,7 +68,7 @@ abstract class controller extends base {
 
         $ret = $this->_render->fetch($path);
 
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('path'=>$path)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $path . ')', 'cost ' . $timeCost . 's ');
         
         return $ret;
     }

@@ -218,7 +218,7 @@ class dispatcher {
         }
         $method->invoke($class->newInstance());
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('controller'=>$className,'action'=>$actionName)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . $timeCost . 's');
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('controller'=>$className,'action'=>$actionName)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . $timeCost . 's');
 
         plugin::run('after_run', new plugin_context(__METHOD__,array()));
     }

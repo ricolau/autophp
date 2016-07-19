@@ -253,15 +253,15 @@ class auto {
 //        
 //    }
 
-    public static function performance($tag, $timecost, $info = array()){
-        return performance::add($tag, $timecost, $info);
-    }
-    public static function performanceGet(){
-        return performance::dump();
-    }
-    public static function performanceGetClean(){
-        return performance::dumpClear();
-    }
+//    public static function performance($tag, $timecost, $info = array()){
+//        return performance::add($tag, $timecost, $info);
+//    }
+//    public static function performanceGet(){
+//        return performance::dump();
+//    }
+//    public static function performanceGetClean(){
+//        return performance::dumpClear();
+//    }
 
     /**
      * @desc 此处和 util::baseChars() 重合，因为一般autoload 的时候还没有加载到 util，所以此处故意冗余

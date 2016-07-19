@@ -37,7 +37,7 @@ final class plugin {
                 $_debugMicrotime = microtime(true);
                 auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'start ---->>>>');
                 self::_execPlugin($plugin, $ptx);
-                ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('plugin'=>$plugin)) && auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . $timeCost . 's');
+                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('plugin'=>$plugin)) && auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . $timeCost . 's');
                 self::$_pluginsHasRun[] = $plugin;
             }
         }
