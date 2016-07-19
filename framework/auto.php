@@ -8,12 +8,11 @@
  */
 class auto {
 
-    const version = '1.6.6';
+    const version = '1.7.0';
     const author = 'ricolau<ricolau@qq.com>';
     const sapi_type_http = 1;
     const sapi_type_cli = 2;
 
-    const performance_data_size = 128;
 
     
     const mode_dev = 'dev';
@@ -31,8 +30,6 @@ class auto {
     private static $_showDebugConsole = false;
 
     private static $_classPath = array();
-
-    private static $_performance = array();
 
     public static function hasRun() {
         return self::$_hasRun;
@@ -251,21 +248,19 @@ class auto {
         self::$_classPath[] = $path;
     }
 
+//    
+//    public static function performanceTagSet($tag, $mode = 1){
+//        
+//    }
 
     public static function performance($tag, $timecost, $info = array()){
-        if(count(self::$_performance)>self::performance_data_size){
-            array_shift(self::$_performance);
-        }
-        self::$_performance[] = array('time'=>time(),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
-        return true;
+        return performance::add($tag, $timecost, $info);
     }
     public static function performanceGet(){
-        return self::$_performance;
+        return performance::dump();
     }
     public static function performanceGetClean(){
-        $tmp =  self::$_performance;
-        self::$_performance = array();
-        return $tmp;
+        return performance::dumpClear();
     }
 
     /**
