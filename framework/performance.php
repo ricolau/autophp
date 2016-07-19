@@ -40,7 +40,7 @@ class performance {
     }
 
     public static function setTagMode($tag, $mode = self::tag_mode_fully, $options = null){
-        if(self::$tag && $mode){
+        if($tag && $mode){
             if($mode===self::tag_mode_sampling){//sampling 抽样概率是多少
                 $options = (is_numeric($options) && $options>0) ? $options : 100;
             }
