@@ -47,7 +47,7 @@ class performance {
         }else{
             self::$_currentSize++;
         }
-        if(self::$_currentSize > self::$_sizeLimit){
+        if(self::$_currentSize - self::$_sizeLimit > 2 && self::$_currentSize % 3==0){
 
             $ptx = new plugin_context(__METHOD__, array());
             plugin::run('notice::'.__METHOD__,$ptx);
@@ -56,7 +56,9 @@ class performance {
             }
   
             queue::out(self::$_hostKey);
-            self::$_currentSize--;
+            queue::out(self::$_hostKey);
+            queue::out(self::$_hostKey);
+            self::$_currentSize -= 3;
         }
         return true;
     }

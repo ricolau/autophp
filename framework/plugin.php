@@ -10,7 +10,7 @@ final class plugin {
 
     private static $_plugins = array();
     private static $_pluginsHasRun = array();
-    private static $_allPlugins = array();
+ //   private static $_allPlugins = array();
 
     const type_before_run = 'before_run';
 //    const type_after_run = 'after_run';
@@ -23,7 +23,7 @@ final class plugin {
      */
     public static function add($pluginName, $type = 'before_run') {
         self::$_plugins[$type][] = $pluginName;
-        self::$_allPlugins[$type][] = $pluginName;
+        //self::$_allPlugins[$type][] = $pluginName;
     }
 
     /**
@@ -66,10 +66,15 @@ final class plugin {
     }
 
 
-    public static function getAllPlugins() {
-        return self::$_allPlugins;
+    public static function getPluginByType($type){
+        if($type){
+            return self::$_plugins[$type];
+        }
     }
-
+    public static function getAllPlugins() {
+        return self::$_plugins;
+    }
+/*
     public static function getHasRunPlugin($type) {
         if (!$type) {
             return;
@@ -86,5 +91,7 @@ final class plugin {
         return self::$_plugins[$type];
 
     }
+
+ */
 
 }
