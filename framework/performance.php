@@ -21,6 +21,8 @@ class performance {
     
     protected static $_tagModes = array();
     
+    protected static $_samplingCounts = array();
+    
     public static function setHostKey($key){
         if($key!==null){
             return self::$_hostKey = $key;
@@ -42,7 +44,8 @@ class performance {
     public static function setTagMode($tag, $mode = self::tag_mode_fully, $options = null){
         if($tag && $mode){
             if($mode===self::tag_mode_sampling){//sampling 抽样概率是多少
-                $options = (is_numeric($options) && $options>0) ? $options : 100;
+                $options = intval($options);
+                $options = $options>0 ? $options : 100;
             }
             self::$_tagModes[$tag] = array('mode'=>$mode, 'options'=>$options);
         }
@@ -54,9 +57,14 @@ class performance {
             return false;
         }elseif(isset(self::$_tagModes[$tag]) && self::$_tagModes[$tag]['mode']==self::tag_mode_sampling){
             
-            if(rand(1, self::$_tagModes[$tag]['mode']['options']) !== 1){
+            if(!isset(self::$_samplingCounts[$tag])){
+                self::$_samplingCounts[$tag]=0;
+            }
+            if(self::$_samplingCounts[$tag] !== self::$_tagModes[$tag]['options']){
+                self::$_samplingCounts[$tag]++;
                 return false;
             }
+            self::$_samplingCounts[$tag] = 0;
         }
         
         $pf = array('time'=>time(),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
