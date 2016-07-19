@@ -15,6 +15,12 @@ class performance {
     
     protected static $_currentSize = 0;
     
+    const tag_mode_fully = 'total';
+    const tag_mode_sampling = 'sampling';
+    const tag_mode_close = 'close';
+    
+    protected static $_tagModes = array();
+    
     public static function setHostKey($key){
         if($key!==null){
             return self::$_hostKey = $key;
@@ -33,11 +39,25 @@ class performance {
         return self::$_currentSize;
     }
 
-//    public static function tagSet($tag, $mode = 1, $options = null){
-//        
-//    }
-
+    public static function setTagMode($tag, $mode = self::tag_mode_fully, $options = null){
+        if(self::$tag && $mode){
+            if($mode===self::tag_mode_sampling){//sampling 抽样概率是多少
+                $options = (is_numeric($options) && $options>0) ? $options : 100;
+            }
+            self::$_tagModes[$tag] = array('mode'=>$mode, 'options'=>$options);
+        }
+        
+    }
+    
     public static function add($tag, $timecost, $info = array()){
+        if(isset(self::$_tagModes[$tag]) && self::$_tagModes[$tag]['mode']==self::tag_mode_close){
+            return false;
+        }elseif(isset(self::$_tagModes[$tag]) && self::$_tagModes[$tag]['mode']==self::tag_mode_sampling){
+            
+            if(rand(1, self::$_tagModes[$tag]['mode']['options']) !== 1){
+                return false;
+            }
+        }
         
         $pf = array('time'=>time(),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
         queue::in(self::$_hostKey, $pf);

@@ -8,7 +8,10 @@
  */
 class auto {
 
-    const version = '1.7.0';
+    //a tremendous version not compatible with old versions~
+    const version = '2.0.0';
+    
+    
     const author = 'ricolau<ricolau@qq.com>';
     const sapi_type_http = 1;
     const sapi_type_cli = 2;
