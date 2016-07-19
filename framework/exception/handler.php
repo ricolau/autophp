@@ -10,7 +10,7 @@
 class exception_handler {
 
     public static function topDeal($e) {
-        if (!auto::isDebugMode() && !auto::isCliMode()) {
+        if (!auto::isDebug() && !auto::isCli()) {
             //response::top404();
             echo 'error occured!';
         } else {

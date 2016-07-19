@@ -41,7 +41,7 @@ class cache_memcached extends cache_abstract {
         foreach ($servers as $server) {
             $this->_memcached->addServer($server['host'], $server['port'], $server['weight']);
         }
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
 
         //return $this->_memcached;
         return $this;
@@ -57,7 +57,7 @@ class cache_memcached extends cache_abstract {
         $_debugMicrotime = microtime(true);        
         $ret = call_user_func_array(array($this->_memcached, 'set'), array($key, $val, $expire));
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, arguments: ' . var_export(array($key,$val,$expire), true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, arguments: ' . var_export(array($key,$val,$expire), true));
         
         return $ret;
     }
@@ -65,11 +65,11 @@ class cache_memcached extends cache_abstract {
     public function __call($funcName, $arguments) {
         $_debugMicrotime = microtime(true);
         if (!$this->_memcached) {
-            throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
+            throw new exception_cache('connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
         $ret = call_user_func_array(array($this->_memcached, $funcName), $arguments);
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__CLASS__ . '::' . $funcName, $timeCost, array('alias'=>$this->_alias)) && auto::isDebugMode() && auto::debugMsg(__CLASS__ . '::' . $funcName, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__CLASS__ . '::' . $funcName, $timeCost, array('alias'=>$this->_alias)) && auto::isDebug() && auto::debugMsg(__CLASS__ . '::' . $funcName, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
 
         return $ret;
     }

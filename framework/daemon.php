@@ -10,7 +10,7 @@ abstract class daemon {
 
     public function __construct() {
        
-        if (!auto::isCliMode()) {
+        if (!auto::isCli()) {
             throw new exception_base('cannot run daemon with http request!', -1);
         }
         $ptx = new plugin_context(__METHOD__,array());

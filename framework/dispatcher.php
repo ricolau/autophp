@@ -32,7 +32,7 @@ class dispatcher {
         self::_httpRoute();
         /*
          *
-          if (!auto::isCliMode()) {
+          if (!auto::isCli()) {
           self::_httpRoute();
           } else {
           self::_cliRoute();
@@ -205,7 +205,7 @@ class dispatcher {
             throw new exception_404('controller not exist: ' . $className, exception_404::type_controller_not_exist);
         }
         $actionName = self::$_currentAction . 'Action';
-        auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'start ---->>>>');
+        auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'start ---->>>>');
 
         $class = new ReflectionClass($className);
         if ($class->isAbstract()) {
@@ -218,7 +218,7 @@ class dispatcher {
         }
         $method->invoke($class->newInstance());
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('controller'=>$className,'action'=>$actionName)) && auto::isDebugMode() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . $timeCost . 's');
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('controller'=>$className,'action'=>$actionName)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . $timeCost . 's');
 
         plugin::run('after_run', new plugin_context(__METHOD__,array()));
     }

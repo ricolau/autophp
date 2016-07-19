@@ -13,7 +13,8 @@ final class plugin {
     private static $_allPlugins = array();
 
     const type_before_run = 'before_run';
-    const type_after_run = 'after_run';
+//    const type_after_run = 'after_run';
+    const type_after_run = 'shutdown';
 
     /**
      * add a plugin for run
@@ -34,9 +35,9 @@ final class plugin {
             while (self::$_plugins[$type]) {
                 $plugin = array_shift(self::$_plugins[$type]);
                 $_debugMicrotime = microtime(true);
-                auto::isDebugMode() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'start ---->>>>');
+                auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'start ---->>>>');
                 self::_execPlugin($plugin, $ptx);
-                ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('plugin'=>$plugin)) && auto::isDebugMode() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . $timeCost . 's');
+                ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('plugin'=>$plugin)) && auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . $timeCost . 's');
                 self::$_pluginsHasRun[] = $plugin;
             }
         }

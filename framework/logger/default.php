@@ -66,7 +66,7 @@ class logger_default extends logger_abstract {
     public function add($level, $msg){
         //as a logger, i won't throw any exception to interrupt your program
         if(!isset($this->_conf[$level])){
-            if(auto::isDebugMode() || auto::isDevMode()){
+            if(auto::isDebug() || auto::isDevMode()){
                 auto::debugMsg('<font color=red>warning</font>', 'log got no conf for level:'.$level);
             }else{
                 return false;
@@ -81,7 +81,7 @@ class logger_default extends logger_abstract {
         if(!is_dir($dir)){
             $mk = @mkdir($dir, 0777, true);
             if(!$mk){
-                auto::isDebugMode() && auto::debugMsg('<font color=red>warning</font>', 'failed for make log dir:'.$dir);
+                auto::isDebug() && auto::debugMsg('<font color=red>warning</font>', 'failed for make log dir:'.$dir);
                 return false;
             }
         }

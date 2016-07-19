@@ -24,19 +24,19 @@ class cache_redis extends cache_abstract {
         $this->_redis = new Redis();
         if (!$this->_confs['host'] || !$this->_confs['port']) {
             throw new exception_cache(
-                'redis connection host and port error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''),
+                'redis connection host and port error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''),
                 exception_cache::type_server_connection_error
             );
         }
         $con = $this->_redis->connect($this->_confs['host'], $this->_confs['port']);
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
 
         if(!$con){
             //设置重入次数上限,防止程序陷入死循环重入崩溃
             $seqid = md5($this->_alias.__METHOD__);
             if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid]>=self::$_reentrantTimesLimit){
                 throw new exception_cache(
-                'redis connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''),
+                'redis connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''),
                 exception_cache::type_server_connection_error
             );
             }
@@ -59,7 +59,7 @@ class cache_redis extends cache_abstract {
     public function __call($funcName, $arguments) {
         $_debugMicrotime = microtime(true);
         if (!$this->_redis) {
-            throw new exception_cache('connection error!' . (auto::isDebugMode() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
+            throw new exception_cache('connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
         try{
             $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
@@ -83,7 +83,7 @@ class cache_redis extends cache_abstract {
             }
             throw $e;
         }
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebugMode() && auto::debugMsg(__CLASS__ . '::' . $funcName, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebug() && auto::debugMsg(__CLASS__ . '::' . $funcName, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
         
         return $ret;
     }

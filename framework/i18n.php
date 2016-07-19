@@ -82,7 +82,7 @@ class i18n {
         if($language !== null){
             self::$language = $language;
         }
-        
+
     }
     public static function getLanguage() {
         return self::$language;

@@ -10,21 +10,25 @@ class auto {
 
     const version = '1.6.6';
     const author = 'ricolau<ricolau@qq.com>';
-    const mode_http = 1;
-    const mode_cli = 2;
+    const sapi_type_http = 1;
+    const sapi_type_cli = 2;
 
     const performance_data_size = 128;
 
+    
+    const mode_dev = 'dev';
+    const mode_test = 'test';
+    const mode_online = 'online';
+    
+    private static $_runMode = self::mode_online;
 
     private static $_runtimeStart = 0;
     private static $_runtimeEnd = 0;
 
-    private static $_isCliMode = false;
+    private static $_isCli = false;
     private static $_hasRun = false;
-    private static $_isDebugMode = false;
+    private static $_isDebug = false;
     private static $_showDebugConsole = false;
-
-    private static $_isDevMode = false;
 
     private static $_classPath = array();
 
@@ -46,7 +50,7 @@ class auto {
 
         self::$_hasRun = true;
         if (php_sapi_name() == 'cli') {
-            self::$_isCliMode = true;
+            self::$_isCli = true;
         }
         if (get_magic_quotes_gpc()) {
             throw new exception_base('magic quotes should be turned off~ ', exception_base::type_magic_quotes_on);
@@ -63,43 +67,82 @@ class auto {
     }
 
     /**
+     * @todo remove this function define
      * get sapi mode
      * @return type
+     * 
      */
     public static function isCliMode() {
-        return self::$_isCliMode;
+        return self::isCli();
+    }
+    
+    public static function isCli(){
+        return self::$_isCli;
     }
 
+    
+      
+    public static function setMode($mode = self::mode_online){
+        $list = array(
+            self::mode_dev=>true,
+            self::mode_test=>true,
+            self::mode_online=>true,
+        );
+        if(!isset($list[$mode])){
+            $mode = self::mode_online;
+        }
+        self::$_runMode = $mode;
+    }
+    
+    public static function getMode(){
+        return self::$_runMode;
+    }
+    public static function isTestMode(){
+        return self::$_runMode === self::mode_test ? true : false;
+    }
+    public static function isOnlineMode(){
+        return self::$_runMode === self::mode_online ? true : false;
+    }
     public static function isDevMode(){
-        return self::$_isDevMode;
+        return self::$_runMode === self::mode_dev;
     }
 
     public static function setDevMode($isDev = false){
-        self::$_isDevMode = $isDev;
+        self::setMode($isDev ? self::mode_dev : self::mode_online);
     }
+    
+    
 
     /**
+     * @todo  reomve this function
      * check whether running in development enviroment
      * @return type
+     *
      */
     public static function isDebugMode() {
-        if (is_null(self::$_isDebugMode)) {
-            self::$_isDebugMode = false;
-        }
-        return self::$_isDebugMode;
+        return self::isDebug();
     }
-
+    
+    public static function isDebug(){
+        return self::$_isDebug;
+    }
+    
     /**
+     * @todo remove this function 
      * set debug mode
      * @return type
      */
     public static function setDebugMode($debugMode = false, $showDebugConsole = true) {
+        return self::setDebug($debugMode,$showDebugConsole);
+    }
+    
+    public static function setDebug($debugMode = false, $showDebugConsole = true){
         if ($debugMode === true) {
             ini_set('display_errors', true);
             error_reporting(E_ALL ^ E_NOTICE);
         }
         self::$_showDebugConsole = $showDebugConsole;
-        return self::$_isDebugMode = $debugMode;
+        return self::$_isDebug = $debugMode;
     }
 
 //    public static function register_shutdown_function($callback = null){
@@ -119,7 +162,7 @@ class auto {
         $className = self::_parseClassname($className);
 
         if (!$className) {
-            if(auto::isDebugMode()){
+            if(auto::isDebug()){
                 throw new exception_base('class name error' . $className, exception_base::TYPE_CLASS_NOT_EXISTS);
             }
         }else{
@@ -258,7 +301,7 @@ class auto {
             return $ptx->breakOut;
         }
 
-        if (!auto::isDebugMode() || !self::$_showDebugConsole) {
+        if (!auto::isDebug() || !self::$_showDebugConsole) {
             return;
         }
         //do not output debug info when ajax request
@@ -284,10 +327,10 @@ class auto {
         $msg = array('title' => 'total runtime cost', 'msg' => (auto::$_runtimeEnd - auto::$_runtimeStart));
         array_unshift(self::$_debugMsg, $msg);
 
-        if (auto::isCliMode()) {
+        if (auto::isCli()) {
             $output = '
 #################### debug info : ####################
-(you can turn this off by "auto::setDebugMode(false)")
+(you can turn this off by "auto::setDebug(false)")
                 ';
             foreach (self::$_debugMsg as $item) {
                 $tstr = '
@@ -300,7 +343,7 @@ class auto {
         } else {
             $output = '<style>.autophp_debug_span{width:100%;display:block;border-bottom: dashed 1px gray;margin: 3px 0 3px 0;padding:3px 0 3px 0;font-size: 14px;font-family: Arial}</style>
                 <fieldset>
-                <span  class="autophp_debug_span"><b>debug info : </b> (you can turn this off by "auto::setDebugMode(false)")</span>';
+                <span  class="autophp_debug_span"><b>debug info : </b> (you can turn this off by "auto::setDebug(false)")</span>';
             foreach (self::$_debugMsg as $item) {
                 $tstr = '<span class="autophp_debug_span"><font color=blue>' . $item['title'] . ': </font>' . $item['msg'] . '</span>';
                 $output .= $tstr;

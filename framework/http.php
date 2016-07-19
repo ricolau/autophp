@@ -112,7 +112,7 @@ class http {
         }
 
         curl_close($ci);
-        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $args) && auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($args, true).",  \n  responsed:".$response);
+        ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $args) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($args, true).",  \n  responsed:".$response);
 
         return $response;
     }
@@ -199,7 +199,7 @@ class http {
                     'multi'=>$multi,'proxy'=>$proxy);
         
         ($timeCost = microtime(true) - $_debugMicrotime) && auto::performance(__METHOD__, $timeCost, $tmpArgs) &&
-                auto::isDebugMode() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . 
+                auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . 
                 var_export($tmpArgs,true) .",  \n  responsed:".$response//end var_export
                 );
 
