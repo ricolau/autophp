@@ -22,7 +22,7 @@ try {
     //auto::run() 当前主要负责加载autoload 和一些常量定义的检测
     //关掉或开启debugMode，此处可以不处理，默认为关闭！
     $debugMode = true;
-    auto::setDebugMode($debugMode);
+    auto::setDebug($debugMode);
 
     auto::run();
 

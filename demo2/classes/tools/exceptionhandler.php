@@ -11,7 +11,7 @@ class tools_exceptionhandler
 
     public static function topDeal($e)
     {
-        if (!auto::isDebugMode() && !auto::isCliMode())
+        if (!auto::isDebug() && !auto::isCli())
         {
             echo 'sorry, something bad happened!';
         } else
@@ -23,7 +23,7 @@ class tools_exceptionhandler
 
     public static function topDeal404($e)
     {
-        if (!auto::isDebugMode() && !auto::isCliMode())
+        if (!auto::isDebug() && !auto::isCli())
         {
             echo '404, page not found!';
         } else

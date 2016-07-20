@@ -22,7 +22,7 @@ try {
     
     //关掉或开启debugMode，此处可以不处理，默认为关闭！
     $debugMode = true;
-    auto::setDebugMode($debugMode);
+    auto::setDebug($debugMode);
     
     //设置时区
     date_default_timezone_set("Asia/Shanghai");
