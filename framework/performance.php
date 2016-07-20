@@ -11,11 +11,11 @@ class performance {
     protected static $_performance = array();
     protected static $_sizeLimit = 128;
     
-    protected static $_hostKey = '__auto_performance_key';
+    protected static $_hostKey = '__auto_performance';
     
     protected static $_currentSize = 0;
     
-    const tag_mode_fully = 'total';
+    const tag_mode_fully = 'fully';
     const tag_mode_sampling = 'sampling';
     const tag_mode_close = 'close';
     
@@ -29,9 +29,12 @@ class performance {
         }
         return false;
     }
+    /*
     public static function getHostKey(){
         return self::$_hostKey;
     }
+     * 
+     */
     
     public static function setSizeLimit($top = 128){
         self::$_sizeLimit = $top>0 ? $top : 128;
@@ -49,12 +52,11 @@ class performance {
             }
             self::$_tagModes[$tag] = array('mode'=>$mode, 'options'=>$options);
         }
-        
     }
     
     public static function add($tag, $timecost, $info = array()){
         if(isset(self::$_tagModes[$tag]) && self::$_tagModes[$tag]['mode']==self::tag_mode_close){
-            return false;
+            return true;
         }elseif(isset(self::$_tagModes[$tag]) && self::$_tagModes[$tag]['mode']==self::tag_mode_sampling){
             
             if(!isset(self::$_samplingCounts[$tag])){
@@ -62,7 +64,7 @@ class performance {
             }
             if(self::$_samplingCounts[$tag] !== self::$_tagModes[$tag]['options']){
                 self::$_samplingCounts[$tag]++;
-                return false;
+                return true;
             }
             self::$_samplingCounts[$tag] = 0;
         }

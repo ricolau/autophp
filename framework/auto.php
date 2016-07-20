@@ -9,7 +9,7 @@
 class auto {
 
     //a tremendous version not compatible with old versions~
-    const version = '2.0.0';
+    const version = '2.0.1';
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -28,7 +28,6 @@ class auto {
     private static $_isCli = false;
     private static $_hasRun = false;
     private static $_isDebug = false;
-    private static $_showDebugConsole = false;
 
     private static $_classPath = array();
 
@@ -134,12 +133,11 @@ class auto {
         return self::setDebug($debugMode,$showDebugConsole);
     }
     
-    public static function setDebug($debugMode = false, $showDebugConsole = true){
+    public static function setDebug($debugMode = false){
         if ($debugMode === true) {
             ini_set('display_errors', true);
             error_reporting(E_ALL ^ E_NOTICE);
         }
-        self::$_showDebugConsole = $showDebugConsole;
         return self::$_isDebug = $debugMode;
     }
 
@@ -291,13 +289,15 @@ class auto {
 //            return;
 //        }
 
+        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart);
+        
         $ptx = new plugin_context(__METHOD__,array());
-        plugin::run('shutdown', $ptx);
+        plugin::run(plugin::type_after_run, $ptx);
         if($ptx->breakOut!==null){
             return $ptx->breakOut;
         }
 
-        if (!auto::isDebug() || !self::$_showDebugConsole) {
+        if (!auto::isDebug()) {
             return;
         }
         //do not output debug info when ajax request
