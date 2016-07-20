@@ -69,9 +69,9 @@ class auto {
      * @return type
      * 
      */
-    public static function isCliMode() {
-        return self::isCli();
-    }
+//    public static function isCliMode() {
+//        return self::isCli();
+//    }
     
     public static function isCli(){
         return self::$_isCli;
@@ -103,10 +103,10 @@ class auto {
     public static function isDevMode(){
         return self::$_runMode === self::mode_dev;
     }
-
-    public static function setDevMode($isDev = false){
-        self::setMode($isDev ? self::mode_dev : self::mode_online);
-    }
+//
+//    public static function setDevMode($isDev = false){
+//        self::setMode($isDev ? self::mode_dev : self::mode_online);
+//    }
     
     
 
@@ -116,10 +116,10 @@ class auto {
      * @return type
      *
      */
-    public static function isDebugMode() {
-        return self::isDebug();
-    }
-    
+//    public static function isDebugMode() {
+//        return self::isDebug();
+//    }
+//    
     public static function isDebug(){
         return self::$_isDebug;
     }
@@ -129,10 +129,10 @@ class auto {
      * set debug mode
      * @return type
      */
-    public static function setDebugMode($debugMode = false, $showDebugConsole = true) {
-        return self::setDebug($debugMode,$showDebugConsole);
-    }
-    
+//    public static function setDebugMode($debugMode = false, $showDebugConsole = true) {
+//        return self::setDebug($debugMode,$showDebugConsole);
+//    }
+//    
     public static function setDebug($debugMode = false){
         if ($debugMode === true) {
             ini_set('display_errors', true);
