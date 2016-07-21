@@ -32,8 +32,8 @@ try {
 
     //============================ 对 plugin 进行定义 ============================
     //如果需要，定义一些（个数不限）在 action 执行之前预执行 和 后执行的程序
-    plugin::add('plugin_wbinit', plugin::type_before_run);
-    plugin::add('plugin_backEnd', plugin::type_after_run);
+    plugin::add('plugin_init', dispatcher::plugin_before_run);
+    plugin::add('plugin_end',  auto::plugin_shutdown);
     
     plugin::add('plugin_dbconnecterror','error::db_mysqlpdo::_connect');
 

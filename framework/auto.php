@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-07-20
+ * @version 2016-07-21
  * @desc autophp auto, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
  *
@@ -9,7 +9,7 @@
 class auto {
 
     //a tremendous version not compatible with old versions~
-    const version = '2.0.2';
+    const version = '2.0.3';
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -19,6 +19,8 @@ class auto {
     const mode_dev = 'dev';
     const mode_test = 'test';
     const mode_online = 'online';
+    
+    const plugin_shutdown = 'auto_shutdown';
     
     private static $_runMode = self::mode_online;
 
@@ -64,14 +66,10 @@ class auto {
     }
 
     /**
-     * @todo remove this function define
      * get sapi mode
      * @return type
      * 
      */
-//    public static function isCliMode() {
-//        return self::isCli();
-//    }
     
     public static function isCli(){
         return self::$_isCli;
@@ -111,28 +109,16 @@ class auto {
     
 
     /**
-     * @todo  reomve this function
      * check whether running in development enviroment
      * @return type
      *
      */
-//    public static function isDebugMode() {
-//        return self::isDebug();
-//    }
-//    
+
     public static function isDebug(){
         return self::$_isDebug;
     }
     
-    /**
-     * @todo remove this function 
-     * set debug mode
-     * @return type
-     */
-//    public static function setDebugMode($debugMode = false, $showDebugConsole = true) {
-//        return self::setDebug($debugMode,$showDebugConsole);
-//    }
-//    
+  
     public static function setDebug($debugMode = false){
         if ($debugMode === true) {
             ini_set('display_errors', true);
@@ -141,15 +127,7 @@ class auto {
         return self::$_isDebug = $debugMode;
     }
 
-//    public static function register_shutdown_function($callback = null){
-//        if(!$callback){
-//            return;
-//        }
-//        self::$shutdownFunction = $callback;
-//    }
 
-
-//    public static $shutdownFunction = null;
 
     protected static $_debugMsg = array();
 
@@ -247,20 +225,7 @@ class auto {
         self::$_classPath[] = $path;
     }
 
-//    
-//    public static function performanceTagSet($tag, $mode = 1){
-//        
-//    }
 
-//    public static function performance($tag, $timecost, $info = array()){
-//        return performance::add($tag, $timecost, $info);
-//    }
-//    public static function performanceGet(){
-//        return performance::dump();
-//    }
-//    public static function performanceGetClean(){
-//        return performance::dumpClear();
-//    }
 
     /**
      * @desc 此处和 util::baseChars() 重合，因为一般autoload 的时候还没有加载到 util，所以此处故意冗余
@@ -292,7 +257,7 @@ class auto {
         performance::add(__METHOD__, microtime(true) - self::$_runtimeStart);
         
         $ptx = new plugin_context(__METHOD__,array());
-        plugin::run(plugin::type_after_run, $ptx);
+        plugin::run(auto::plugin_shutdown, $ptx);
         if($ptx->breakOut!==null){
             return $ptx->breakOut;
         }

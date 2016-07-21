@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2015-08-31
+ * @version 2016-07-20
  * @desc autophp dispatcher
  *
  */
@@ -20,6 +20,9 @@ class dispatcher {
 
     const path_deep3 = 3;
     const path_deep2 = 2;
+    
+    const plugin_before_run = 'dispatcher_before_run';
+    const plugin_after_run = 'dispatcher_after_run';
 
     public static function instance() {
         if (!self::$_instance) {
@@ -191,7 +194,7 @@ class dispatcher {
     public function run() {
         
         $ptx = new plugin_context(__METHOD__,array());
-        plugin::run('before_run', $ptx);
+        plugin::run(dispatcher::plugin_before_run, $ptx);
 
         $_debugMicrotime = microtime(true);
 
@@ -220,7 +223,7 @@ class dispatcher {
         
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('controller'=>$className,'action'=>$actionName)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . $timeCost . 's');
 
-        plugin::run('after_run', new plugin_context(__METHOD__,array()));
+        plugin::run(dispatcher::plugin_after_run, new plugin_context(__METHOD__,array()));
     }
 
 }

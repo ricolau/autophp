@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-04-29
+ * @version 2016-07-20
  * @desc autophp plugin tool
  *
  */
@@ -10,11 +10,9 @@ final class plugin {
 
     private static $_plugins = array();
     private static $_pluginsHasRun = array();
- //   private static $_allPlugins = array();
-
-    const type_before_run = 'before_run';
-//    const type_after_run = 'after_run';
-    const type_after_run = 'shutdown';
+//    const type_before_run = 'before_run';
+////    const type_after_run = 'after_run';
+//    const type_after_run = 'shutdown';
 
     /**
      * add a plugin for run
@@ -74,24 +72,5 @@ final class plugin {
     public static function getAllPlugins() {
         return self::$_plugins;
     }
-/*
-    public static function getHasRunPlugin($type) {
-        if (!$type) {
-            return;
-        }
-        return self::$_pluginsHasRun[$type];
-
-    }
-
-    public static function getHasNotRunPlugin($type) {
-        return null;
-        if (!$type) {
-            return;
-        }
-        return self::$_plugins[$type];
-
-    }
-
- */
 
 }
