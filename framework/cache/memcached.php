@@ -32,8 +32,8 @@ class cache_memcached extends cache_abstract {
         $_debugMicrotime = microtime(true);
         
         $memcachedClass = 'Memcached';
-        if(!auto::autoload($memcacheClass)){
-            throw new exception_cache('class not exist for '.$memcacheClass.', check your php extensions~', exception_cache::type_memcache_not_exist);
+        if(!auto::autoload($memcachedClass)){
+            throw new exception_cache('class not exist for '.$memcachedClass.', check your php extensions~', exception_cache::type_memcache_not_exist);
         }
        
         $this->_memcached = new $memcachedClass();
