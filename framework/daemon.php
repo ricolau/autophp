@@ -29,7 +29,7 @@ abstract class daemon {
     public function __destruct(){
         
         $ptx = new plugin_context(__METHOD__,array());
-        plugin::run(dameon::plugin_destruct, $ptx);
+        plugin::run(daemon::plugin_destruct, $ptx);
     }
 
 }
