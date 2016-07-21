@@ -84,6 +84,9 @@ class performance {
             if($ptx->breakOut){
                 return $ptx->breakOut;
             }
+            if(self::$_currentSize===0){
+                return true;   
+            }
   
             queue::out(self::$_hostKey);
             queue::out(self::$_hostKey);
