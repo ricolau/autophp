@@ -72,7 +72,7 @@ class performance {
         $pf = array('time'=>time(),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
         queue::in(self::$_hostKey, $pf);
         
-        if(self::$_currentSize===0){
+        if(self::$_currentSize<=0){
             self::$_currentSize = queue::size(self::$_hostKey);
         }else{
             self::$_currentSize++;
