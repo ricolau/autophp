@@ -7,14 +7,14 @@
 
 
 ## >>简体中文版介绍
-* [README](https://ricolau.gitbooks.io/autophp/content/README.md)
-* [新建一个APP](https://ricolau.gitbooks.io/autophp/content/create_new.md)
-* [APP目录树解释](https://ricolau.gitbooks.io/autophp/content/app_tree.md)
-* [class实例化](https://ricolau.gitbooks.io/autophp/content/class_instance.md)
-* [dispatcher/ url路由](https://ricolau.gitbooks.io/autophp/content/dispatcher.md)
-* [request封装](https://ricolau.gitbooks.io/autophp/content/request.md)
-* [config](https://ricolau.gitbooks.io/autophp/content/config.md)
-* [db wrapper](https://ricolau.gitbooks.io/autophp/content/db_wrapper.md)
-* [debug](https://ricolau.gitbooks.io/autophp/content/debug.md)
+* [README](https://ricolau.gitbooks.io/autophp/content/README.html)
+* [新建一个APP](https://ricolau.gitbooks.io/autophp/content/create_new.html)
+* [APP目录树解释](https://ricolau.gitbooks.io/autophp/content/app_tree.html)
+* [class实例化](https://ricolau.gitbooks.io/autophp/content/class_instance.html)
+* [dispatcher/ url路由](https://ricolau.gitbooks.io/autophp/content/dispatcher.html)
+* [request封装](https://ricolau.gitbooks.io/autophp/content/request.html)
+* [config](https://ricolau.gitbooks.io/autophp/content/config.html)
+* [db wrapper](https://ricolau.gitbooks.io/autophp/content/db_wrapper.html)
+* [debug](https://ricolau.gitbooks.io/autophp/content/debug.html)
 
 持续更新中~
