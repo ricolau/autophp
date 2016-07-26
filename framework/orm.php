@@ -169,8 +169,9 @@ class orm extends base {
             $this->_raiseError('get data structure failed', exception_mysqlpdo::type_input_data_error);
         }
         foreach ($data as $k => $v) {
-            if (!in_array($k, $structure))
+            if (!in_array($k, $structure)){
                 unset($data[$k]);
+            }
         }
         $ret = $this->update($data);
         return $ret;
@@ -182,8 +183,9 @@ class orm extends base {
             $this->_raiseError('get data structure failed', exception_mysqlpdo::type_input_data_error);
         }
         foreach ($data as $k => $v) {
-            if (!in_array($k, $structure))
+            if (!in_array($k, $structure)){
                 unset($data[$k]);
+            }
         }
         $ret = $this->insert($data, $getLastInsertId);
         return $ret;

@@ -113,18 +113,21 @@ final class rico {
     }
 
     public static function array2code($array, $name = '', $isPrint = true) {
-        if ($name === '')
+        if ($name === ''){
             $name = '$GLOBALS';
+        }
 
-        if (!is_array($array))
+        if (!is_array($array)){
             return 'NO_ARRAY';
+        }
 
         $str = self::_array2line($array, $name, false);
 
-        if (!$isPrint)
+        if (!$isPrint){
             return $str;
-        else
+        }else{
             echo $str;
+        }
     }
 
     private static function _array2line($obj, $name, $isPrint = false) {

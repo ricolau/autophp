@@ -38,8 +38,9 @@ class i18n {
 
     public static function get($key, $default = null) {
 
-        if ($key === null)
+        if ($key === null){
             return $default;
+        }
 
         if (!isset(self::$_languageData[self::$language])) {
             self::$_languageData[self::$language] = self::_getDataByFilename(self::$language);

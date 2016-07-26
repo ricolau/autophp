@@ -10,9 +10,6 @@ final class plugin {
 
     private static $_plugins = array();
     private static $_pluginsHasRun = array();
-//    const type_before_run = 'before_run';
-////    const type_after_run = 'after_run';
-//    const type_after_run = 'shutdown';
 
     /**
      * add a plugin for run
@@ -21,7 +18,6 @@ final class plugin {
      */
     public static function add($pluginName, $type = 'before_run') {
         self::$_plugins[$type][] = $pluginName;
-        //self::$_allPlugins[$type][] = $pluginName;
     }
 
     /**

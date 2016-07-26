@@ -38,13 +38,14 @@ class render_default extends render_abstract {
      * @desc
      * @param type $name
      * @param type $data
-     * @example TView::slot
+     * @example $render_default->slot();
      */
     public function slot($name, $isDisplay = true) {
         $file = self::_getSlotPath($name);
         $data = $this->_fetchTpl($file, $this->data);
-        if (!$isDisplay)
+        if (!$isDisplay){
             return $data;
+        }
 
         response::output($data);
     }

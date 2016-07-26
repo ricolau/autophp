@@ -101,15 +101,9 @@ class auto {
     public static function isDevMode(){
         return self::$_runMode === self::mode_dev;
     }
-//
-//    public static function setDevMode($isDev = false){
-//        self::setMode($isDev ? self::mode_dev : self::mode_online);
-//    }
-    
-    
 
     /**
-     * check whether running in development enviroment
+     * check whether running in development mode
      * @return type
      *
      */

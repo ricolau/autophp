@@ -92,7 +92,6 @@ final class util {
     //Miscellaneous reads [ˌmɪsə'leɪniəs]
     public static function loadMiscellaneous() {
 
-        //can be used instead of TConfig::get($key), as  c('default.domain')  ;
         if (!function_exists('a')) {
 
             function a() {
@@ -118,7 +117,7 @@ final class util {
             }
 
         }
-        //can be used instead of TConfig::get($key), as  c('default.domain')  ;
+        //can be used instead of config::get($key), as  c('default.domain')  ;
         if (!function_exists('config')) {
 
             function config($key) {
@@ -140,7 +139,7 @@ final class util {
             }
         }
 
-        //can be used instead of TI18n::get($key) or  TI18n::vget($key, $fillData);
+        //can be used instead of i18n::get($key) or  i18n::vget($key, $fillData);
         if (!function_exists('lang')) {
             function lang($key, $args = null) {
                 if (!class_exists('i18n') || !auto::hasRun()) {

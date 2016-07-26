@@ -123,9 +123,6 @@ class request {
      * @param type $default, default value
      * @return null
      */
-//    public static function request($key, $type = 'int', $default = null) {
-//        return null;
-//    }
     public function request($key, $type = 'int', $default = null){
         return null;
     }
@@ -155,8 +152,9 @@ class request {
      */
     public static function setParams($data, $type = 'get') {
         self::_checkInit();
-        if (!is_array($data))
+        if (!is_array($data)){
             return false;
+        }
 
         if ($type == 'get') {
             //$_GET = util::array_merge($_GET, $data);
@@ -169,8 +167,9 @@ class request {
 
     protected static function _deal($data, $key, $type, $default) {
         self::_checkInit();
-        if ($key == null || !isset($data[$key]))
+        if ($key == null || !isset($data[$key])){
             return $default;
+        }
 
         switch ($type) {
             case 'int':
