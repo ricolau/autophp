@@ -2,7 +2,7 @@
 
 include dirname(__FILE__).'/loader.php';
 
-class daemon_demo extends dameon{
+class daemon_demo extends daemon{
     
     public function _init(){
         

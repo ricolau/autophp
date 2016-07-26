@@ -11,7 +11,7 @@ define('APP_PATH', dirname(dirname(__FILE__)));
 define('DS', DIRECTORY_SEPARATOR);
 
 //============================ 定义框架地址（必须）============================
-define('AUTOPHP_PATH', APP_PATH . DS . 'framework');
+define('AUTOPHP_PATH', dirname(APP_PATH) . DS . 'framework');
 
 
 try {

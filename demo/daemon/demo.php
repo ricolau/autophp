@@ -2,7 +2,7 @@
 
 include dirname(__FILE__).'/loader.php';
 
-class daemon_demo extends dameon{
+class daemon_demo extends daemon{
     
     public function _init(){
         
@@ -31,7 +31,7 @@ class daemon_demo extends dameon{
 
 
         } catch (Exception $e) {
-            Tools_Exceptionhandler::topDeal($e);
+            exception_handler::topDeal($e);
         }
        
 
