@@ -31,7 +31,7 @@ class daemon_demo extends dameon{
 
 
         } catch (Exception $e) {
-            Tools_Exceptionhandler::topDeal($e);
+            exception_handler::topDeal($e);
         }
        
 
