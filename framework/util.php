@@ -108,6 +108,16 @@ final class util {
             }
 
         }
+        if (!function_exists('t')) {
+
+            function t($time = null,$format = 'Y-m-d H:i:s') {
+                if($time===null){
+                    $time = time();
+                }
+                return date($format,$time);
+            }
+
+        }
         if (!function_exists('de')) {
 
             function de() {

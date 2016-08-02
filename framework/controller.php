@@ -86,6 +86,9 @@ abstract class controller extends base {
     }
 
     public function renderJson($data) {
+        if(!headers_sent()){
+            header('Content-type: application/json');
+        }
         response::outputJson($data);
     }
 
