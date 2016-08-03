@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-07-19
+ * @version 2016-08-03
  * @desc performance log
  *
  */
@@ -15,6 +15,8 @@ class performance {
     
     protected static $_currentSize = 0;
     
+    
+    protected static $_openStatus = true;
     const tag_mode_fully = 'fully';
     const tag_mode_sampling = 'sampling';
     const tag_mode_close = 'close';
@@ -36,6 +38,11 @@ class performance {
      * 
      */
     
+    
+    public static function switchOpenStatus($isOpen = true){
+        self::$_openStatus = $isOpen ? true : false;
+    }
+    
     public static function setSizeLimit($top = 128){
         self::$_sizeLimit = $top>0 ? $top : 128;
     }
@@ -55,6 +62,9 @@ class performance {
     }
     
     public static function add($tag, $timecost, $info = array()){
+        if(false === self::$_openStatus){
+            return true;
+        }
         if(isset(self::$_tagModes[$tag]) && self::$_tagModes[$tag]['mode']==self::tag_mode_close){
             return true;
         }elseif(isset(self::$_tagModes[$tag]) && self::$_tagModes[$tag]['mode']==self::tag_mode_sampling){

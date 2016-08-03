@@ -6,7 +6,7 @@
  * @desc http request lib
  *
  */
-class request {
+class request{
 
     protected static $_hasInit = false;
     protected static $_getData = array();
@@ -15,7 +15,7 @@ class request {
     protected static $_antiXssMode = true;
     protected static $_addslashesMode = false;
 
-    public static function init($antiXssModeOn = true, $addslashesModeOn = false) {
+    public static function init($antiXssModeOn = true, $addslashesModeOn = false){
         if(!self::$_hasInit){
             self::$_hasInit = true;
         }else{
@@ -30,20 +30,20 @@ class request {
         self::$_cookie = self::_formatDeep($_COOKIE);
         self::_destroyOriginalData();
     }
+
     protected static function _checkInit(){
         if(!self::$_hasInit){
             self::init(true, true);
         }
     }
 
-    public static function getAntiXssMode() {
+    public static function getAntiXssMode(){
         return self::$_antiXssMode;
     }
 
     public static function getAddslashesMode(){
         return self::$_addslashesMode;
     }
-
 
     /**
      * get $_GET parameter
@@ -52,11 +52,11 @@ class request {
      * @param type $default
      * @return
      */
-    public static function get($key, $type = 'str', $default = null) {
+    public static function get($key, $type = 'str', $default = null){
         return self::_deal(self::$_getData, $key, $type, $default);
     }
 
-    public static function getAll() {
+    public static function getAll(){
         self::_checkInit();
         return self::$_getData;
     }
@@ -69,7 +69,7 @@ class request {
      * @return
      * @desc get post data
      */
-    public static function post($key, $type = 'str', $default = null) {
+    public static function post($key, $type = 'str', $default = null){
         return self::_deal(self::$_postData, $key, $type, $default);
     }
 
@@ -77,7 +77,7 @@ class request {
      * @desc get all post data
      * @return just as the original $_POST
      */
-    public static function postAll() {
+    public static function postAll(){
         self::_checkInit();
         return self::$_postData;
     }
@@ -87,7 +87,7 @@ class request {
      * @param str $key
      * @return array
      */
-    public static function getArray($key) {
+    public static function getArray($key){
         return self::_deal(self::$_getData, $key, 'array', array());
     }
 
@@ -98,7 +98,7 @@ class request {
      * @param type $default, default return value when got null
      * @return type
      */
-    public static function cookie($key, $type = 'str', $default = null) {
+    public static function cookie($key, $type = 'str', $default = null){
         return self::_deal(self::$_cookie, $key, $type, $default);
     }
 
@@ -112,7 +112,7 @@ class request {
      * @param str $key
      * @return type
      */
-    public static function postArray($key) {
+    public static function postArray($key){
         return self::_deal(self::$_postData, $key, 'array', null);
     }
 
@@ -134,11 +134,11 @@ class request {
      * @param enum $type = get / post
      * @return type
      */
-    public static function setParam($key, $val, $type = 'get') {
+    public static function setParam($key, $val, $type = 'get'){
         self::_checkInit();
-        if ($type == 'get') {
+        if($type == 'get'){
             self::$_getData[$key] = $val;
-        } else {
+        }else{
             self::$_postData[$key] = $val;
         }
         return true;
@@ -150,28 +150,28 @@ class request {
      * @param enum $type = get / post
      * @return bool
      */
-    public static function setParams($data, $type = 'get') {
+    public static function setParams($data, $type = 'get'){
         self::_checkInit();
-        if (!is_array($data)){
+        if(!is_array($data)){
             return false;
         }
 
-        if ($type == 'get') {
+        if($type == 'get'){
             //$_GET = util::array_merge($_GET, $data);
             self::$_getData = util::array_merge(self::$_getData, self::_formatDeep($data));
-        } else {
+        }else{
             //$_POST = util::array_merge($_POST, $data);
             self::$_postData = util::array_merge(self::$_postData, self::_formatDeep($data));
         }
     }
 
-    protected static function _deal($data, $key, $type, $default) {
+    protected static function _deal($data, $key, $type, $default){
         self::_checkInit();
-        if ($key == null || !isset($data[$key])){
+        if($key == null || !isset($data[$key])){
             return $default;
         }
 
-        switch ($type) {
+        switch($type){
             case 'int':
                 return intval($data[$key]);
                 break;
@@ -186,10 +186,10 @@ class request {
         }
     }
 
-    public static function formatText($txt) {
+    public static function formatText($txt){
         self::_checkInit();
         $txt = trim($txt);
-        if (self::$_antiXssMode) {
+        if(self::$_antiXssMode){
             $txt = htmlspecialchars($txt);
         }
         if(self::$_addslashesMode){
@@ -198,16 +198,16 @@ class request {
         return $txt;
     }
 
-    protected static function _formatDeep($data) {
-        if (!is_array($data)) {
+    protected static function _formatDeep($data){
+        if(!is_array($data)){
             return self::formatText($data);
-        } else {
-            foreach ($data as $key => $val) {
+        }else{
+            foreach($data as $key => $val){
                 $key2 = self::_formatDeep($key);
                 $val = self::_formatDeep($val);
-				if($key2!=$key) {
-                     unset($data[$key]);
-                     $key = $key2;
+                if($key2 != $key){
+                    unset($data[$key]);
+                    $key = $key2;
                 }
                 $data[$key] = $val;
             }
@@ -218,32 +218,30 @@ class request {
     /**
      * @desc destroy original request arguments
      */
-    protected static function _destroyOriginalData() {
+    protected static function _destroyOriginalData(){
         $_GET = NULL;
         $_POST = NULL;
         $_REQUEST = NULL;
         $_COOKIE = null;
     }
-    
-    
+
     public static function ip(){
-        if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")){
+        if(getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")){
             $ip = getenv("HTTP_CLIENT_IP");
-        }else if (getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown")){
+        }else if(getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown")){
             $ip = getenv("HTTP_X_FORWARDED_FOR");
-        }else if (getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown")){
+        }else if(getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown")){
             $ip = getenv("REMOTE_ADDR");
-        }else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown")){
+        }else if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown")){
             $ip = $_SERVER['REMOTE_ADDR'];
         }else{
             $ip = "unknown";
         }
         return($ip);
     }
-    
+
     public static function isAjax(){
         return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
-           
     }
 
 }
