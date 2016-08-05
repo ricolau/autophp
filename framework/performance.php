@@ -9,7 +9,7 @@ class performance {
 
 
     protected static $_performance = array();
-    protected static $_sizeLimit = 128;
+    protected static $_sizeLimit = 256;
     
     protected static $_hostKey = '__auto_performance';
     
@@ -43,8 +43,8 @@ class performance {
         self::$_openStatus = $isOpen ? true : false;
     }
     
-    public static function setSizeLimit($top = 128){
-        self::$_sizeLimit = $top>0 ? $top : 128;
+    public static function setSizeLimit($top = 256){
+        self::$_sizeLimit = $top>0 ? $top : 256;
     }
     
     public static function getCurrentSize(){
