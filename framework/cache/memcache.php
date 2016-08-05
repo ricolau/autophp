@@ -58,7 +58,7 @@ class cache_memcache extends cache_abstract {
         }
         $ret = call_user_func_array(array($this->_memcache, 'set'), $arguments);
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments)) &&        auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments,'retType'=>( (is_bool($ret) || is_null($ret)) ? $ret: gettype($ret)       )    )) &&        auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
         
         return $ret;
     }
@@ -71,7 +71,7 @@ class cache_memcache extends cache_abstract {
         }
         $ret = call_user_func_array(array($this->_memcache, $funcName), $arguments);
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments)) &&  auto::isDebug() && auto::debugMsg($method, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments, 'retType'=>( (is_bool($ret) || is_null($ret)) ? $ret: gettype($ret)       ) )) &&  auto::isDebug() && auto::debugMsg($method, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
         return $ret;
     }
 
