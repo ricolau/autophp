@@ -84,7 +84,7 @@ class cache_redis extends cache_abstract {
             }
             throw $e;
         }
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias)) && auto::isDebug() && auto::debugMsg($method, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments,'retType'=>(!$ret ? $ret: gettype($ret)) ) ) && auto::isDebug() && auto::debugMsg($method, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
         
         return $ret;
     }
