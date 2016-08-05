@@ -2,7 +2,7 @@
 
 
 
-class plugin_backend extends plugin_abstract{
+class plugin_end extends plugin_abstract{
     
     
     
