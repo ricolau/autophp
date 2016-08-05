@@ -3,7 +3,7 @@
 
 
 
-class plugin_wbinit extends plugin_abstract{
+class plugin_init extends plugin_abstract{
     
     
     
