@@ -9,7 +9,7 @@
 class auto {
 
     //a tremendous version not compatible with old versions~
-    const version = '2.0.4';
+    const version = '2.0.5';
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -248,7 +248,7 @@ class auto {
 //            return;
 //        }
 
-        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart);
+        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri()    ));
         
         $ptx = new plugin_context(__METHOD__,array());
         plugin::run(auto::plugin_shutdown, $ptx);
