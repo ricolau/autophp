@@ -258,7 +258,7 @@ class auto {
 
     public static function shutdownCall() {
         
-        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri()    ));
+        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri(),'runId'=>self::getRunId()    ));
         
         $ptx = new plugin_context(__METHOD__,array());
         plugin::run(auto::plugin_shutdown, $ptx);
