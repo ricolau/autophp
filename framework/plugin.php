@@ -16,7 +16,7 @@ final class plugin {
      * @param str $pluginName
      * @param str $type
      */
-    public static function add($pluginName, $type = 'before_run') {
+    public static function add($pluginName, $type) {
         self::$_plugins[$type][] = $pluginName;
     }
 

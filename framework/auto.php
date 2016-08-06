@@ -1,20 +1,19 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-02
+ * @version 2016-08-06
  * @desc autophp auto, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
  *
  */
 class auto {
 
-    //a tremendous version not compatible with old versions~
-    const version = '2.0.5';
+    const version = '2.0.6';
     
     
     const author = 'ricolau<ricolau@qq.com>';
-    const sapi_type_http = 1;
-    const sapi_type_cli = 2;
+//    const sapi_type_http = 1;
+//    const sapi_type_cli = 2;
     
     const mode_dev = 'dev';
     const mode_test = 'test';
@@ -30,6 +29,8 @@ class auto {
     private static $_isCli = false;
     private static $_hasRun = false;
     private static $_isDebug = false;
+    
+    private static $_runId = null;
 
     private static $_classPath = array();
 
@@ -48,7 +49,10 @@ class auto {
         }
 
         self::$_hasRun = true;
-        if (php_sapi_name() == 'cli') {
+        
+        //may got as:  fpm-fcgi,cli ....etc.
+        $sapi = php_sapi_name();
+        if ($sapi == 'cli') {
             self::$_isCli = true;
         }
         if (get_magic_quotes_gpc()) {
@@ -61,16 +65,26 @@ class auto {
             throw exception_base('AUTOPHP_PATH not defined!', exception_base::type_autophp_path_not_defined);
         }
         self::$_runtimeStart = microtime(true);
+        
+        self::$_runId = uniqid(substr($sapi,0,1).'_');
 
 
     }
+    
+    
+    public static function getRunId(){
+        return self::$_runId;
+    }
+    
+    public static function setRunId($id){
+        self::$_runId = $id;
+    }
 
     /**
-     * get sapi mode
+     * get sapi mode whether cli
      * @return type
      * 
      */
-    
     public static function isCli(){
         return self::$_isCli;
     }
@@ -243,11 +257,7 @@ class auto {
 
 
     public static function shutdownCall() {
-//        if(self::$shutdownFunction && is_callable(self::$shutdownFunction)){
-//            call_user_func(self::$shutdownFunction);
-//            return;
-//        }
-
+        
         performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri()    ));
         
         $ptx = new plugin_context(__METHOD__,array());
@@ -264,18 +274,7 @@ class auto {
             return;
         }
         $rn = "\n";
-/*
-        $hasNotRunPlugins = plugin::getHasNotRunPlugin(plugin::type_before_run);
-        if ($hasNotRunPlugins) {
-            $msg = array('title' => '<font color=red><b>Warning: some plugins NOT RUN(maybe "exit()" used! in your program?)</b></font>', 'msg' => var_export($hasNotRunPlugins, true));
-            array_unshift(self::$_debugMsg, $msg);
-        }
-        $hasNotRunPlugins2 = plugin::getHasNotRunPlugin(plugin::type_after_run);
-        if ($hasNotRunPlugins2) {
-            $msg = array('title' => '<font color=red><b>Warning: some plugins NOT RUN(maybe "exit()" used in your program?)</b></font>', 'msg' => var_export($hasNotRunPlugins2, true));
-            array_unshift(self::$_debugMsg, $msg);
-        }
-*/
+
 
         //total cost
         auto::$_runtimeEnd = microtime(true);
