@@ -17,7 +17,7 @@ abstract class daemon {
             throw new exception_base('cannot run daemon with http request!', -1);
         }
         $ptx = new plugin_context(__METHOD__,array());
-        plugin::run(daemon::plugin_construct, $ptx);
+        plugin::call(daemon::plugin_construct, $ptx);
         
         $this->_init();
     }
@@ -29,7 +29,7 @@ abstract class daemon {
     public function __destruct(){
         
         $ptx = new plugin_context(__METHOD__,array());
-        plugin::run(daemon::plugin_destruct, $ptx);
+        plugin::call(daemon::plugin_destruct, $ptx);
     }
 
 }

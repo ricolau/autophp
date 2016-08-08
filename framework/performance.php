@@ -90,7 +90,7 @@ class performance {
         if(self::$_currentSize - self::$_sizeLimit > 2 && self::$_currentSize % 3==0){
 
             $ptx = new plugin_context(__METHOD__, array());
-            plugin::run('notice::'.__METHOD__,$ptx);
+            plugin::call('notice::'.__METHOD__,$ptx);
             if($ptx->breakOut){
                 return $ptx->breakOut;
             }

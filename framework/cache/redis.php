@@ -46,7 +46,7 @@ class cache_redis extends cache_abstract {
             self::$_reentrantTimes[$seqid] += 1;
             
             $ptx = new plugin_context(__METHOD__, array('conf'=>$this->_confs,'alias'=>$this->_alias,'obj'=>&$this));
-            plugin::run('error::'.__METHOD__,$ptx);
+            plugin::call('error::'.__METHOD__,$ptx);
             if($ptx->breakOut){
                 return $ptx->breakOut;
             }
@@ -78,7 +78,7 @@ class cache_redis extends cache_abstract {
             
             $ptx = new plugin_context($method, array('conf'=>$this->_confs,'alias'=>$this->_alias,
                                                 'exception'=>&$e,'obj'=>&$this, 'func'=>$funcName,'args'=>$arguments));
-            plugin::run('error::'.$method,$ptx);
+            plugin::call('error::'.$method,$ptx);
             if($ptx->breakOut){
                 return $ptx->breakOut;
             }

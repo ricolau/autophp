@@ -25,13 +25,13 @@ final class plugin {
      * run plugins of this type
      * @param type $tag
      */
-    public static function run($tag, plugin_context &$ptx) {
+    public static function call($tag, plugin_context &$ptx) {
         if (isset(self::$_plugins[$tag]) && is_array(self::$_plugins[$tag])) {
             foreach (self::$_plugins[$tag] as $pluginName=>&$plugin) {
                 
                 $_debugMicrotime = microtime(true);
                 auto::isDebug() && auto::debugMsg(__METHOD__ . ' ('.  $pluginName.') ', 'start ---->>>>');
-                call_user_func_array(array($plugin,'run'), array($tag, $ptx));
+                call_user_func_array(array($plugin,'call'), array($tag, $ptx));
                 
                 ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('plugin'=>$pluginName)) && auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$pluginName') ", 'end,<<<<---- cost ' . $timeCost . 's');
                 //self::$_pluginsHasRun[] = $plugin;

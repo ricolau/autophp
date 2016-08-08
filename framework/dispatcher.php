@@ -194,7 +194,7 @@ class dispatcher {
     public function run() {
         
         $ptx = new plugin_context(__METHOD__,array());
-        plugin::run(dispatcher::plugin_before_run, $ptx);
+        plugin::call(dispatcher::plugin_before_run, $ptx);
 
         $_debugMicrotime = microtime(true);
 
@@ -223,7 +223,7 @@ class dispatcher {
         
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('controller'=>$className,'action'=>$actionName)) && auto::isDebug() && auto::debugMsg(__METHOD__ . '(' . $className . '->' . $actionName . ')', 'end,<<<<---- cost ' . $timeCost . 's');
 
-        plugin::run(dispatcher::plugin_after_run, new plugin_context(__METHOD__,array()));
+        plugin::call(dispatcher::plugin_after_run, new plugin_context(__METHOD__,array()));
     }
 
 }
