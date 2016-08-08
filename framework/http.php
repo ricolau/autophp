@@ -9,18 +9,20 @@
 class http {
 
     /**
-      url,
-      params = array(),
-      method = GET( or POST)
-      multi = false(or true)
-      extheaders = array()
-      cookie = '', full str
-      referer = null
-      return_header = null,
-      return_rich_info = null
-      useragent = 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2041.4 Safari/537.36'
-      proxy = null
-      timeout = 10
+     * $args = array(
+            url,
+            params = array(),
+            method = GET( or POST),
+            multi = false(or true),
+            extheaders = array(),
+            cookie = '', full str,
+            referer = null,
+            return_header = null,
+            return_rich_info = null,
+            useragent = 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2041.4 Safari/537.36'
+            proxy = null,
+            timeout = 10,
+      );
      */
     public static function requestHigh($args) {
         if (!function_exists('curl_init')){

@@ -37,8 +37,9 @@ final class config {
      *         config::get('default._env')
      */
     public static function get($key, $default = null) {
-        if (!$key)
+        if (!$key){
             return false;
+        }
 
         $tmp = explode('.', $key, 2);
         $alias = $tmp[0];

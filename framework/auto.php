@@ -8,7 +8,7 @@
  */
 class auto {
 
-    const version = '2.1.1';//2.1.0 update about plugin, not compatible with version before 2.1.0
+    const version = '2.1.2';//2.1.0 update about plugin, not compatible with version before 2.1.0
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -259,10 +259,11 @@ class auto {
 
     public static function shutdownCall() {
         
-        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri(),'runId'=>self::getRunId()    ));
-        
         $ptx = new plugin_context(__METHOD__,array());
         plugin::call(auto::plugin_shutdown, $ptx);
+        
+        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri(),'runId'=>self::getRunId()    ));
+  
         if($ptx->breakOut!==null){
             return $ptx->breakOut;
         }

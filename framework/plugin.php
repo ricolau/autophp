@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-07-20
+ * @version 2016-08-08
  * @desc autophp plugin tool
  *
  */
@@ -12,9 +12,9 @@ final class plugin {
     //private static $_pluginsHasRun = array();
 
     /**
-     * add a plugin for run
-     * @param object $plugin
-     * @param str $tag
+     * register a plugin to a specific tag
+     * @param string $tag
+     * @param plugin_abstract $plugin
      */
     public static function register($tag, plugin_abstract $plugin) {
         $pluginName = get_class($plugin);
@@ -22,8 +22,9 @@ final class plugin {
     }
 
     /**
-     * run plugins of this type
-     * @param type $tag
+     * run plugins for this tag
+     * @param string $tag
+     * @param plugin_context $ptx
      */
     public static function call($tag, plugin_context &$ptx) {
         if (isset(self::$_plugins[$tag]) && is_array(self::$_plugins[$tag])) {

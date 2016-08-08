@@ -25,6 +25,11 @@ class performance {
     
     protected static $_samplingCounts = array();
     
+    /**
+     * set performance storage key in class "queue"
+     * @param string $key
+     * @return boolean
+     */
     public static function setHostKey($key){
         if($key!==null){
             return self::$_hostKey = $key;
@@ -43,6 +48,10 @@ class performance {
         self::$_openStatus = $isOpen ? true : false;
     }
     
+    /**
+     * set size limit top
+     * @param type $top
+     */
     public static function setSizeLimit($top = 256){
         self::$_sizeLimit = $top>0 ? $top : 256;
     }
@@ -60,7 +69,13 @@ class performance {
             self::$_tagModes[$tag] = array('mode'=>$mode, 'options'=>$options);
         }
     }
-    
+    /**
+     * performance info add, this function should only return true!
+     * @param string $tag
+     * @param float $timecost
+     * @param array $info
+     * @return true!!!
+     */
     public static function add($tag, $timecost, $info = array()){
         if(false === self::$_openStatus){
             return true;
