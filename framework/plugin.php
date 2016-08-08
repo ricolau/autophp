@@ -9,7 +9,7 @@
 final class plugin {
 
     private static $_plugins = array();
-    private static $_pluginsHasRun = array();
+    //private static $_pluginsHasRun = array();
 
     /**
      * add a plugin for run
@@ -17,7 +17,8 @@ final class plugin {
      * @param str $tag
      */
     public static function add($tag, plugin_abstract $plugin) {
-        self::$_plugins[$tag][] = &$plugin;
+        $pluginName = get_class($plugin);
+        self::$_plugins[$tag][$pluginName] = &$plugin;
     }
 
     /**
@@ -26,13 +27,14 @@ final class plugin {
      */
     public static function run($tag, plugin_context &$ptx) {
         if (isset(self::$_plugins[$tag]) && is_array(self::$_plugins[$tag])) {
-            foreach (self::$_plugins[$tag] as &$plugin) {
+            foreach (self::$_plugins[$tag] as $pluginName=>&$plugin) {
+                
                 $_debugMicrotime = microtime(true);
-                auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'start ---->>>>');
+                auto::isDebug() && auto::debugMsg(__METHOD__ . ' ('.  $pluginName.') ', 'start ---->>>>');
                 call_user_func_array(array($plugin,'run'), array($tag, $ptx));
                 
-                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('plugin'=>$plugin)) && auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$plugin') ", 'end,<<<<---- cost ' . $timeCost . 's');
-                self::$_pluginsHasRun[] = $plugin;
+                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('plugin'=>$pluginName)) && auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$pluginName') ", 'end,<<<<---- cost ' . $timeCost . 's');
+                //self::$_pluginsHasRun[] = $plugin;
             }
         }
     }
