@@ -8,6 +8,6 @@
  */
 abstract class plugin_abstract {
 
-    abstract function main(plugin_context &$ptx);
+    abstract function run($tag,plugin_context &$ptx);
 
 }

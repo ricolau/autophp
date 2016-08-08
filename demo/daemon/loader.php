@@ -30,9 +30,7 @@ try {
     
     //============================ 失效的plugin ============================
     //停用了 CLI 模式下的 route，因此最简单的damon 方式中，plugin 不会执行！
-//    plugin::add('Plugin_Wbinit', plugin::TYPE_BEFORE_RUN);
-//    plugin::add('Plugin_BackEnd', plugin::TYPE_AFTER_RUN);
-    //plugin::add('Plugin_Requestend', plugin::TYPE_AFTER_RUN);
+
     
     
     //============================ 对request 的数据进行处理 ============================
