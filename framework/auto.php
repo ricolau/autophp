@@ -262,7 +262,7 @@ class auto {
         $ptx = new plugin_context(__METHOD__,array());
         plugin::call(auto::plugin_shutdown, $ptx);
         
-        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri(),'runId'=>self::getRunId()    ));
+        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri(),'runId'=>self::getRunId(),'runMode'=>self::$_runMode    ));
   
         if($ptx->breakOut!==null){
             return $ptx->breakOut;
