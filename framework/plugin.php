@@ -16,7 +16,7 @@ final class plugin {
      * @param object $plugin
      * @param str $tag
      */
-    public static function add($tag, plugin_abstract $plugin) {
+    public static function register($tag, plugin_abstract $plugin) {
         $pluginName = get_class($plugin);
         self::$_plugins[$tag][$pluginName] = &$plugin;
     }

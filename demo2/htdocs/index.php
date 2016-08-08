@@ -32,8 +32,8 @@ try {
 
     //============================ 对 plugin 进行定义 ============================
     //如果需要，定义一些（个数不限）在 action 执行之前预执行 和 后执行的程序
-    plugin::add(dispatcher::plugin_before_run, new plugin_init());
-    plugin::add(auto::plugin_shutdown, new plugin_end());
+    plugin::register(dispatcher::plugin_before_run, new plugin_init());
+    plugin::register(auto::plugin_shutdown, new plugin_end());
 
    
     //
