@@ -1,14 +1,14 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-06
+ * @version 2016-08-08
  * @desc autophp auto, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
  *
  */
 class auto {
 
-    const version = '2.0.6';
+    const version = '2.0.7';
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -67,7 +67,8 @@ class auto {
         self::$_runtimeStart = microtime(true);
         
         self::$_runId = uniqid(substr($sapi,0,1).'_');
-
+        
+        performance::add(__METHOD__, 0, array('runId'=>self::$_runId    ));
 
     }
     
