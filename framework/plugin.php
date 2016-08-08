@@ -63,7 +63,7 @@ final class plugin {
 //    }
 
 
-    public static function getPluginByType($tag){
+    public static function getPluginsByTag($tag){
         if($tag){
             return self::$_plugins[$tag];
         }

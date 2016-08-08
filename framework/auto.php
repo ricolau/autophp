@@ -8,7 +8,7 @@
  */
 class auto {
 
-    const version = '2.0.7';
+    const version = '2.1.0';//2.1.0 update about plugin, not compatible with version before 2.1.0
     
     
     const author = 'ricolau<ricolau@qq.com>';
