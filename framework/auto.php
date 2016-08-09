@@ -8,7 +8,7 @@
  */
 class auto {
 
-    const version = '2.1.3';//2.1.0 update about plugin, not compatible with version before 2.1.0
+    const version = '2.1.4';//2.1.0 update about plugin, not compatible with version before 2.1.0
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -257,12 +257,12 @@ class auto {
 
 
     public static function shutdownCall() {
-        
+        //为什么这个performance  不加到 plugin::call(auto::plugin_shutdown, $ptx) 后面,是因为防止有人在里面执行 exit(),导致这个performance 无法执行记录 
+        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri(),'runId'=>self::getRunId(),'runMode'=>self::$_runMode    ));
+
         $ptx = new plugin_context(__METHOD__,array());
         plugin::call(auto::plugin_shutdown, $ptx);
-        
-        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri(),'runId'=>self::getRunId(),'runMode'=>self::$_runMode    ));
-  
+          
         if($ptx->breakOut!==null){
             return $ptx->breakOut;
         }
@@ -312,9 +312,9 @@ class auto {
         self::$_debugMsg[] = array('title' => $title, 'msg' => $msg);
     }
 
-    public static function debugMsgExport(){
-        return self::$_debugMsg;
-    }
+//    public static function debugMsgExport(){
+//        return self::$_debugMsg;
+//    }
 
 
 }
