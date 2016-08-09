@@ -16,11 +16,6 @@ define('AUTOPHP_PATH', dirname(APP_PATH) . '/framework');
 try {
     //============================ 开始加载框架！============================
     require AUTOPHP_PATH . DS . 'auto.php';
-    //auto::run() 当前主要负责加载autoload 和一些常量定义的检测
-    //关掉或开启debugMode，此处可以不处理，默认为关闭！
-    $debugMode = true;
-    auto::setDebug($debugMode);
-
     auto::run();
 
     //设置时区
@@ -46,6 +41,13 @@ try {
     //add log conf
     $logconf = config::get('logger.default');
     log::addLogger(new logger_default($logconf));
+    
+    
+     //auto::run() 当前主要负责加载autoload 和一些常量定义的检测
+    //关掉或开启debugMode，此处可以不处理，默认为关闭！
+    $debugMode = true;
+    auto::setDebug($debugMode);
+    auto::setMode(config::get('default.mode'));
 
 
     //============================ 定义一些快捷的function 别名之类，此处非必须 ============================

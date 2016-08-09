@@ -8,12 +8,11 @@
  */
 class auto {
 
-    const version = '2.1.2';//2.1.0 update about plugin, not compatible with version before 2.1.0
+    const version = '2.1.3';//2.1.0 update about plugin, not compatible with version before 2.1.0
     
     
     const author = 'ricolau<ricolau@qq.com>';
-//    const sapi_type_http = 1;
-//    const sapi_type_cli = 2;
+
     
     const mode_dev = 'dev';
     const mode_test = 'test';
@@ -38,7 +37,7 @@ class auto {
         return self::$_hasRun;
     }
 
-    public static function run() {
+    public static function run($runId = null) {
         !defined('DS') && define('DS', DIRECTORY_SEPARATOR);
 
         spl_autoload_register(array('auto', 'autoload'));
@@ -66,7 +65,7 @@ class auto {
         }
         self::$_runtimeStart = microtime(true);
         
-        self::$_runId = uniqid(substr($sapi,0,1).'_');
+        self::$_runId = $runId ?: uniqid(substr($sapi,0,1).'_');
         
         performance::add(__METHOD__, 0, array('runId'=>self::$_runId    ));
 
@@ -77,9 +76,9 @@ class auto {
         return self::$_runId;
     }
     
-    public static function setRunId($id){
-        self::$_runId = $id;
-    }
+//    public static function setRunId($id){
+//        self::$_runId = $id;
+//    }
 
     /**
      * get sapi mode whether cli
