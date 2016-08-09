@@ -48,7 +48,10 @@ class plugin_performance extends plugin_abstract{
                 $this->_writeData(self::$_performanceLog, $data);
             }
             
-            $ptx->breakOut = true;
+            if(auto::isOnlineMode()){
+                $ptx->breakOut = true;
+            }
+            
         }
         
     }
