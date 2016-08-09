@@ -8,7 +8,7 @@
  */
 class auto {
 
-    const version = '2.1.4';//2.1.0 update about plugin, not compatible with version before 2.1.0
+    const version = '2.1.5';//2.1.0 update about plugin, not compatible with version before 2.1.0
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -30,8 +30,10 @@ class auto {
     private static $_isDebug = false;
     
     private static $_runId = null;
+    private static $_sapiName = null;
 
     private static $_classPath = array();
+    
 
     public static function hasRun() {
         return self::$_hasRun;
@@ -50,8 +52,8 @@ class auto {
         self::$_hasRun = true;
         
         //may got as:  fpm-fcgi,cli ....etc.
-        $sapi = php_sapi_name();
-        if ($sapi == 'cli') {
+        self::$_sapiName = php_sapi_name();
+        if (self::$_sapiName == 'cli') {
             self::$_isCli = true;
         }
         if (get_magic_quotes_gpc()) {
@@ -65,10 +67,14 @@ class auto {
         }
         self::$_runtimeStart = microtime(true);
         
-        self::$_runId = $runId ?: uniqid(substr($sapi,0,1).'_');
+        self::$_runId = $runId ?: uniqid(substr(self::$_sapiName,0,1).'_');
         
-        performance::add(__METHOD__, 0, array('runId'=>self::$_runId    ));
+        performance::add(__METHOD__, 0, array('runId'=>self::$_runId,'sapi'=>self::$_sapiName    ));
 
+    }
+        
+    public static function getSapiName(){
+        return self::$_sapiName;
     }
     
     
@@ -258,7 +264,7 @@ class auto {
 
     public static function shutdownCall() {
         //为什么这个performance  不加到 plugin::call(auto::plugin_shutdown, $ptx) 后面,是因为防止有人在里面执行 exit(),导致这个performance 无法执行记录 
-        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('uri'=>dispatcher::instance()->getUri(),'runId'=>self::getRunId(),'runMode'=>self::$_runMode    ));
+        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('runId'=>self::$_runId,'sapi'=>self::$_sapiName,'uri'=>dispatcher::instance()->getUri(),'runMode'=>self::$_runMode    ));
 
         $ptx = new plugin_context(__METHOD__,array());
         plugin::call(auto::plugin_shutdown, $ptx);
@@ -311,10 +317,6 @@ class auto {
     public static function debugMsg($title, $msg) {
         self::$_debugMsg[] = array('title' => $title, 'msg' => $msg);
     }
-
-//    public static function debugMsgExport(){
-//        return self::$_debugMsg;
-//    }
 
 
 }
