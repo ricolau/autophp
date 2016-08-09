@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2015-7
+ * @version 2016-08-09
  * @desc memcached
  *
  */
@@ -57,7 +57,7 @@ class cache_memcached extends cache_abstract {
         $_debugMicrotime = microtime(true);        
         $ret = call_user_func_array(array($this->_memcached, 'set'), array($key, $val, $expire));
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias,'key'=>$key,'val'=>$val ,'retType'=>((is_bool($ret) || is_null($ret)) ? $ret: gettype($ret))       )) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, arguments: ' . var_export(array($key,$val,$expire), true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias,'key'=>$key,'val'=>$val ,'ret'=>util::summarize($ret)       )) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, arguments: ' . var_export(array($key,$val,$expire), true));
         
         return $ret;
     }
@@ -70,7 +70,7 @@ class cache_memcached extends cache_abstract {
         }
         $ret = call_user_func_array(array($this->_memcached, $funcName), $arguments);
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments,'retType'=>(    (is_bool($ret) || is_null($ret)) ? $ret: gettype($ret))  )) && auto::isDebug() && auto::debugMsg($method, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments,'ret'=>util::summarize($ret)  )) && auto::isDebug() && auto::debugMsg($method, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
 
         return $ret;
     }

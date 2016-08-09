@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-03-31
+ * @version 2016-08-09
  * @desc autophp utils, just some tools here~
  *
  */
@@ -198,6 +198,24 @@ final class util {
             return self::$_classSingleton[$className];
         }
         return null;
+        
+    }
+    
+        
+    /**
+     * get summary info for a variable
+     * @param type $var
+     * @return type
+     */
+    public static function summarize($var){
+        if( is_bool($var) || is_numeric($var) || is_null($var)){
+            $ret = $var;
+        }elseif(is_string($var)){
+            $ret = 'string('.strlen($var).')';
+        }else{
+            $ret = gettype($var);
+        }
+        return $ret;
         
     }
 
