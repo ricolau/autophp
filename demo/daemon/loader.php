@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2013-03
+ * @version 2016-08-09
  * @desc http request entrance file
  * 
  */
@@ -48,6 +48,8 @@ try {
     //============================ 定义一些快捷的function 别名之类，此处非必须 ============================
     util::loadMiscellaneous();
     
+    plugin::register( auto::plugin_shutdown, new plugin_performance());// 脚本结束运行时,log 拿出来
+    plugin::register('notice::performance::add', new plugin_performance());// 因为脚本跑的时间可能会很长
     
     //============================ 开始定义database 和 cache相关资源 ============================
     //定义database server

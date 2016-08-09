@@ -1,10 +1,7 @@
 <?php
-
-ini_set('display_errors', 1);
-error_reporting(7);
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2013-03
+ * @version 2016-08-09
  * @desc http request entrance file
  * 
  */
@@ -34,6 +31,8 @@ try {
     //如果需要，定义一些（个数不限）在 action 执行之前预执行 和 后执行的程序
     plugin::register(dispatcher::plugin_before_run, new plugin_init());
     plugin::register(auto::plugin_shutdown, new plugin_end());
+    
+    plugin::register( auto::plugin_shutdown, new plugin_performance());
     
     plugin::register('error::db_mysqlpdo::_connect', new plugin_dbconnecterror());
 
