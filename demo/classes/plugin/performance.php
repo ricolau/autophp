@@ -61,12 +61,13 @@ class plugin_performance extends plugin_abstract{
             return false;
             
         }
+        $runId = auto::getRunId();
         $line = '';
                 //        $pf[0] = array('time'=>time(),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
 
         foreach($pf as $v){
             
-            $line .= 'time|'.t($v['time']).'||rid|'.REQUEST_ID.'||tag|'.$v['tag'].'||timecost|'.$v['timecost'].'||info|'. json_encode($v['info'])."\n";
+            $line .= 'time|'.t($v['time']).'||rid|'.$runId.'||tag|'.$v['tag'].'||timecost|'.$v['timecost'].'||info|'. json_encode($v['info'])."\n";
         }
         
         file_put_contents($file, $line, FILE_APPEND);
