@@ -289,15 +289,17 @@ class auto {
 
         //total cost
         auto::$_runtimeEnd = microtime(true);
-        $msg = array('title' => 'total runtime cost', 'msg' => (auto::$_runtimeEnd - auto::$_runtimeStart));
-        array_unshift(self::$_debugMsg, $msg);
+//        $msg = array('title' => 'total runtime cost', 'msg' => (auto::$_runtimeEnd - auto::$_runtimeStart));
+//        array_unshift(self::$_debugMsg, $msg);
+        
+        $performance = performance::dump();
 
         if (auto::isCli()) {
             $output = '
 #################### debug info : ####################
 (you can turn this off by "auto::setDebug(false)")
                 ';
-            foreach (self::$_debugMsg as $item) {
+            foreach ($performance as $item) {
                 $tstr = '
 >>>>>>' . $item['title'] . '>>>>>> ' . $item['msg'];
                 $output .= $tstr;
@@ -309,7 +311,7 @@ class auto {
             $output = '<style>.autophp_debug_span{width:100%;display:block;border-bottom: dashed 1px gray;margin: 3px 0 3px 0;padding:3px 0 3px 0;font-size: 14px;font-family: Arial}</style>
                 <fieldset>
                 <span  class="autophp_debug_span"><b>debug info : </b> (you can turn this off by "auto::setDebug(false)")</span>';
-            foreach (self::$_debugMsg as $item) {
+            foreach ($performance as $item) {
                 $tstr = '<span class="autophp_debug_span"><font color=blue>' . $item['title'] . ': </font>' . $item['msg'] . '</span>';
                 $output .= $tstr;
             }

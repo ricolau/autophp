@@ -23,8 +23,10 @@ class render_default extends render_abstract {
     }
 
     public function render($path) {
-        auto::isDebug() && auto::debugMsg('render data for ' . $path, '<pre>' . rico::export($this->data) . '</pre>');
+        $_debugMicrotime = microtime(true);
         $data = $this->fetch($path);
+        
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('path'=>$path,'render-data'=>rico::export($this->data)));
         response::output($data);
     }
 
