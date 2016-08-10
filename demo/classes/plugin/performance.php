@@ -31,7 +31,7 @@ class plugin_performance extends plugin_abstract{
          * }
          * 
          * cli{
-         * 需要注册到 事件: plugin::register('notice::performance::add', new plugin_performance()), 因为脚本跑的时间可能会很长
+         * 需要注册到 事件: plugin::register('performance::add::notice', new plugin_performance()), 因为脚本跑的时间可能会很长
          * 需要注册到 事件: plugin::register( auto::plugin_shutdown, new plugin_performance()),  脚本结束运行时,log 拿出来
          * 
          * 记录cli 模式的全部log

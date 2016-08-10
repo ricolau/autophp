@@ -162,7 +162,7 @@ class cache_codis extends cache_abstract{
             $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
         }catch(RedisException $e){
             
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias' => $this->_alias, 'hitServer'=>$this->_confs['hitServer'],'args' => $arguments, 'ret' => performance::summarize($e, $method)));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias' => $this->_alias, 'line'=>__LINE__,'hitServer'=>$this->_confs['hitServer'],'args' => $arguments, 'ret' => performance::summarize($e, $method)));
 
             try{
                 //这个地方不加 plugin 了,并且有任何exception 的话,都要throw 上去了
@@ -170,7 +170,7 @@ class cache_codis extends cache_abstract{
                 $this->connect();
                 $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
             }catch(Exception $e2){
-                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias' => $this->_alias, 'hitServer'=>$this->_confs['hitServer'],'args' => $arguments, 'ret' => performance::summarize($e2, $method)));
+                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias' => $this->_alias, 'line'=>__LINE__,'hitServer'=>$this->_confs['hitServer'],'args' => $arguments, 'ret' => performance::summarize($e2, $method)));
                 throw $e2;
             }
         }
