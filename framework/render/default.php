@@ -26,7 +26,7 @@ class render_default extends render_abstract {
         $_debugMicrotime = microtime(true);
         $data = $this->fetch($path);
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('path'=>$path,'render-data'=>rico::export($this->data)));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('path'=>$path,'data'=>$this->data));
         response::output($data);
     }
 
