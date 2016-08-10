@@ -75,8 +75,7 @@ class cache_codis extends cache_abstract{
     public function connect(){
         $_debugMicrotime = microtime(true);
 
-        $servers = $this->_confs['servers'];
-        if(!$servers){
+        if(!$this->_confs['servers']){
             throw new exception_cache(
             'codis connection host and port empty!' . (!auto::isOnline() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
             );
@@ -86,6 +85,12 @@ class cache_codis extends cache_abstract{
         while(true){
             $server = $this->_getServer();
             if(!$server){
+                //所有的server 全部连接失败!!!!!太严重了
+                $ptx = new plugin_context(__METHOD__, array('conf' => $this->_confs, 'alias' => $this->_alias, 'obj' => &$this, 'hitServer' => $server,));
+                plugin::call('fatal::' . __METHOD__, $ptx);
+                if($ptx->breakOut){
+                    return $ptx->breakOut;
+                }
                 continue;
             }
 
