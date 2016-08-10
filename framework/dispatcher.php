@@ -45,17 +45,17 @@ class dispatcher {
     }
 
     private static function _httpRoute() {
-        $uri = self::$_instance->getPath();
-        $uri = trim($uri, '/');
+        $path = self::$_instance->getPath();
+        $path = trim($path, '/');
         $moduleName = null;
-        if ($uri == '') {
+        if ($path == '') {
             if (self::$_pathDeep == self::path_deep3) {
                 $moduleName = self::$_defaultModule;
             }
             $controllerName = self::$_defaultController;
             $actionName = self::$_defaultAction;
         } else {
-            $us = explode('/', $uri);
+            $us = explode('/', $path);
 
             if (self::$_pathDeep == self::path_deep3) {
                 $moduleName = array_shift($us);
@@ -105,8 +105,8 @@ class dispatcher {
       }
      */
 
-    public function setPath($uri) {
-        self::$_path = $uri;
+    public function setPath($path) {
+        self::$_path = $path;
         return self::$_instance;
     }
 
@@ -128,21 +128,21 @@ class dispatcher {
 
     public static function detectPath() {
         if (!empty($_SERVER['SCRIPT_URL'])) {
-            $uri = $_SERVER['SCRIPT_URL'];
+            $path = $_SERVER['SCRIPT_URL'];
         } else {
             // as: /m/test?saadf=esdf
             if (isset($_SERVER['REQUEST_URI'])) {
                 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
                 if (false !== $request_uri) {
-                    $uri = $request_uri;
+                    $path = $request_uri;
                 } elseif ($_SERVER['REQUEST_URI'] && strpos($_SERVER['REQUEST_URI'], '?') !== false) {
-                    $uri = strstr($_SERVER['REQUEST_URI'], '?', true);
+                    $path = strstr($_SERVER['REQUEST_URI'], '?', true);
                 }
             } else {
-                $uri = $_SERVER['PHP_SELF'];
+                $path = $_SERVER['PHP_SELF'];
             }
         }
-        return $uri;
+        return $path;
     }
 
     public function setDefaultModule($module = 'default') {
