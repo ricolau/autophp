@@ -38,7 +38,7 @@ class db_mysqlpdo extends db_abstract {
         //every time run "new db_mysqlpdo($conf)->connect($type)" would reconnect the mysql database!
         $this->_pdoCon = $this->_getPdo($type);
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias));
         return $this->_pdoCon;
 
     }

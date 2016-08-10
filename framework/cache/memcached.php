@@ -41,7 +41,7 @@ class cache_memcached extends cache_abstract {
         foreach ($servers as $server) {
             $this->_memcached->addServer($server['host'], $server['port'], $server['weight']);
         }
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias));
 
         //return $this->_memcached;
         return $this;
@@ -57,7 +57,7 @@ class cache_memcached extends cache_abstract {
         $_debugMicrotime = microtime(true);        
         $ret = call_user_func_array(array($this->_memcached, 'set'), array($key, $val, $expire));
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias,'key'=>$key,'val'=>$val ,'ret'=>performance::summarize($ret,__METHOD__)       )) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, arguments: ' . var_export(array($key,$val,$expire), true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias,'key'=>$key,'val'=>$val ,'ret'=>performance::summarize($ret,__METHOD__)       ));
         
         return $ret;
     }
@@ -70,7 +70,7 @@ class cache_memcached extends cache_abstract {
         }
         $ret = call_user_func_array(array($this->_memcached, $funcName), $arguments);
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments,'ret'=>performance::summarize($ret,$method)  )) && auto::isDebug() && auto::debugMsg($method, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments,'ret'=>performance::summarize($ret,$method)  )) ;
 
         return $ret;
     }

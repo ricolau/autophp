@@ -8,7 +8,7 @@
  */
 class auto {
 
-    const version = '2.1.6';//2.1.0 update about plugin, not compatible with version before 2.1.0
+    const version = '2.1.7';//2.1.0 update about plugin, not compatible with version before 2.1.0
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -147,9 +147,6 @@ class auto {
 
 
 
-    protected static $_debugMsg = array();
-
-
     public static function autoload($className) {
         $className = self::_parseClassname($className);
 
@@ -270,6 +267,8 @@ class auto {
         //为什么这个performance  不加到 plugin::call(auto::plugin_shutdown, $ptx) 后面,是因为防止有人在里面执行 exit(),导致这个performance 无法执行记录 
         performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('runId'=>self::$_runId,'sapi'=>self::$_sapiName,'runPath'=>dispatcher::instance()->getPath(),'runMode'=>self::$_runMode    ));
 
+        $performance = performance::dump();
+
         $ptx = new plugin_context(__METHOD__,array());
         plugin::call(auto::plugin_shutdown, $ptx);
           
@@ -290,18 +289,18 @@ class auto {
         //total cost
         auto::$_runtimeEnd = microtime(true);
 //        $msg = array('title' => 'total runtime cost', 'msg' => (auto::$_runtimeEnd - auto::$_runtimeStart));
-//        array_unshift(self::$_debugMsg, $msg);
         
-        $performance = performance::dump();
-
+        $pfsize = performance::getSizeLimit();
         if (auto::isCli()) {
             $output = '
-#################### debug info : ####################
+#################### performance info (of last '.$pfsize.' items): ####################
 (you can turn this off by "auto::setDebug(false)")
                 ';
             foreach ($performance as $item) {
+                $item['msg'] = 'timecost '.$item['timecost'].', \n info:'.rico::export($item['info']);
+
                 $tstr = '
->>>>>>' . $item['title'] . '>>>>>> ' . $item['msg'];
+>>>>>>' . $item['tag'] . '>>>>>> ' . $item['msg'];
                 $output .= $tstr;
             }
             $output .= '
@@ -310,18 +309,16 @@ class auto {
         } else {
             $output = '<style>.autophp_debug_span{width:100%;display:block;border-bottom: dashed 1px gray;margin: 3px 0 3px 0;padding:3px 0 3px 0;font-size: 14px;font-family: Arial}</style>
                 <fieldset>
-                <span  class="autophp_debug_span"><b>debug info : </b> (you can turn this off by "auto::setDebug(false)")</span>';
+                <span  class="autophp_debug_span"><b>debug info(of last '.$pfsize.' items): </b> (you can turn this off by "auto::setDebug(false)")</span>';
             foreach ($performance as $item) {
-                $tstr = '<span class="autophp_debug_span"><font color=blue>' . $item['title'] . ': </font>' . $item['msg'] . '</span>';
+                $item['msg'] = 'timecost '.$item['timecost'].', <br /><pre>info:'.rico::export($item['info']).'</pre>';
+                $tstr = '<span class="autophp_debug_span"><font color=blue>' . $item['tag'] . ': </font>' . $item['msg'] . '</span>';
                 $output .= $tstr;
             }
             $output .= '</fieldset>';
         }
 
         echo $output;
-    }
-    public static function debugMsg($title, $msg) {
-        self::$_debugMsg[] = array('title' => $title, 'msg' => $msg);
     }
 
 

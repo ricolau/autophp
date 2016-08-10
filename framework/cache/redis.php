@@ -29,7 +29,7 @@ class cache_redis extends cache_abstract {
             );
         }
         $con = $this->_redis->connect($this->_confs['host'], $this->_confs['port']);
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias)) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's, alias: ' . $this->_alias . ',conf ' . var_export($this->_confs, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias));
 
         if(!$con){
             //设置重入次数上限,防止程序陷入死循环重入崩溃
@@ -84,7 +84,7 @@ class cache_redis extends cache_abstract {
             }
             throw $e;
         }
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments,'ret'=>performance::summarize($ret,$method) ) ) && auto::isDebug() && auto::debugMsg($method, 'cost ' . $timeCost . 's, arguments: ' . var_export($arguments, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias'=>$this->_alias,'args'=>$arguments,'ret'=>performance::summarize($ret,$method) ) );
         
         return $ret;
     }

@@ -62,6 +62,10 @@ class performance {
         self::$_sizeLimit = $top>0 ? $top : 256;
     }
     
+    public static function getSizeLimit(){
+        return self::$_sizeLimit;
+    }
+    
     public static function getCurrentSize(){
         return self::$_currentSize;
     }

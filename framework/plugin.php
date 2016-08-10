@@ -31,10 +31,9 @@ final class plugin {
             foreach (self::$_plugins[$tag] as $pluginName=>&$plugin) {
                 
                 $_debugMicrotime = microtime(true);
-                auto::isDebug() && auto::debugMsg(__METHOD__ . ' ('.  $pluginName.') ', 'start ---->>>>');
                 call_user_func_array(array($plugin,'call'), array($tag, $ptx));
                 
-                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('plugin'=>$pluginName)) && auto::isDebug() && auto::debugMsg(__METHOD__ . " ('$pluginName') ", 'end,<<<<---- cost ' . $timeCost . 's');
+                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('plugin'=>$pluginName));
                 //self::$_pluginsHasRun[] = $plugin;
             }
         }

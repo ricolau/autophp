@@ -114,7 +114,7 @@ class http {
         }
 
         curl_close($ci);
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('args'=>$args,'ret'=>performance::summarize($response,__METHOD__) )) && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($args, true).",  \n  responsed:".$response);
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('args'=>$args,'ret'=>performance::summarize($response,__METHOD__) )) ;
 
         return $response;
     }
@@ -200,10 +200,7 @@ class http {
         $tmpArgs = array('url'=>$url,'method'=>$method,'params'=>$params,'timeout'=>$timeout,'cookie'=>$cookie,'referer'=>$referer,'extheaders'=>$extheaders,
                     'multi'=>$multi,'proxy'=>$proxy);
         
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('args'=>$tmpArgs,'ret'=>performance::summarize($response,__METHOD__) ) ) &&
-                auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . 
-                var_export($tmpArgs,true) .",  \n  responsed:".$response//end var_export
-                );
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('args'=>$tmpArgs,'ret'=>performance::summarize($response,__METHOD__) ) ) ;
 
         return $response;
     }

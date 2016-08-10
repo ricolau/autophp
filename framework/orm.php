@@ -141,25 +141,25 @@ class orm extends base {
         $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
         $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)));
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($values);
 
         $this->_clearStat();
         if ($res === false) {
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__))) ;
             $this->_raiseError('insert query failed~', exception_mysqlpdo::type_query_error);
         }
         if ($getLastInsertId) {
             $lastInsertId = $this->_queryObj->lastInsertId();
             //有时候table 可能没有primary key
             if ($lastInsertId) {
-                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  $lastInsertId))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  $lastInsertId))  && auto::isDebug();
                 return $lastInsertId;
             }
         }
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__))) ;
         return $res;
     }
 
@@ -228,7 +228,7 @@ class orm extends base {
             $ret = $sth->rowCount();
         }
         $this->_clearStat();
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($ret,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($ret,__METHOD__))) ;
         return $ret;
     }
 
@@ -248,19 +248,19 @@ class orm extends base {
         $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
         $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)));
 
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($values);
         if ($res === false) {
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__))) ;
 
             $this->_raiseError('delete query failed~', exception_mysqlpdo::type_query_error);
         }
 
         $this->_clearStat();
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)));
         return $res;
     }
 
@@ -298,18 +298,18 @@ class orm extends base {
         $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
         $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)));
 
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($values);
         if ($res === false) {
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)));
             $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)) )  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)) ) ;
 
         $this->_clearStat();
 
@@ -345,17 +345,17 @@ class orm extends base {
         $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
         $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__))) ;
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($values);
         if ($res === false) {
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__))) ;
             $this->_raiseError('count query failed~', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->fetchColumn();
         $this->_clearStat();
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__))) ;
 
         return $res;
     }
@@ -487,7 +487,7 @@ class orm extends base {
         $this->_queryObj = $this->_getPdoByMethodName($queryType);
         $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)));
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($data);
@@ -495,7 +495,7 @@ class orm extends base {
             $res = $sth->rowCount();
         }
 
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)));
         return $res;
     }
     
@@ -508,7 +508,7 @@ class orm extends base {
         $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
         $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)));
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($data);
@@ -517,7 +517,7 @@ class orm extends base {
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
         $this->_clearStat();
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)));
         return $res;
     }
 
@@ -536,12 +536,12 @@ class orm extends base {
         $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
         $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__))) ;
             $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute(array());
         if (!$res) {
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__))) ;
             $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
         }
         $dt = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -555,7 +555,7 @@ class orm extends base {
 
 
         self::$_tableStructure[$this->_dbAlias][$this->_table] = $dt;
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($dt,__METHOD__)))  && auto::isDebug() && auto::debugMsg(__METHOD__, 'cost ' . $timeCost . 's of query: ' . var_export($this->_lastQuery, true));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($dt,__METHOD__)))  ;
         return $dt;
     }
 
