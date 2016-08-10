@@ -120,6 +120,28 @@ class performance {
         }
         return true;
     }
+    
+    
+    /**
+     * get summary info for a variable
+     * @param type $var
+     * @return type
+     */
+    public static function summarize($var, $tag = null){
+        if(!auto::isCli()){
+            return $var;
+        }
+        if( is_bool($var) || is_numeric($var) || is_null($var)){
+            $ret = $var;
+        }elseif(is_string($var)){
+            $ret = 'string('.strlen($var).')';
+        }else{
+            $ret = gettype($var);
+        }
+        return $ret;
+        
+    }
+    
     public static function dump(){
         return queue::dump(self::$_hostKey);
     }
