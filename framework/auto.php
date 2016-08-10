@@ -1,14 +1,14 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-08
+ * @version 2016-08-10
  * @desc autophp auto, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
  *
  */
 class auto {
 
-    const version = '2.1.5';//2.1.0 update about plugin, not compatible with version before 2.1.0
+    const version = '2.1.6';//2.1.0 update about plugin, not compatible with version before 2.1.0
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -69,7 +69,7 @@ class auto {
         
         self::$_runId = $runId ?: uniqid(substr(self::$_sapiName,0,1).'_');
         
-        performance::add(__METHOD__, 0, array('runId'=>self::$_runId,'sapi'=>self::$_sapiName    ));
+        performance::add(__METHOD__, 0, array('runId'=>self::$_runId,'sapi'=>self::$_sapiName,'reqPath'=>(!self::$_isCli ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : $_SERVER['PHP_SELF'])    ));
 
     }
         
@@ -264,7 +264,7 @@ class auto {
 
     public static function shutdownCall() {
         //为什么这个performance  不加到 plugin::call(auto::plugin_shutdown, $ptx) 后面,是因为防止有人在里面执行 exit(),导致这个performance 无法执行记录 
-        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('runId'=>self::$_runId,'sapi'=>self::$_sapiName,'uri'=>dispatcher::instance()->getUri(),'runMode'=>self::$_runMode    ));
+        performance::add(__METHOD__, microtime(true) - self::$_runtimeStart,array('runId'=>self::$_runId,'sapi'=>self::$_sapiName,'runPath'=>dispatcher::instance()->getPath(),'runMode'=>self::$_runMode    ));
 
         $ptx = new plugin_context(__METHOD__,array());
         plugin::call(auto::plugin_shutdown, $ptx);

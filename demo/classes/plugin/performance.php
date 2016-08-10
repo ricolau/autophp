@@ -83,7 +83,7 @@ class plugin_performance extends plugin_abstract{
         if(!auto::isCli()){//http 请求,对某些api 抽样
             
             //对于这些指定的url,按照指定的概率进行抽样记录 performance
-            $uri= dispatcher::instance()->getUri();
+            $uri= dispatcher::instance()->getPath();
             if(isset(self::$_samplingUriRateList[$uri]) && rand(0, self::$_samplingUriRateList[$uri])!=0){
                 $doFlush =  false;
             }

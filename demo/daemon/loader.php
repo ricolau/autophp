@@ -66,10 +66,10 @@ try {
     
     //=========================== 在CLI 模式下，http route 不会生效，因此此处 TDispatcher没用， ============================
     //检测并获取到uri，当然也可以自己指定
-//    $uri = dispatcher::detectUri();
+//    $uri = dispatcher::detectPath();
 //    // 开始路由和执行
 //    dispatcher::instance()->//获取实例
-//            setUri($uri)->                  //设置uri，可以随意设置任意 uri，注意要设置为  /controller/action  类似的格式才会被解析为对应的controller中
+//            setPath($uri)->                  //设置uri，可以随意设置任意 uri，注意要设置为  /controller/action  类似的格式才会被解析为对应的controller中
 //            setDefaultController('index')-> //设置默认的controller ，当controller 为空的时候执行
 //            setDefaultAction('index')->     //设置默认的action ，action 为空的时候执行
 //            dispatch()->                    //开始路由，获取到底要执行哪个controller 和 action，准备就绪

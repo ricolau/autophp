@@ -74,7 +74,7 @@ abstract class controller extends base {
     }
 
     public function forward($path) {
-        dispatcher::instance()->setUri($path)->dispatch()->run();
+        dispatcher::instance()->setPath($path)->dispatch()->run();
     }
 
     public function assign($key, $val) {

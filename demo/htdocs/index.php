@@ -68,7 +68,7 @@ try {
 
     //============================ 开始路由和执行controller 层中 ============================
     //检测并获取到uri，当然也可以自己指定
-    $uri = dispatcher::detectUri();
+    $uri = dispatcher::detectPath();
     //$uri = '/';
     /*
      * 可以自己随意接受一些参数然后设置 uri 进行转发
@@ -86,7 +86,7 @@ try {
             setDefaultAction('index')->//设置默认的action ，action 为空的时候执行
             //setControllerName('index')->setActionName('index')->
 
-            setUri($uri)->//设置uri，可以随意设置任意 uri，注意要设置为  /controller/action  类似的格式才会被解析为对应的controller中
+            setPath($uri)->//设置uri，可以随意设置任意 uri，注意要设置为  /controller/action  类似的格式才会被解析为对应的controller中
             dispatch()->//开始路由，获取到底要执行哪个controller 和 action，准备就绪
             run();                          //开始执行上一步路由后的 controller 和 action
     //dispatcher::instance()->setControllerName('index')->setActionName('index')->run();

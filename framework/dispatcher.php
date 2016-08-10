@@ -9,7 +9,7 @@
 class dispatcher {
 
     private static $_instance = null;
-    private static $_uri = null;
+    private static $_path = null;
     private static $_defaultModule = 'default';
     private static $_defaultController = 'default';
     private static $_defaultAction = 'default';
@@ -45,7 +45,7 @@ class dispatcher {
     }
 
     private static function _httpRoute() {
-        $uri = self::$_instance->getUri();
+        $uri = self::$_instance->getPath();
         $uri = trim($uri, '/');
         $moduleName = null;
         if ($uri == '') {
@@ -105,16 +105,16 @@ class dispatcher {
       }
      */
 
-    public function setUri($uri) {
-        self::$_uri = $uri;
+    public function setPath($uri) {
+        self::$_path = $uri;
         return self::$_instance;
     }
 
-    public function getUri() {
-        if (null === self::$_uri) {
-            self::$_uri = self::detectUri();
+    public function getPath() {
+        if (null === self::$_path) {
+            self::$_path = self::detectPath();
         }
-        return self::$_uri;
+        return self::$_path;
     }
 
     public function setPathDeep($deep = self::path_deep2) {
@@ -126,7 +126,7 @@ class dispatcher {
         return self::$_pathDeep;
     }
 
-    public static function detectUri() {
+    public static function detectPath() {
         if (!empty($_SERVER['SCRIPT_URL'])) {
             $uri = $_SERVER['SCRIPT_URL'];
         } else {
