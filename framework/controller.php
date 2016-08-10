@@ -21,6 +21,8 @@ abstract class controller extends base {
     }
 
     public function render($path = '') {
+        header('_runId: '.auto::getRunId());
+
         $_debugMicrotime = microtime(true);
         if ($path) {
             $this->_render->render($path);
@@ -87,6 +89,7 @@ abstract class controller extends base {
 
     public function renderJson($data) {
         if(!headers_sent()){
+            header('_runId: '.auto::getRunId());
             header('Content-type: application/json');
         }
         response::outputJson($data);
