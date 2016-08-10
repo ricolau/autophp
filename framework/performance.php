@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-03
+ * @version 2016-08-10
  * @desc performance log
  *
  */
@@ -24,6 +24,12 @@ class performance {
     protected static $_tagModes = array();
     
     protected static $_samplingCounts = array();
+    
+     
+    const summarize_mode_default = 0;
+    const summarize_mode_fully = 1;
+    
+    protected static $_summarizeMode = self::summarize_mode_default;
     
     /**
      * set performance storage key in class "queue"
@@ -121,6 +127,17 @@ class performance {
         return true;
     }
     
+//    
+//    public static function setSummarizeModeByTag($tag, $mode){
+//        
+//    }
+   
+    
+    public static function setSummarizeMode($mode = self::summarize_mode_default){
+        self::$_summarizeMode = ($mode == self::summarize_mode_default)? self::summarize_mode_default : self::summarize_mode_fully;
+    }
+    
+    
     
     /**
      * get summary info for a variable
@@ -128,7 +145,8 @@ class performance {
      * @return type
      */
     public static function summarize($var, $tag = null){
-        if(!auto::isCli()){
+        
+        if(self::$_summarizeMode!==self::summarize_mode_default){
             return $var;
         }
         if( is_bool($var) || is_numeric($var) || is_null($var)){
@@ -137,7 +155,7 @@ class performance {
             $ret = 'string('.strlen($var).')';
         }else{
             $ret = gettype($var);
-        }
+        }     
         return $ret;
         
     }
