@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2012-04
+ * @version 2016-08-10
  * @desc default config file
  *
  */
@@ -20,9 +20,9 @@ return array(
     'codis' => array(
         'type' => 'codis',//codis
         'servers' => array(
-            array('host' => '10.100.100.1', 'port' => 11217, 'weight' => 10,'connectTimeout'=>0.05),
-            array('host' => '10.100.100.2', 'port' => 11217, 'weight' => 40,'connectTimeout'=>0.05),
-            array('host' => '10.100.100.3', 'port' => 11217, 'weight' => 50,'connectTimeout'=>0.05),
+            array('host' => '127.0.0.1', 'port' => 6379, 'weight' => 10,'connectTimeout'=>0.05),
+            array('host' => '127.0.0.1', 'port' => 6379, 'weight' => 40,'connectTimeout'=>0.05),
+            array('host' => '127.0.0.1', 'port' => 6379, 'weight' => 50,'connectTimeout'=>0.05),
         )
     ),
     //配置第二个memcache 的集群
@@ -37,13 +37,14 @@ return array(
     //配置第二个memcache 的集群
     'rs1' => array(
         'type' => 'redis',
-        'host'=>'10.100.100.60',
+        'host'=>'127.0.0.1',
+        'port'=>6379,
         'connectTimeout'=>0.05,
     ),
     'rs2' => array(
         'type' => 'redis',
         'host'=>'127.0.0.1',
-        'port'=>'',
+        'port'=>6379,
         'connectTimeout'=>0.01,
     )
 );

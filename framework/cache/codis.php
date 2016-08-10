@@ -35,12 +35,28 @@ class cache_codis extends cache_abstract{
                 }
 
                 $this->_confs['serversFormat'][$k]['weight'] = ($svr['weight'] <= 0) ? 1 : $svr['weight'];
-                $this->_confs['serversFormat'][$k]['timeout'] = !isset($svr['connectTimeout']) ? $svr['connectTimeout'] : 0.05;
+                $this->_confs['serversFormat'][$k]['connectTimeout'] = !isset($svr['connectTimeout']) ? $svr['connectTimeout'] : 0.05;
                 $weightTotal += $this->_confs['serversFormat'][$k]['weight'];
             }
             $this->_confs['weightTotal'] = $weightTotal;
             $this->_confs['serverCount'] = count($this->_confs['serversFormat']);
-
+            
+            $tmpSvrs = array_values($this->_confs['serversFormat']);
+            $this->_confs['serversFormat'] = array();
+            
+            $cnt = $this->_confs['serverCount'];
+            for ($i = 0; $i < $cnt; $i++) {
+                for ($j = 0; $j < $cnt - $i - 1; $j++) {
+                    if ($tmpSvrs[$j]['weight'] < $tmpSvrs[$j + 1]['weight']) {
+                        $temp = $tmpSvrs[$j];
+                        $tmpSvrs[$j] = $tmpSvrs[$j + 1];
+                        $tmpSvrs[$j + 1] = $temp;
+                    }
+                }
+            }
+            
+            $this->_confs['serversFormat'] = array_values($tmpSvrs);
+            
             $this->_confFormated = true;
             self::$_reentrantTimesLimit = $this->_confs['serverCount'] + 1;
         }
@@ -57,13 +73,16 @@ class cache_codis extends cache_abstract{
                     break;
                 }
             }
-            if(!$hitSvr){
-                $key = $this->_confs['serverCount'] - 1;
-                $hitSvr = array('key' => $key, 'server' => $this->_confs['serversFormat'][$key]);
+            if($hitSvr){
+                unset($this->_confs['serversFormat'][$k]);
+                
+            }else{
+                $key =  - 1;
+                $hitSvr = array('key' => $key, 'server' => array_pop($this->_confs['serversFormat']));
             }
-
-            $this->_confs['weightTotal'] -= $this->_confs['serversFormat'][$key]['weight'];
-            unset($this->_confs['serversFormat'][$key]);
+            $this->_confs['weightTotal'] -= $hitSvr['server']['weight'];
+            $this->_confs['hitServer'] = $hitSvr;
+            
 
             return $hitSvr;
         }else{
@@ -97,7 +116,7 @@ class cache_codis extends cache_abstract{
 
             if(!$server['server']['host'] || !$server['server']['port']){
                 throw new exception_cache(
-                'redis connection host and port error!' . (auto::isDebug() ? var_export($server, true) : ''), exception_cache::type_server_connection_error
+                'codis connection host and port error!' . (auto::isDebug() ? var_export($server, true) : ''), exception_cache::type_server_connection_error
                 );
             }
             try{
@@ -115,7 +134,7 @@ class cache_codis extends cache_abstract{
             $seqid = md5($this->_alias . __METHOD__);
             if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid] >= self::$_reentrantTimesLimit){
                 throw new exception_cache(
-                    'redis connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
+                    'codis connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
                 );
             }
             if(!isset(self::$_reentrantTimes[$seqid])){
@@ -137,28 +156,23 @@ class cache_codis extends cache_abstract{
         $method = __CLASS__ . '::' . $funcName;
         $_debugMicrotime = microtime(true);
         if(!$this->_redis){
-            throw new exception_cache('connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
+            throw new exception_cache('codis connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
         try{
             $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
         }catch(RedisException $e){
-            //设置重入次数上限,防止程序陷入死循环重入崩溃
-            $seqid = md5($this->_alias . serialize($arguments) . $funcName);
-            if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid] >= self::$_reentrantTimesLimit){
-                throw $e;
-            }
-            if(!isset(self::$_reentrantTimes[$seqid])){
-                self::$_reentrantTimes[$seqid] = 0;
-            }
-            self::$_reentrantTimes[$seqid] += 1;
+            
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias' => $this->_alias, 'hitServer'=>$this->_confs['hitServer'],'args' => $arguments, 'ret' => performance::summarize($e, $method)));
 
-            $ptx = new plugin_context($method, array('conf' => $this->_confs, 'alias' => $this->_alias,
-                'exception' => &$e, 'obj' => &$this, 'func' => $funcName, 'args' => $arguments));
-            plugin::call('error::' . $method, $ptx);
-            if($ptx->breakOut){
-                return $ptx->breakOut;
+            try{
+                //这个地方不加 plugin 了,并且有任何exception 的话,都要throw 上去了
+                //做完 重新连接server 之后,如果还失败,不需要做任何事情了
+                $this->connect();
+                $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
+            }catch(Exception $e2){
+                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias' => $this->_alias, 'hitServer'=>$this->_confs['hitServer'],'args' => $arguments, 'ret' => performance::summarize($e2, $method)));
+                throw $e2;
             }
-            throw $e;
         }
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias' => $this->_alias, 'args' => $arguments, 'ret' => performance::summarize($ret, $method)));
 

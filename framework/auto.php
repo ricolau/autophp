@@ -8,7 +8,7 @@
  */
 class auto {
 
-    const version = '2.1.7';//2.1.0 update about plugin, not compatible with version before 2.1.0
+    const version = '2.1.8';//2.1.0 update about plugin, not compatible with version before 2.1.0
     
     
     const author = 'ricolau<ricolau@qq.com>';
@@ -174,6 +174,7 @@ class auto {
         'cache_memcache'=>true,
         'cache_memcached'=>true,
         'cache_redis'=>true,
+        'cache_codis'=>true,
         'db_abstract'=>true,
         'db_mysqlpdo'=>true,
         'exception_404'=>true,
