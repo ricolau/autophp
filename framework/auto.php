@@ -69,6 +69,10 @@ class auto {
         
         self::$_runId = $runId ?: uniqid(substr(self::$_sapiName,0,1).'_');
         
+        if(!self::$_isCli){
+            performance::setSummarizeMode(performance::summarize_mode_fully);
+        }
+        
         performance::add(__METHOD__, 0, array('runId'=>self::$_runId,'sapi'=>self::$_sapiName,'reqPath'=>(!self::$_isCli ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : $_SERVER['PHP_SELF'])    ));
 
     }
