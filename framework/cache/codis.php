@@ -106,7 +106,7 @@ class cache_codis extends cache_abstract{
             if(!$server){
                 //所有的server 全部连接失败!!!!!太严重了
                 $ptx = new plugin_context(__METHOD__, array('conf' => $this->_confs, 'alias' => $this->_alias, 'obj' => &$this, 'hitServer' => $server,));
-                plugin::call('fatal::' . __METHOD__, $ptx);
+                plugin::call(__METHOD__.'::fatal', $ptx);
                 if($ptx->breakOut){
                     return $ptx->breakOut;
                 }
