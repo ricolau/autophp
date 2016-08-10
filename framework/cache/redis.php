@@ -17,28 +17,34 @@ class cache_redis extends cache_abstract {
     public function __construct($alias, $conf) {
         $this->_alias = $alias;
         $this->_confs = $conf;
+        if(!isset($this->_confs['connectTimeout'])){
+            $this->_confs['connectTimeout'] = 0.05;
+        }
     }
 
     public function connect() {
         $_debugMicrotime = microtime(true);
-        $this->_redis = new Redis();
         if (!$this->_confs['host'] || !$this->_confs['port']) {
             throw new exception_cache(
                 'redis connection host and port error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''),
                 exception_cache::type_server_connection_error
             );
         }
-        $con = $this->_redis->connect($this->_confs['host'], $this->_confs['port']);
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias));
-
+        try{
+            $this->_redis = new Redis();
+            $con = $this->_redis->connect($this->_confs['host'], $this->_confs['port'], $this->_confs['connectTimeout']);
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_alias));
+        }catch(Exception $e){
+            //just ignore, and take to the below flow
+        }
         if(!$con){
             //设置重入次数上限,防止程序陷入死循环重入崩溃
             $seqid = md5($this->_alias.__METHOD__);
-            if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid]>=self::$_reentrantTimesLimit){
-                throw new exception_cache(
-                'redis connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''),
-                exception_cache::type_server_connection_error
-            );
+                if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid]>=self::$_reentrantTimesLimit){
+                    throw new exception_cache(
+                    'redis connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''),
+                    exception_cache::type_server_connection_error
+                );
             }
             if(!isset(self::$_reentrantTimes[$seqid])){
                 self::$_reentrantTimes[$seqid] =0;

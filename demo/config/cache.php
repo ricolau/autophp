@@ -16,6 +16,15 @@ return array(
             array('host' => '10.100.100.3', 'port' => 11217, 'weight' => 50),
         )
     ),
+    
+    'codis' => array(
+        'type' => 'codis',//codis
+        'servers' => array(
+            array('host' => '10.100.100.1', 'port' => 11217, 'weight' => 10,'connectTimeout'=>0.05),
+            array('host' => '10.100.100.2', 'port' => 11217, 'weight' => 40,'connectTimeout'=>0.05),
+            array('host' => '10.100.100.3', 'port' => 11217, 'weight' => 50,'connectTimeout'=>0.05),
+        )
+    ),
     //配置第二个memcache 的集群
     'mc1' => array(
         'type' => 'memcache',
@@ -29,11 +38,13 @@ return array(
     'rs1' => array(
         'type' => 'redis',
         'host'=>'10.100.100.60',
+        'connectTimeout'=>0.05,
     ),
     'rs2' => array(
         'type' => 'redis',
         'host'=>'127.0.0.1',
         'port'=>'',
+        'connectTimeout'=>0.01,
     )
 );
 
