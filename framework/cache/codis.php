@@ -101,7 +101,7 @@ class cache_codis extends cache_abstract{
 
         if(!$this->_confs['servers']){
             throw new exception_cache(
-            'codis connection host and port empty!' . (!auto::isOnline() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
+            'codis connection servers empty!' . (!auto::isOnline() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
             );
         }
 
@@ -130,7 +130,7 @@ class cache_codis extends cache_abstract{
             $seqid = md5($this->_alias . __METHOD__);
             if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid] >= self::$_reentrantTimesLimit){
                 throw new exception_cache(
-                    'codis connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
+                    'codis connection error too many times!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
                 );
             }
             if(!isset(self::$_reentrantTimes[$seqid])){
@@ -152,7 +152,7 @@ class cache_codis extends cache_abstract{
         $method = __CLASS__ . '::' . $funcName;
         $_debugMicrotime = microtime(true);
         if(!$this->_redis){
-            throw new exception_cache('codis connection error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
+            throw new exception_cache('codis object error!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error);
         }
         try{
             $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
