@@ -143,7 +143,7 @@ class cache_codis extends cache_abstract{
             self::$_reentrantTimes[$seqid] += 1;
 
             $ptx = new plugin_context(__METHOD__, array('conf' => $this->_confs, 'alias' => $this->_alias, 'obj' => &$this, 'hitServer' => $server,));
-            plugin::call('error::' . __METHOD__, $ptx);
+            plugin::call(__METHOD__.'::error', $ptx);
             if($ptx->breakOut){
                 return $ptx->breakOut;
             }
@@ -162,17 +162,26 @@ class cache_codis extends cache_abstract{
             $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
         }catch(RedisException $e){
             
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias' => $this->_alias, 'line'=>__LINE__,'hitServer'=>$this->_confs['hitServer'],'args' => $arguments, 'ret' => performance::summarize($e, $method)));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias'=>$this->_alias,'line'=>__LINE__));
 
-            try{
-                //这个地方不加 plugin 了,并且有任何exception 的话,都要throw 上去了
-                //做完 重新连接server 之后,如果还失败,不需要做任何事情了
-                $this->connect();
-                $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
-            }catch(Exception $e2){
-                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias' => $this->_alias, 'line'=>__LINE__,'hitServer'=>$this->_confs['hitServer'],'args' => $arguments, 'ret' => performance::summarize($e2, $method)));
-                throw $e2;
+            //设置重入次数上限,防止程序陷入死循环重入崩溃
+            $seqid = md5($this->_alias.serialize($arguments).$funcName);
+            if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid]>=self::$_reentrantTimesLimit){
+                throw $e;
             }
+            if(!isset(self::$_reentrantTimes[$seqid])){
+                self::$_reentrantTimes[$seqid] =0;
+                
+            }
+            self::$_reentrantTimes[$seqid] += 1;
+            
+            $ptx = new plugin_context($method, array('conf'=>$this->_confs,'alias'=>$this->_alias,
+                                                'exception'=>&$e,'obj'=>&$this, 'func'=>$funcName,'args'=>$arguments));
+            plugin::call(__METHOD__.'::error',$ptx);
+            if($ptx->breakOut){
+                return $ptx->breakOut;
+            }
+            throw $e;
         }
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias' => $this->_alias, 'args' => $arguments, 'ret' => performance::summarize($ret, $method)));
 

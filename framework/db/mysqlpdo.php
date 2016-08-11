@@ -72,7 +72,7 @@ class db_mysqlpdo extends db_abstract {
                 
                 
                 $ptx = new plugin_context(__METHOD__, array('conf'=>$this->_confs,'alias'=>$this->_alias,'type'=>$type,'exception'=>&$e,'obj'=>&$this));
-                plugin::call('error::'.__METHOD__,$ptx);
+                plugin::call(__METHOD__.'::error',$ptx);
                 if($ptx->breakOut){
                     return $ptx->breakOut;
                 }
