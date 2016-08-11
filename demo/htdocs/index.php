@@ -67,17 +67,7 @@ try {
     }
 
     plugin::register( 'cache_codis::__call::error', new plugin_codiserror());
-
-//$c1 = cache::instance('rs1');
-//d($c1->set('test','testv1111111111'));
-
-$c2 = cache::instance('codis');
-
-d('cccccccccccc222222222222222222');
-d($c2->set('test','test22222222'));
-sleep(3);
-de($c2->get('test'));
-//de($c1->set('test','test11111'), $c2->set('test2','test2222222'), $c1->get('test'), $c2->get('test2'));
+    plugin::register( 'cache_redis::__call::error', new plugin_codiserror());
 
     //============================ 开始路由和执行controller 层中 ============================
     //检测并获取到uri，当然也可以自己指定
