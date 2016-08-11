@@ -40,7 +40,7 @@ class cache_codis extends cache_abstract{
             }
 
             $this->_confs['serversFormat'][$k]['weight'] = ($svr['weight'] <= 0) ? 1 : $svr['weight'];
-            $this->_confs['serversFormat'][$k]['connectTimeout'] = !isset($svr['connectTimeout']) ? $svr['connectTimeout'] : 0.05;
+            $this->_confs['serversFormat'][$k]['connectTimeout'] = isset($svr['connectTimeout']) ? $svr['connectTimeout'] : 0.05;
             $weightTotal += $this->_confs['serversFormat'][$k]['weight'];
         }
         $this->_confs['weightTotal'] = $weightTotal;
