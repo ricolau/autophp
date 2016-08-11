@@ -20,6 +20,14 @@ class cache_redis extends cache_abstract {
         if(!isset($this->_confs['connectTimeout'])){
             $this->_confs['connectTimeout'] = 0.05;
         }
+        
+        
+        
+        if(!class_exists('Redis')){
+            throw new exception_cache(
+            'class Redis not exists!' . (!auto::isOnline() ? var_export($this->_confs, true) : ''), exception_cache::type_driver_not_exist
+            );
+        }
     }
 
     public function connect() {
