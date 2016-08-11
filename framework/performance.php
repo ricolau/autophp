@@ -116,7 +116,7 @@ class performance {
 
             $ptx = new plugin_context(__METHOD__, array());
             plugin::call(__METHOD__.'::notice',$ptx);
-            if($ptx->breakOut){
+            if($ptx->breakOut!==null){
                 return $ptx->breakOut;
             }
             if(self::$_currentSize===0){

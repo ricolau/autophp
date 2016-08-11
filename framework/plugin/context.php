@@ -14,7 +14,7 @@ class plugin_context {
     
     public function __construct($tag, $data){
         $this->_tag = $tag;
-        $this->_data = $data;
+        $this->_data = &$data;
     }
     
     public function getTag(){

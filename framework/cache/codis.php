@@ -107,7 +107,7 @@ class cache_codis extends cache_abstract{
                 //所有的server 全部连接失败!!!!!太严重了
                 $ptx = new plugin_context(__METHOD__, array('conf' => $this->_confs, 'alias' => $this->_alias, 'obj' => &$this, 'hitServer' => $server,));
                 plugin::call(__METHOD__.'::fatal', $ptx);
-                if($ptx->breakOut){
+                if($ptx->breakOut!==null){
                     return $ptx->breakOut;
                 }
                 continue;
@@ -120,6 +120,7 @@ class cache_codis extends cache_abstract{
                 );
             }
             try{
+                $this->_redis = null;
                 $this->_redis = new Redis();
                 $con = $this->_redis->connect($server['server']['host'], $server['server']['port'], $server['server']['timeout']);
                 ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias' => $this->_alias, 'hitServer' => $server, 'ret' => performance::summarize($con)));
@@ -144,7 +145,7 @@ class cache_codis extends cache_abstract{
 
             $ptx = new plugin_context(__METHOD__, array('conf' => $this->_confs, 'alias' => $this->_alias, 'obj' => &$this, 'hitServer' => $server,));
             plugin::call(__METHOD__.'::error', $ptx);
-            if($ptx->breakOut){
+            if($ptx->breakOut!==null){
                 return $ptx->breakOut;
             }
         }
@@ -171,14 +172,13 @@ class cache_codis extends cache_abstract{
             }
             if(!isset(self::$_reentrantTimes[$seqid])){
                 self::$_reentrantTimes[$seqid] =0;
-                
             }
             self::$_reentrantTimes[$seqid] += 1;
             
             $ptx = new plugin_context($method, array('conf'=>$this->_confs,'alias'=>$this->_alias,
                                                 'exception'=>&$e,'obj'=>&$this, 'func'=>$funcName,'args'=>$arguments));
             plugin::call(__METHOD__.'::error',$ptx);
-            if($ptx->breakOut){
+            if($ptx->breakOut!==null){
                 return $ptx->breakOut;
             }
             throw $e;
