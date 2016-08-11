@@ -66,6 +66,19 @@ try {
         cache::addServer($alias, $conf);
     }
 
+    plugin::register( 'cache_codis::__call::error', new plugin_codiserror());
+
+//$c1 = cache::instance('rs1');
+//d($c1->set('test','testv1111111111'));
+
+$c2 = cache::instance('codis');
+
+d('cccccccccccc222222222222222222');
+d($c2->set('test','test22222222'));
+sleep(3);
+de($c2->get('test'));
+//de($c1->set('test','test11111'), $c2->set('test2','test2222222'), $c1->get('test'), $c2->get('test2'));
+
     //============================ 开始路由和执行controller 层中 ============================
     //检测并获取到uri，当然也可以自己指定
     $uri = dispatcher::detectPath();
@@ -96,5 +109,6 @@ try {
 } catch (ReflectionException $e) {          //一般来说，这种情况不太可能发生
     tools_exceptionhandler::topDeal404($e);
 } catch (Exception $e) {                    //做个最后的兼容
+    de($e);
     tools_exceptionhandler::topDeal($e);
 }
