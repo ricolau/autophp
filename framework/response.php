@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2012-04
+ * @version 2016-08-12
  * @desc http response package
  *
  */
@@ -40,6 +40,11 @@ class response {
     }
 
     public static function outputJson($data) {
+        $ptx = new plugin_context(__METHOD__, array('data'=>&$data));
+        plugin::call(__METHOD__, $ptx);
+        if($ptx->breakOut!==null){
+            return $ptx->breakOut;
+        }
         return self::output(json_encode($data));
     }
 

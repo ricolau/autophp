@@ -2,8 +2,8 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-03-29
- * @desc orm, must be based on pdo!
+ * @version 2016-08-12
+ * @desc orm, need PDO extension !
  *
  */
 class orm extends base {
@@ -125,6 +125,18 @@ class orm extends base {
             $this->_raiseError('unsafe mode checked for method: ' . $method, exception_mysqlpdo::type_high_risk_query);
         }
     }
+    
+    protected static function _getErrorInfo($obj){
+        
+        $info = $obj->errorInfo();
+        if(is_array($info)){
+            $ret = implode('|', $info);
+        }else{
+            $ret = (string)$info;
+        }
+        return $ret;
+        
+    }
 
     public function insert($data, $getLastInsertId = false) {
         $_debugMicrotime = microtime(true);
@@ -142,20 +154,20 @@ class orm extends base {
         $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)));
-            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+            $this->_raiseError('prepare failed for '.__METHOD__.', ['.self::_getErrorInfo($this->_queryObj).']', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($values);
 
         $this->_clearStat();
         if ($res === false) {
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__))) ;
-            $this->_raiseError('insert query failed~', exception_mysqlpdo::type_query_error);
+            $this->_raiseError('insert query failed for '.__METHOD__.', ['.self::_getErrorInfo($sth).']', exception_mysqlpdo::type_query_error);
         }
         if ($getLastInsertId) {
             $lastInsertId = $this->_queryObj->lastInsertId();
             //有时候table 可能没有primary key
             if ($lastInsertId) {
-                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  $lastInsertId))  && auto::isDebug();
+                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  $lastInsertId));
                 return $lastInsertId;
             }
         }
@@ -166,7 +178,7 @@ class orm extends base {
     public function autoUpdate($data) {
         $structure = $this->structure();
         if (!is_array($structure)) {
-            $this->_raiseError('get data structure failed', exception_mysqlpdo::type_input_data_error);
+            $this->_raiseError('get data structure empty', exception_mysqlpdo::type_input_data_error);
         }
         foreach ($data as $k => $v) {
             if (!in_array($k, $structure)){
@@ -216,13 +228,13 @@ class orm extends base {
         if($sth===false){
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)));
 
-            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+            $this->_raiseError('prepare failed for '.__METHOD__.', ['.self::_getErrorInfo($this->_queryObj).']', exception_mysqlpdo::type_query_error);
         }
         $ret = $sth->execute($values);
         if ($ret === false) {
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($ret,__METHOD__)));
 
-            $this->_raiseError('update query failed~', exception_mysqlpdo::type_query_error);
+            $this->_raiseError('update query failed for '.__METHOD__.', ['.self::_getErrorInfo($sth).']', exception_mysqlpdo::type_query_error);
         }
         if ($returnAffectedRows) {
             $ret = $sth->rowCount();
@@ -250,13 +262,13 @@ class orm extends base {
         if($sth===false){
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)));
 
-            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+            $this->_raiseError('prepare failed for '.__METHOD__.', ['.self::_getErrorInfo($this->_queryObj).']', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($values);
         if ($res === false) {
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__))) ;
 
-            $this->_raiseError('delete query failed~', exception_mysqlpdo::type_query_error);
+            $this->_raiseError('execute failed for '.__METHOD__.', ['.self::_getErrorInfo($sth).']', exception_mysqlpdo::type_query_error);
         }
 
         $this->_clearStat();
@@ -300,12 +312,12 @@ class orm extends base {
         if($sth===false){
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__)));
 
-            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+            $this->_raiseError('prepare failed for '.__METHOD__.', ['.self::_getErrorInfo($this->_queryObj).']', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($values);
         if ($res === false) {
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)));
-            $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
+            $this->_raiseError('execute failed for '.__METHOD__.', ['.self::_getErrorInfo($sth).']', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
 
@@ -346,12 +358,12 @@ class orm extends base {
         $sth = $this->_queryObj->prepare($sql);
         if($sth===false){
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($sth,__METHOD__))) ;
-            $this->_raiseError('prepare failed for '.__METHOD__, exception_mysqlpdo::type_query_error);
+            $this->_raiseError('prepare failed for '.__METHOD__.', ['.self::_getErrorInfo($this->_queryObj).']', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->execute($values);
         if ($res === false) {
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__))) ;
-            $this->_raiseError('count query failed~', exception_mysqlpdo::type_query_error);
+            $this->_raiseError('execute query failed for '.__METHOD__.', ['.self::_getErrorInfo($sth).']', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->fetchColumn();
         $this->_clearStat();
@@ -362,9 +374,9 @@ class orm extends base {
 
     protected function _raiseError($msg, $code = -2) {
         if (auto::isDebug()) {
-            throw new exception_mysqlpdo('mysql query failed, ' . $msg . ' :' . var_export($this->getLastQuery(), true), $code);
+            throw new exception_mysqlpdo('mysql ' . $msg . ' :' . var_export($this->getLastQuery(), true), $code);
         } else {
-            throw new exception_mysqlpdo('mysql query failed, ' . $msg, $code);
+            throw new exception_mysqlpdo('mysql ' . $msg, $code);
         }
     }
 
