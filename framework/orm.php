@@ -376,11 +376,12 @@ class orm extends base {
     }
 
     protected function _raiseError($msg, $code = -2) {
-        if (auto::isDebug()) {
-            throw new exception_mysqlpdo('mysql ' . $msg . ' :' . var_export($this->getLastQuery(), true), $code);
-        } else {
-            throw new exception_mysqlpdo('mysql ' . $msg, $code);
-        }
+//        if (auto::isDebug()) {
+//            throw new exception_mysqlpdo('mysql ' . $msg . ' :' . json_encode($this->getLastQuery()), $code);
+//        } else {
+//            throw new exception_mysqlpdo('mysql ' . $msg, $code);
+//        }
+        throw new exception_mysqlpdo('mysql ' . $msg . ' || ' . json_encode($this->getLastQuery()), $code);
     }
 
     /*
