@@ -127,13 +127,16 @@ class orm extends base {
     }
     
     protected static function _getErrorInfo($obj){
-        
+        if(!is_object($obj)){
+            return '';
+        }
         $info = $obj->errorInfo();
         if(is_array($info)){
             $ret = implode('|', $info);
         }else{
             $ret = (string)$info;
         }
+        $ret = get_class($obj).'|'.$ret;
         return $ret;
         
     }
