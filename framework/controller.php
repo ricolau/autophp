@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-03-29
+ * @version 2016-08-18
  * @desc controller base
  *
  */
@@ -93,6 +93,21 @@ abstract class controller extends base {
             header('Content-type: application/json');
         }
         response::outputJson($data);
+    }
+    
+    
+    public function requestGet($key, $type='str', $default=null){
+        return request::get($key, $type, $default);
+    }
+    public function requestPost($key, $type='str', $default=null){
+        return request::post($key, $type, $default);
+    }
+    
+    public function requestGetAll(){
+        return request::getAll();
+    }
+    public function requestPostAll(){
+        return request::postAll();
     }
 
 }

@@ -8,7 +8,7 @@
  */
 class auto {
 
-    const version = '2.1.20';
+    const version = '2.1.21';
     
     const author = 'ricolau<ricolau@qq.com>';
 
