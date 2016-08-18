@@ -2,29 +2,31 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-10
+ * @version 2016-08-18
  * @desc codis
  *
  */
 class cache_codis extends cache_abstract{
 
-    protected static $_reentrantTimes = array();
-    protected static $_reentrantTimesLimit = 5;
+    protected $_reentrantTimes = array();
+    protected $_reentrantTimesLimit = 5;
     protected $_redis = null;
+
+    const connect_timeout_default = 0.05;
 
     public function __construct($alias, $conf){
         $this->_alias = $alias;
         $this->_confs = $conf;
 
         $this->_confFormated = false;
-        
+
         if(!class_exists('Redis')){
             throw new exception_cache(
             'class Redis not exists!' . (!auto::isOnline() ? var_export($this->_confs, true) : ''), exception_cache::type_driver_not_exist
             );
         }
     }
-    
+
     protected function _formatServer(){
 
         $this->_confs['serversFormat'] = array();
@@ -40,7 +42,7 @@ class cache_codis extends cache_abstract{
             }
 
             $this->_confs['serversFormat'][$k]['weight'] = ($svr['weight'] <= 0) ? 1 : $svr['weight'];
-            $this->_confs['serversFormat'][$k]['connectTimeout'] = isset($svr['connectTimeout']) ? $svr['connectTimeout'] : 0.05;
+            $this->_confs['serversFormat'][$k]['connectTimeout'] = isset($svr['connectTimeout']) ? $svr['connectTimeout'] : self::connect_timeout_default;
             $weightTotal += $this->_confs['serversFormat'][$k]['weight'];
         }
         $this->_confs['weightTotal'] = $weightTotal;
@@ -50,9 +52,9 @@ class cache_codis extends cache_abstract{
         $this->_confs['serversFormat'] = array();
 
         $cnt = $this->_confs['serverCount'];
-        for ($i = 0; $i < $cnt; $i++) {
-            for ($j = 0; $j < $cnt - $i - 1; $j++) {
-                if ($tmpSvrs[$j]['weight'] < $tmpSvrs[$j + 1]['weight']) {
+        for($i = 0; $i < $cnt; $i++){
+            for($j = 0; $j < $cnt - $i - 1; $j++){
+                if($tmpSvrs[$j]['weight'] < $tmpSvrs[$j + 1]['weight']){
                     $temp = $tmpSvrs[$j];
                     $tmpSvrs[$j] = $tmpSvrs[$j + 1];
                     $tmpSvrs[$j + 1] = $temp;
@@ -63,7 +65,7 @@ class cache_codis extends cache_abstract{
         $this->_confs['serversFormat'] = array_values($tmpSvrs);
 
         $this->_confFormated = true;
-        self::$_reentrantTimesLimit = $this->_confs['serverCount'] + 1;
+        $this->_reentrantTimesLimit = $this->_confs['serverCount'] + 1;
     }
 
     protected function _getServer(){
@@ -84,16 +86,14 @@ class cache_codis extends cache_abstract{
         }
         if($hitSvr){
             unset($this->_confs['serversFormat'][$k]);
-
         }else{
-            $key =  - 1;
+            $key = - 1;
             $hitSvr = array('key' => $key, 'server' => array_pop($this->_confs['serversFormat']));
         }
         $this->_confs['weightTotal'] -= $hitSvr['server']['weight'];
         $this->_confs['hitServer'] = $hitSvr;
 
         return $hitSvr;
-        
     }
 
     public function connect(){
@@ -108,7 +108,7 @@ class cache_codis extends cache_abstract{
 
         while(true){
             $server = $this->_getServer();
-            
+
             if(!$server || !$server['server']['host'] || !$server['server']['port']){
                 throw new exception_cache(
                 'codis connection host and port error!' . (auto::isDebug() ? var_export($server, true) : ''), exception_cache::type_server_connection_error
@@ -128,19 +128,19 @@ class cache_codis extends cache_abstract{
             }
             //设置重入次数上限,防止程序陷入死循环重入崩溃
             $seqid = md5($this->_alias . __METHOD__);
-            if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid] >= self::$_reentrantTimesLimit){
+            if(isset($this->_reentrantTimes[$seqid]) && $this->_reentrantTimes[$seqid] >= $this->_reentrantTimesLimit){
                 throw new exception_cache(
-                    'codis connection error too many times!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
+                'codis connection error too many times!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
                 );
             }
-            if(!isset(self::$_reentrantTimes[$seqid])){
-                self::$_reentrantTimes[$seqid] = 0;
+            if(!isset($this->_reentrantTimes[$seqid])){
+                $this->_reentrantTimes[$seqid] = 0;
             }
-            self::$_reentrantTimes[$seqid] += 1;
+            $this->_reentrantTimes[$seqid] += 1;
 
             $ptx = new plugin_context(__METHOD__, array('conf' => $this->_confs, 'alias' => $this->_alias, 'obj' => &$this, 'hitServer' => $server,));
-            plugin::call(__METHOD__.'::error', $ptx);
-            if($ptx->breakOut!==null){
+            plugin::call(__METHOD__ . '::error', $ptx);
+            if($ptx->breakOut !== null){
                 return $ptx->breakOut;
             }
         }
@@ -157,23 +157,23 @@ class cache_codis extends cache_abstract{
         try{
             $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
         }catch(RedisException $e){
-            
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method.'::error', $timeCost, array('alias'=>$this->_alias,'line'=>__LINE__));
+
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method . '::error', $timeCost, array('alias' => $this->_alias, 'line' => __LINE__));
 
             //设置重入次数上限,防止程序陷入死循环重入崩溃
-            $seqid = md5($this->_alias.serialize($arguments).$funcName);
-            if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid]>=self::$_reentrantTimesLimit){
+            $seqid = md5($this->_alias . serialize($arguments) . $funcName);
+            if(isset($this->_reentrantTimes[$seqid]) && $this->_reentrantTimes[$seqid] >= $this->_reentrantTimesLimit){
                 throw $e;
             }
-            if(!isset(self::$_reentrantTimes[$seqid])){
-                self::$_reentrantTimes[$seqid] =0;
+            if(!isset($this->_reentrantTimes[$seqid])){
+                $this->_reentrantTimes[$seqid] = 0;
             }
-            self::$_reentrantTimes[$seqid] += 1;
-            
-            $ptx = new plugin_context($method, array('conf'=>$this->_confs,'alias'=>$this->_alias,
-                                                'exception'=>&$e,'obj'=>&$this, 'func'=>$funcName,'args'=>$arguments));
-            plugin::call(__METHOD__.'::error',$ptx);
-            if($ptx->breakOut!==null){
+            $this->_reentrantTimes[$seqid] += 1;
+
+            $ptx = new plugin_context($method, array('conf' => $this->_confs, 'alias' => $this->_alias,
+                'exception' => &$e, 'obj' => &$this, 'func' => $funcName, 'args' => $arguments));
+            plugin::call(__METHOD__ . '::error', $ptx);
+            if($ptx->breakOut !== null){
                 return $ptx->breakOut;
             }
             throw $e;
