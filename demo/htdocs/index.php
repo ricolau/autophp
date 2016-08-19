@@ -101,6 +101,5 @@ try {
 } catch (ReflectionException $e) {          //一般来说，这种情况不太可能发生
     tools_exceptionhandler::topDeal404($e);
 } catch (Exception $e) {                    //做个最后的兼容
-    de($e);
     tools_exceptionhandler::topDeal($e);
 }
