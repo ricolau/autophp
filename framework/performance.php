@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-10
+ * @version 2016-08-19
  * @desc performance log
  *
  */
@@ -14,6 +14,8 @@ class performance {
     protected static $_hostKey = '__auto_performance';
     
     protected static $_currentSize = 0;
+    
+    protected static $_bufferFlushStep = 5;
     
     
     protected static $_openStatus = true;
@@ -60,10 +62,11 @@ class performance {
      */
     public static function setSizeLimit($top = 256){
         self::$_sizeLimit = $top>0 ? $top : 256;
+        self::$_sizeLimit -= self::$_bufferFlushStep;
     }
     
     public static function getSizeLimit(){
-        return self::$_sizeLimit;
+        return self::$_sizeLimit +self::$_bufferFlushStep;
     }
     
     public static function getCurrentSize(){
@@ -112,7 +115,7 @@ class performance {
         }else{
             self::$_currentSize++;
         }
-        if(self::$_currentSize - self::$_sizeLimit > 2 && self::$_currentSize % 3==0){
+        if(self::$_currentSize - self::$_sizeLimit > 0 && self::$_currentSize % self::$_bufferFlushStep==0){
 
             $ptx = new plugin_context(__METHOD__, array());
             plugin::call(__METHOD__.'::notice',$ptx);
@@ -123,10 +126,10 @@ class performance {
                 return true;   
             }
   
-            queue::out(self::$_hostKey);
-            queue::out(self::$_hostKey);
-            queue::out(self::$_hostKey);
-            self::$_currentSize -= 3;
+            for($i=0;$i<self::$_bufferFlushStep;$i++){
+                queue::out(self::$_hostKey);
+            }
+            self::$_currentSize -= self::$_bufferFlushStep;
         }
         return true;
     }
