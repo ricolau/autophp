@@ -6,7 +6,7 @@
  * @link https://github.com/ricolau/autophp
  *
  */
-class dance {
+class auto {
 
     const version = '2.1.23';
     
