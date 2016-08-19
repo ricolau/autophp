@@ -28,8 +28,22 @@ try {
     date_default_timezone_set("Asia/Shanghai");
     
     
-    //============================ 失效的plugin ============================
-    //停用了 CLI 模式下的 route，因此最简单的damon 方式中，plugin 不会执行！
+    
+    
+    //============================ plugin设置============================
+    
+    plugin::register(dispatcher::plugin_before_run, new plugin_init());
+    plugin::register(auto::plugin_shutdown, new plugin_end());
+    
+    plugin::register('performance::add::notice', new plugin_performance());
+    plugin::register( auto::plugin_shutdown, new plugin_performance());
+
+    
+    plugin::register('error::db_mysqlpdo::_connect', new plugin_dbconnecterror());
+    
+    plugin::register( 'cache_codis::__call::error', new plugin_codiserror());
+    plugin::register( 'cache_redis::__call::error', new plugin_codiserror());
+
 
     
     

@@ -30,6 +30,11 @@ try {
     plugin::register( auto::plugin_shutdown, new plugin_performance());
     
     plugin::register('error::db_mysqlpdo::_connect', new plugin_dbconnecterror());
+    
+    
+    plugin::register( 'cache_codis::__call::error', new plugin_codiserror());
+    plugin::register( 'cache_redis::__call::error', new plugin_codiserror());
+
 
     
     //============================ 对request 的数据进行处理 ============================
@@ -65,9 +70,6 @@ try {
     foreach ($cacheConf as $alias => $conf) {
         cache::addServer($alias, $conf);
     }
-
-    plugin::register( 'cache_codis::__call::error', new plugin_codiserror());
-    plugin::register( 'cache_redis::__call::error', new plugin_codiserror());
 
     //============================ 开始路由和执行controller 层中 ============================
     //检测并获取到uri，当然也可以自己指定
