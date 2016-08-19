@@ -8,7 +8,7 @@
  */
 class auto {
 
-    const version = '2.1.22';
+    const version = '2.1.23';
     
     const author = 'ricolau<ricolau@qq.com>';
 
@@ -290,14 +290,14 @@ class auto {
         auto::$_runtimeEnd = microtime(true);
 //        $msg = array('title' => 'total runtime cost', 'msg' => (auto::$_runtimeEnd - auto::$_runtimeStart));
         
-        $pfsize = performance::getSizeLimit();
+        $pfsize = count($performance);
         if (auto::isCli()) {
             $output = '
 #################### performance info (of last '.$pfsize.' items): ####################
 (you can turn this off by "auto::setDebug(false)")
                 ';
             foreach ($performance as $item) {
-                $item['msg'] = 'timecost '.$item['timecost'].', \n info:'.rico::export($item['info']);
+                $item['msg'] = 'timecost '.$item['timecost'].", $rn info:".rico::export($item['info']);
 
                 $tstr = '
 >>>>>>' . $item['tag'] . '>>>>>> ' . $item['msg'];
