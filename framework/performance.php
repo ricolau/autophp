@@ -15,7 +15,7 @@ class performance {
     
     protected static $_currentSize = 0;
     
-    protected static $_bufferFlushStep = 5;
+    protected static $_flushStep = 5;
     
     
     protected static $_openStatus = true;
@@ -61,12 +61,12 @@ class performance {
      * @param type $top
      */
     public static function setSizeLimit($top = 256){
-        self::$_sizeLimit = $top>0 ? $top : 256;
-        self::$_sizeLimit -= self::$_bufferFlushStep;
+        self::$_sizeLimit = ($top>self::$_flushStep) ? $top : (self::$_flushStep+1);
+        self::$_sizeLimit -= self::$_flushStep;
     }
     
     public static function getSizeLimit(){
-        return self::$_sizeLimit +self::$_bufferFlushStep;
+        return self::$_sizeLimit +self::$_flushStep;
     }
     
     public static function getCurrentSize(){
@@ -115,7 +115,7 @@ class performance {
         }else{
             self::$_currentSize++;
         }
-        if(self::$_currentSize - self::$_sizeLimit > 0 && self::$_currentSize % self::$_bufferFlushStep==0){
+        if(self::$_currentSize - self::$_sizeLimit > 0 && self::$_currentSize % self::$_flushStep==0){
 
             $ptx = new plugin_context(__METHOD__, array());
             plugin::call(__METHOD__.'::notice',$ptx);
@@ -126,10 +126,10 @@ class performance {
                 return true;   
             }
   
-            for($i=0;$i<self::$_bufferFlushStep;$i++){
+            for($i=0;$i<self::$_flushStep;$i++){
                 queue::out(self::$_hostKey);
             }
-            self::$_currentSize -= self::$_bufferFlushStep;
+            self::$_currentSize -= self::$_flushStep;
         }
         return true;
     }
