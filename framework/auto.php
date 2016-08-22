@@ -1,14 +1,14 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-18
+ * @version 2016-08-22
  * @desc autophp, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
  *
  */
 class auto {
 
-    const version = '2.1.23';
+    const version = '2.1.24';
     
     const author = 'ricolau<ricolau@qq.com>';
 
@@ -186,6 +186,7 @@ class auto {
         'exception_mysqlpdo'=>true,
         'exception_render'=>true,
         'exception_logger'=>true,
+        'exception_plugin'=>true,
         'exception_msg'=>true,
         'plugin_abstract'=>true,
         'plugin_context'=>true,

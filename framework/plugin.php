@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-08
+ * @version 2016-08-22
  * @desc autophp plugin tool
  *
  */
@@ -19,6 +19,20 @@ final class plugin {
     public static function register($tag, plugin_abstract $plugin) {
         $pluginName = get_class($plugin);
         self::$_plugins[$tag][$pluginName] = &$plugin;
+    }
+    
+    
+    public static function init($plugins){
+        if(!is_array($plugins)){
+            throw new exception_plugin('plugins empty!', exception_plugin::type_plugin_empty);
+        }
+        foreach($plugins as $tag =>&$plugin){
+            if(!($plugin instanceof plugin_abstract)){
+                throw new exception_plugin('bad plugin!', exception_plugin::type_bad_plugin);
+            }
+            $pluginName = get_class($plugin);
+            self::$_plugins[$tag][$pluginName] = $plugin;
+        }
     }
 
     /**
@@ -38,29 +52,6 @@ final class plugin {
             }
         }
     }
-
-    /**
-     * run a plugin
-     * @param type $plugin
-     */
-//    private static function _execPlugin($className, &$ptx) {
-//        if (!class_exists($className)){
-//            throw new exception_base('class not exist:' . $className, -1);
-//        }
-//
-//        $class = new ReflectionClass($className);
-//        if ($class->isAbstract()) {
-//            throw new exception_base('can not run abstract class: ' . $className, -1);
-//        }
-//        if (!$class->isSubclassOf('plugin_abstract')) {
-//            throw new exception_base('plugin '.$className .'must extends of plugin_abstract', -1);
-//        }
-//        $method = $class->getMethod('main');
-//        if (!$method || !$method->isPublic()) {
-//            throw new exception_base('no public method main exist in:' . $className, -1);
-//        }
-//        $method->invoke($class->newInstance(), $ptx);
-//    }
 
 
     public static function getPluginsByTag($tag){
