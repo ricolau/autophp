@@ -9,6 +9,8 @@
 final class plugin {
 
     private static $_plugins = array();
+    
+    private static $_hasInit = false;
     //private static $_pluginsHasRun = array();
 
     /**
@@ -23,7 +25,10 @@ final class plugin {
     
     
     public static function init($plugins){
-        if(!is_array($plugins)){
+        if(self::$_hasInit){
+            throw new exception_plugin('plugins has init!', exception_plugin::type_plugin_has_init);
+        }
+        if(!is_array($plugins)|| empty($plugins)){
             throw new exception_plugin('plugins empty!', exception_plugin::type_plugin_empty);
         }
         foreach($plugins as $tag =>&$plugin){
@@ -31,7 +36,7 @@ final class plugin {
                 throw new exception_plugin('bad plugin!', exception_plugin::type_bad_plugin);
             }
             $pluginName = get_class($plugin);
-            self::$_plugins[$tag][$pluginName] = $plugin;
+            self::$_plugins[$tag][$pluginName] = &$plugin;
         }
     }
 
