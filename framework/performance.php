@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-19
+ * @version 2016-08-24
  * @desc performance log
  *
  */
@@ -144,6 +144,10 @@ class performance {
         self::$_summarizeMode = ($mode == self::summarize_mode_default)? self::summarize_mode_default : self::summarize_mode_fully;
     }
     
+    public static function getSummerizeMode(){
+        return self::$_summarizeMode;
+    }
+    
     
     
     /**
@@ -156,14 +160,7 @@ class performance {
         if(self::$_summarizeMode!==self::summarize_mode_default){
             return $var;
         }
-        if( is_bool($var) || is_numeric($var) || is_null($var)){
-            $ret = $var;
-        }elseif(is_string($var)){
-            $ret = 'string('.strlen($var).')';
-        }else{
-            $ret = gettype($var);
-        }     
-        return $ret;
+        return util::summarize($var);
         
     }
     
