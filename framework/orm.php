@@ -376,11 +376,7 @@ class orm extends base {
     }
 
     protected function _raiseError($msg, $code = -2) {
-//        if (auto::isDebug()) {
-//            throw new exception_mysqlpdo('mysql ' . $msg . ' :' . json_encode($this->getLastQuery()), $code);
-//        } else {
-//            throw new exception_mysqlpdo('mysql ' . $msg, $code);
-//        }
+
         throw new exception_mysqlpdo('mysql ' . $msg . ' || ' . json_encode($this->getLastQuery()), $code);
     }
 
@@ -498,7 +494,7 @@ class orm extends base {
         $updateType = array('insert' => true, 'update' => true, 'delete' => true, 'replace' => true);
         $queryType = isset($updateType[$subSql]) ? 'update' : 'select';
 
-        $this->_lastQuery = $sql;
+        $this->_lastQuery = array($sql,$data);
 
         $this->_queryObj = $this->_getPdoByMethodName($queryType);
         $sth = $this->_queryObj->prepare($sql);
