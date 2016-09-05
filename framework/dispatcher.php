@@ -23,6 +23,11 @@ class dispatcher {
     
     const plugin_before_run = 'dispatcher_before_run';
     const plugin_after_run = 'dispatcher_after_run';
+    
+    
+    protected function __construct() {
+        
+    }
 
     public static function instance() {
         if (!self::$_instance) {
@@ -105,11 +110,34 @@ class dispatcher {
       }
      */
 
+    /**
+     * map original path to a real path wanted!
+     * @param array $rules as array()
+     * @param string $path
+     */
+    public function mapPath($rules, $path){
+        $rules = array(
+            '/list/[id:\d+]'=>'/list/list/index',
+            '/list/[id:\w+]'=>'/list/list/<id>',
+            
+            '*'=>'/index/404',
+        );
+    }
+    
+    /**
+     * set path for dispatch
+     * @param string $path
+     * @return type
+     */
     public function setPath($path) {
         self::$_path = $path;
         return self::$_instance;
     }
 
+    /**
+     * get current path
+     * @return type
+     */
     public function getPath() {
         if (null === self::$_path) {
             self::$_path = self::detectPath();

@@ -30,6 +30,10 @@ class request{
         self::$_cookie = self::_formatDeep($_COOKIE);
         self::_destroyOriginalData();
     }
+    
+    public static function hasInit(){
+        return self::$_hasInit;
+    }
 
     protected static function _checkInit(){
         if(!self::$_hasInit){

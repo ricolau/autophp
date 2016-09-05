@@ -8,36 +8,45 @@
  */
 return 
 
-$dev= array(
+$dev = array(
     'default' => array(
         'type' => 'mysqlpdo', //定义数据库类型，将直接调用 db_mysqlpdo 驱动
-        'conf'=>array(
-            db_mysqlpdo::type_server_slave => array(
+        'balance'=>db::balance_master_slave,
+        'servers'=>array(
+            db::server_type_slave => array(
                 'host' => 'localhost',
                 'user' => 'root',
                 'pwd' => '',
                 'dbname' => 'test',
                 'charset' => 'utf8'
             ),
-            db_mysqlpdo::type_server_master => array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8')
+            db::server_type_master => array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8')
 
         ),
 
     ),
     'test' => array(
         'type' => 'mysqlpdo',
-        'conf'=>array(
-            db_mysqlpdo::type_server_slave => array('host' => '10.94.100.23', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
-            db_mysqlpdo::type_server_master => array()
+        'balance'=>db::balance_random,
+        'servers'=>array(
+            array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
+            array('host' => 'localhost', 'user' => 'user_test', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
+        )
+    ),
+    
+    'singledb' => array(
+        'type' => 'mysqlpdo',
+        'balance'=>db::balance_single,
+        'servers'=>array(
+            array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
         )
 
     ),
-    // 微空间套餐方案库
     'entStock' => array(
         'type' => 'mysqlpdo',
-        'conf'=>array(
-            db_mysqlpdo::type_server_slave => array('host' => 'localhost', 'user' => 'database_username_slave', 'pwd' => '222222', 'dbname' => 'database_name22', 'charset' => 'utf8'),
-            db_mysqlpdo::type_server_master => array('host' => 'localhost', 'user' => 'database_username', 'pwd' => '111111', 'dbname' => 'database_name1', 'charset' => 'utf8')
+        'servers'=>array(
+            db::server_type_slave => array('host' => 'localhost', 'user' => 'database_username_slave', 'pwd' => '222222', 'dbname' => 'database_name22', 'charset' => 'utf8'),
+            db::server_type_master => array('host' => 'localhost', 'user' => 'database_username', 'pwd' => '111111', 'dbname' => 'database_name1', 'charset' => 'utf8')
 
         )
 
@@ -49,33 +58,42 @@ $test = $dev;
 $online = array(
     'default' => array(
         'type' => 'mysqlpdo', //定义数据库类型，将直接调用 db_mysqlpdo 驱动
-        'conf'=>array(
-            db_mysqlpdo::type_server_slave => array(
+        'balance'=>db::balance_master_slave,
+        'servers'=>array(
+            db::server_type_slave => array(
                 'host' => 'localhost',
-                'user' => 'database_username',
-                'pwd' => 'database_password',
-                'dbname' => 'database_name',
+                'user' => 'root',
+                'pwd' => '',
+                'dbname' => 'test',
                 'charset' => 'utf8'
             ),
-            db_mysqlpdo::type_server_master => array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8')
+            db::server_type_master => array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8')
 
         ),
 
     ),
-    'microspace' => array(
+    'test' => array(
         'type' => 'mysqlpdo',
-        'conf'=>array(
-            db_mysqlpdo::type_server_slave => array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'database_name2'),
-            db_mysqlpdo::type_server_master => array()
+        'balance'=>db::balance_random,
+        'servers'=>array(
+            array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
+            array('host' => 'localhost', 'user' => 'user_test', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
+        )
+    ),
+    
+    'singledb' => array(
+        'type' => 'mysqlpdo',
+        'balance'=>db::balance_single,
+        'servers'=>array(
+            array('host' => 'localhost', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
         )
 
     ),
-    // 微空间套餐方案库
     'entStock' => array(
         'type' => 'mysqlpdo',
-        'conf'=>array(
-            db_mysqlpdo::type_server_slave => array('host' => 'localhost', 'user' => 'database_username_slave', 'pwd' => '222222', 'dbname' => 'database_name22', 'charset' => 'utf8'),
-            db_mysqlpdo::type_server_master => array('host' => 'localhost', 'user' => 'database_username', 'pwd' => '111111', 'dbname' => 'database_name1', 'charset' => 'utf8')
+        'servers'=>array(
+            db::server_type_slave => array('host' => 'localhost', 'user' => 'database_username_slave', 'pwd' => '222222', 'dbname' => 'database_name22', 'charset' => 'utf8'),
+            db::server_type_master => array('host' => 'localhost', 'user' => 'database_username', 'pwd' => '111111', 'dbname' => 'database_name1', 'charset' => 'utf8')
 
         )
 
