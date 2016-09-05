@@ -25,7 +25,7 @@ class db_mysqlpdo extends db_abstract {
     }
 
     public function connect($type = null) {
-        if($this->_confs['servers']['balance'] != db::balance_random) {
+        if($this->_confs['balance'] == db::balance_master_slave) {
             if($type === null) {
                 throw new exception_mysqlpdo('no type specified for mysqlpdo connection with type db::balance_master_slave', exception_mysqlpdo::type_conf_error);
             }
@@ -35,15 +35,15 @@ class db_mysqlpdo extends db_abstract {
         //every time run "new db_mysqlpdo($conf)->connect($type)" would reconnect the mysql database!
         $this->_pdoCon = $this->_getPdo($type);
 
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias' => $this->_alias));
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias' => $this->_alias,'balance'=>$this->_confs['balance'],'connectType'=>$type));
         return $this->_pdoCon;
     }
 
     protected function _getPdo($type) {
-        if($this->_confs['servers']['balance'] == db::balance_random) {
+        if($this->_confs['balance'] == db::balance_random) {
             $id = array_rand($this->_confs['servers']);
             $server = $this->_confs['servers'][$id];
-        }elseif($this->_confs['servers']['balance'] == db::balance_single){ 
+        }elseif($this->_confs['balance'] == db::balance_single){ 
             $server = reset($this->_confs['servers']);
         }else {
             if(!isset($this->_confs['servers'][$type])) {

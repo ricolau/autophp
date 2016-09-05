@@ -5,7 +5,7 @@
  */
 class model_demo extends orm{
     protected $_dbAlias = 'default';
-    protected $_table = 'ent_package';
+    protected $_table = 'user';
     
     
     protected $_cacheServer1 = null;
@@ -25,10 +25,29 @@ class model_demo extends orm{
                 echo "\r\n <br /> use memcache! \r\n <br /> ";
                 return $cacheData;
             }
-            $tableStructure =  $this->queryFetch('desc ent_package;');
+            $tableStructure =  $this->queryFetch('show tables;');
 
             //第一种得到orm 的方式，根据$this->_dbAlias 和 $this->_table 配置，$this 就是orm 的实例！
-            $data =  $this->where('package_id > 1')->getOne();
+            $data11 =  $this->where('id = 2')->getOne();
+            /*
+            $data12 =  $this->where('id = 2')->getOne();
+
+            $up11 = $this->where('id=2')->update(array('name'=>'testname_'.time()));
+            $up12 = $this->where('id=2')->update(array('name'=>'testname_'.time()));
+
+            $data21 =  $this->where('id = 2')->getOne();
+            $data22 =  $this->where('id = 2')->getOne();
+
+
+echo '<pre>';
+            de($data11, $data12, $up11, $up12, $data21, $data22);
+*/
+
+
+
+
+
+
             if($data){
                 $expire = 160;
                 echo "\r\n <br /> set memcache! \r\n <br /> ";

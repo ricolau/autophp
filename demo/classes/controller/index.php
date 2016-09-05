@@ -44,6 +44,9 @@ class controller_index extends controller{
            
             //throw $e;  //如果把这个异常抛上去，当前页面就木有了，上层接收到的话自己处理就好了，比如报个异常啥的
             
+            if(auto::isDevMode()){
+                d($e);
+            }
             $code = $e->getCode();
             echo $e->getMessage();
             

@@ -16,7 +16,7 @@ class db {
     
     const balance_single = 'single';
     const balance_random = 'random';
-    const balance_master_slave = 'master-slave';
+    const balance_master_slave = 'master_slave';
 
     public static function addServer($alias, $conf) {
         if(!isset($conf['balance']) || !in_array($conf['balance'], array(db::balance_master_slave, db::balance_random, db::balance_single))) {
@@ -33,10 +33,10 @@ class db {
      * @return type
      */
     public static function instance($alias, $type = null, $newConnection = false) {
-        if(self::$_conf[$alias]['balance'] == db::balance_random) {
-            $instanceKey = db::balance_random;
+        if(self::$_conf[$alias]['balance'] == db::balance_master_slave) {
+            $instanceKey = self::$_conf[$alias]['balance'] . '::' . $type;
         } else {
-            $instanceKey = self::$_conf[$alias]['balance'] . ':' . $type;
+            $instanceKey = self::$_conf[$alias]['balance'];
         }
         if(!isset(self::$_instance[$alias][$instanceKey]) || $newConnection) {
             self::$_instance[$alias][$instanceKey] = self::_getInstance($alias)->connect($type);
