@@ -2,8 +2,8 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2014-03
- * @desc http request lib
+ * @version 2016-09-06
+ * @desc client request lib
  *
  */
 class request{
@@ -47,6 +47,10 @@ class request{
 
     public static function getAddslashesMode(){
         return self::$_addslashesMode;
+    }
+    
+    public static function method(){
+        return $_SERVER['REQUEST_METHOD'];
     }
 
     /**

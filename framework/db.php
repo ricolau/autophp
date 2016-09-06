@@ -20,7 +20,7 @@ class db {
 
     public static function addServer($alias, $conf) {
         if(!isset($conf['balance']) || !in_array($conf['balance'], array(db::balance_master_slave, db::balance_random, db::balance_single))) {
-            $conf['balance'] = db::balance_random;
+            throw new exception_db('database conf balance type error for:' . $alias . ','.$conf['balance'], exception_db::type_conf_error);
         }
         self::$_conf[$alias] = $conf;
     }
@@ -33,6 +33,10 @@ class db {
      * @return type
      */
     public static function instance($alias, $type = null, $newConnection = false) {
+        if(empty($alias) || empty(self::$_conf[$alias])) {
+            throw new exception_db('database conf: ' . $alias . ' not exist!', exception_db::type_server_not_exist);
+        }
+        
         if(self::$_conf[$alias]['balance'] == db::balance_master_slave) {
             $instanceKey = self::$_conf[$alias]['balance'] . '::' . $type;
         } else {
@@ -45,9 +49,6 @@ class db {
     }
 
     protected static function _getInstance($alias) {
-        if(empty($alias) || empty(self::$_conf[$alias])) {
-            throw new exception_db('database conf: ' . $alias . ' not exist!', exception_db::type_server_not_exist);
-        }
         $driverType = self::$_conf[$alias]['type'];
         $driverClass = 'db_' . $driverType;
         if(!class_exists($driverClass)) {
