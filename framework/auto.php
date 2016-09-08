@@ -8,7 +8,7 @@
  */
 class auto {
 
-    const version = '2.1.27';
+    const version = '2.1.28';
     
     const author = 'ricolau<ricolau@qq.com>';
 
@@ -298,7 +298,7 @@ class auto {
 (you can turn this off by "auto::setDebug(false)")
                 ';
             foreach ($performance as $item) {
-                $item['msg'] = 'timecost '.$item['timecost'].", $rn info:".rico::export($item['info']);
+                $item['msg'] = 'timecost '.$item['timecost'].", $rn info:".util::export($item['info']);
 
                 $tstr = '
 >>>>>>' . $item['tag'] . '>>>>>> ' . $item['msg'];
@@ -312,7 +312,7 @@ class auto {
                 <fieldset>
                 <span  class="autophp_debug_span"><b>debug info(of last '.$pfsize.' items): </b> (you can turn this off by "auto::setDebug(false)")</span>';
             foreach ($performance as $item) {
-                $item['msg'] = 'timecost '.$item['timecost'].', <br /><pre>info:'.rico::export($item['info']).'</pre>';
+                $item['msg'] = 'timecost '.$item['timecost'].', <br /><pre>info:'.util::export($item['info']).'</pre>';
                 $tstr = '<span class="autophp_debug_span"><font color=blue>' . $item['tag'] . ': </font>' . $item['msg'] . '</span>';
                 $output .= $tstr;
             }

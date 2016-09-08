@@ -110,7 +110,6 @@ debug 手动布码方式和示例：
 	$key 或固定字符串，作用域需要在  “开始 和 结尾处之间” 都有效！！！
 	$arguments 可以把自己想打印的传入参数放在这里
 
-	关于 rico::elapseStart($key) 是autophp 新引进的rico 类，提供一系列的工具选项
 
 关于 class  rico：
 	rico 主要是提供了用于debug 的各种工具和 方式

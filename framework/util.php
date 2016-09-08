@@ -2,8 +2,8 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-09
- * @desc autophp utils, just some tools here~
+ * @version 2016-09-08
+ * @desc utils, just some tools here~
  *
  */
 final class util {
@@ -99,12 +99,12 @@ final class util {
             }
 
         }
-        //can be used instead of  rico::dump($a, $b ...), as d($a, $b)
+        //can be used instead of  util::dump($a, $b ...), as d($a, $b)
         if (!function_exists('d')) {
 
             function d() {
                 $args = func_get_args();
-                call_user_func_array(array('rico', 'dump'), $args);
+                call_user_func_array(array('util', 'dump'), $args);
             }
 
         }
@@ -122,7 +122,7 @@ final class util {
 
             function de() {
                 $args = func_get_args();
-                call_user_func_array(array('rico', 'dump'), $args);
+                call_user_func_array(array('util', 'dump'), $args);
                 exit;
             }
 
@@ -217,6 +217,101 @@ final class util {
         }
         return $ret;
         
+    }
+    
+    public static function export($data) {
+        return self::_dump($data, '', false);
+    }
+    
+    /**
+     * @static
+     * @waring currently can not be used to dump() variableds or functions of reference~`~! may cause the stack overflow
+     * @return mixed
+     */
+    public static function dump() {
+        $args = func_get_args();
+        $nums = func_num_args();
+        if ($nums <= 0) {
+            self::_dump(NULL, '', true);
+            return;
+        }
+        array_map(array('self', '_dump'), $args, array_fill(0, $nums, ''), array_fill(0, $nums, true));
+    }
+
+    private static function _dump($obj, $name = '', $isPrint = true) {
+        $str = $pre = '';
+        if (!is_array($obj)) {
+            if (is_string($obj)) {
+                $str .= 'string(' . strlen($obj) . ') "' . $obj . '"';
+            } elseif (is_int($obj)) {
+                $str .= 'int(' . $obj . ')';
+            } elseif (is_float($obj)) {
+                $str .= 'float(' . $obj . ')';
+            } elseif (is_bool($obj)) {
+                $str .= 'bool(' . var_export($obj, true) . ')';
+            } elseif (is_object($obj)) {
+                $str .= 'object(' . var_export($obj, true) . ')';
+            } else {
+                $str .= var_export($obj, true);
+            }
+        } else {
+            $str .= 'array(' . count($obj) . '){' . self::$_r;
+            foreach ($obj as $key => $value) {
+                $str .= $name . '["' . $key . '"]=>' . self::_dump($value, $name . '["' . $key . '"]', false);
+            }
+            $str .= '}' . self::$_r;
+        }
+        if (true !== $isPrint) {
+            return $str . self::$_r;
+        }
+        echo $str . self::$_r;
+    }
+
+    public static function array2code($array, $name = '', $isPrint = true) {
+        if ($name === ''){
+            $name = '$GLOBALS';
+        }
+
+        if (!is_array($array)){
+            return 'NO_ARRAY';
+        }
+
+        $str = self::_array2line($array, $name, false);
+
+        if (!$isPrint){
+            return $str;
+        }else{
+            echo $str;
+        }
+    }
+
+    private static function _array2line($obj, $name, $isPrint = false) {
+        $str = $pre = '';
+        if (!is_array($obj)) {
+            if (is_string($obj)) {
+                $str .= '\'' . $obj . '\'';
+            } elseif (is_bool($obj)) {
+                $str .= var_export($obj, true);
+            } elseif (is_object($obj)) {
+                $str .= '\'' . serialize($obj) . '\'';
+            } else {
+                $str .= $obj;
+            }
+            $str .= ';';
+        } else {
+            foreach ($obj as $key => $value) {
+                if (!is_array($value)) {
+                    $str .= $name . '[\'' . $key . '\'] = ' . self::_array2Line($value, $name . '[\'' . $key . '\']', false);
+                    $str .= self::$_r;
+                } else {
+                    $str .= self::_array2Line($value, $name . '[\'' . $key . '\']', false);
+                }
+            }
+        }
+        if (true !== $isPrint) {
+            return $str;
+        }
+        echo $str . self::$_r;
     }
 
 
