@@ -22,7 +22,7 @@ class cache_codis extends cache_abstract{
 
         if(!class_exists('Redis')){
             throw new exception_cache(
-            'class Redis not exists!' . (!auto::isOnline() ? var_export($this->_confs, true) : ''), exception_cache::type_driver_not_exist
+            'class Redis not exists!' . (!auto::isOnlineMode() ? var_export($this->_confs, true) : ''), exception_cache::type_driver_not_exist
             );
         }
     }
@@ -101,7 +101,7 @@ class cache_codis extends cache_abstract{
 
         if(!$this->_confs['servers']){
             throw new exception_cache(
-            'codis connection servers empty!' . (!auto::isOnline() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
+            'codis connection servers empty!' . (!auto::isOnlineMode() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
             );
         }
 
