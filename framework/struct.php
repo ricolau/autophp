@@ -3,17 +3,17 @@
 /**
  * @author ricolau<ricolau@qq.com>
  * @version 2016-10-27
- * @desc param base
+ * @desc struct base
  * 
  * @uses below
 
     //@uses ======================= style one ======================= 
-    class b extends param {
+    class b extends struct {
 
         protected $_propertyDefine = array(
-            'gender' => param::type_bool,
-            'age' => param::type_int,
-            'obj' => param::type_object,
+            'gender' => struct::type_bool,
+            'age' => struct::type_int,
+            'obj' => struct::type_object,
         );
         protected $_strictMode = false;     //whether throw exception when property type not match with definations
 
@@ -45,8 +45,8 @@
 
 
     try {
-        $st = array('name' => param::type_string, 'age' => param::type_int, 'gender' => param::type_int);
-        $a = new param($st);
+        $st = array('name' => struct::type_string, 'age' => struct::type_int, 'gender' => struct::type_int);
+        $a = new struct($st);
 
 
         $a->age = 20;
@@ -68,7 +68,7 @@
  */
 
 
-class param implements IteratorAggregate {
+class struct implements IteratorAggregate {
 
     const err_property_not_exist = 5;
     const err_init = 1;
@@ -95,8 +95,7 @@ class param implements IteratorAggregate {
     );
     
     private $_data = array();
-    private static $_recursiveDepthLimit = 8;
-    
+    const recursive_depth_limit = 8;    
     
     protected $_propertyDefine = array(
     );
@@ -108,7 +107,7 @@ class param implements IteratorAggregate {
             throw new Exception('class construct argument[0] should be an array', self::err_init);
         }
         if($this->_propertyDefine && $define){
-            throw new Exception('property has been defined! can not be init again!', self::err_init);
+            throw new Exception('property has been defined! can not define it with ::__construct() !', self::err_init);
         }
         if($define) {
             $this->_propertyDefine = $define;
@@ -116,7 +115,7 @@ class param implements IteratorAggregate {
 
         foreach($this->_propertyDefine as $name => $type) {
             if(!isset(self::$_typeList[$type])) {
-                throw new Exception('type :' . $type . ' not valid for class param!', self::err_init);
+                throw new Exception('type :' . $type . ' not valid for class struct!', self::err_init);
             }
             $this->_data[$name] = null;
         }
@@ -147,13 +146,13 @@ class param implements IteratorAggregate {
         return $this->_data[$name];
     }
 
-    //递归实现针对子元素的 param 数组转化
+    //递归实现针对子元素的 struct 数组转化
     private static function _recursiveArrayConvert($dt, $recursiveLevel = 0) {
-        if($recursiveLevel > self::$_recursiveDepthLimit){//递归深度控制
-            throw new Exception('too much levels recursived, oversize :' . self::$_recursiveDepthLimit, self::err_recursive_limit);
+        if($recursiveLevel > self::recursive_depth_limit){//递归深度控制
+            throw new Exception('too much levels recursived, oversize :' . self::recursive_depth_limit, self::err_recursive_limit);
         }
         
-        if(is_array($dt) || $dt instanceof param) {
+        if(is_array($dt) || $dt instanceof struct) {
             $ret = array();
             foreach($dt as $k => $v) {
                 $ret[$k] = self::_recursiveArrayConvert($v, $recursiveLevel+1);
@@ -179,4 +178,5 @@ class param implements IteratorAggregate {
     }
 
 }
+
 
