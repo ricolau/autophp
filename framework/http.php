@@ -35,7 +35,7 @@ class http {
         extract($args);
 
         $method = $method ? : 'GET';
-        $timeout = $timeout ? : 5;
+        $timeout = $timeout ? : 3;
 
         if (!function_exists('curl_init')){
             exit('Need to open the curl extension');
@@ -134,7 +134,7 @@ class http {
      * @param type $proxy
      * @return type
      */
-    public static function request($url, $params = array(), $method = 'GET', $timeout = 10, $cookie = '', $referer = null, $extheaders = array(), $multi = false, $proxy = null) {
+    public static function request($url, $params = array(), $method = 'GET', $timeout = 3, $cookie = '', $referer = null, $extheaders = array(), $multi = false, $proxy = null) {
         if (!function_exists('curl_init')){
             throw new exception_base('curl module not exist~!');
         }
