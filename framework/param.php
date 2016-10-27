@@ -54,7 +54,7 @@
         //var_dump($a->fff); // this will throw exception
 
 
-        var_dump(isset($a->fff), $a->toJson());
+        var_dump(isset($a->fff), $a->propertyExist('age'),$a->toJson());
 
 
         foreach($a as $k => $v) {
@@ -95,7 +95,7 @@ class param implements IteratorAggregate {
     );
     
     private $_data = array();
-    private $_recursiveDepthLimit = 8;
+    private static $_recursiveDepthLimit = 8;
     
     
     protected $_propertyDefine = array(
@@ -148,20 +148,24 @@ class param implements IteratorAggregate {
     }
 
     //递归实现针对子元素的 param 数组转化
-    private function _recursiveArrayConvert($dt, $recursiveLevel = 0) {
-        if($recursiveLevel > $this->_recursiveDepthLimit){//递归深度控制
-            throw new Exception('too much levels recursived, oversize :' . $this->_recursiveDepthLimit, self::err_recursive_limit);
+    private static function _recursiveArrayConvert($dt, $recursiveLevel = 0) {
+        if($recursiveLevel > self::$_recursiveDepthLimit){//递归深度控制
+            throw new Exception('too much levels recursived, oversize :' . self::$_recursiveDepthLimit, self::err_recursive_limit);
         }
         
         if(is_array($dt) || $dt instanceof param) {
             $ret = array();
             foreach($dt as $k => $v) {
-                $ret[$k] = $this->_recursiveArrayConvert($v, $recursiveLevel+1);
+                $ret[$k] = self::_recursiveArrayConvert($v, $recursiveLevel+1);
             }
             return $ret;
         } else {
             return $dt;
         }
+    }
+    
+    public function propertyExist($name){
+        return isset($this->_propertyDefine[$name]);
     }
 
     public function toJson() {
@@ -170,8 +174,9 @@ class param implements IteratorAggregate {
     }
     
     public function toArray(){
-        $dt =   $this->_recursiveArrayConvert($this->_data);
+        $dt =   self::_recursiveArrayConvert($this->_data);
         return $dt;
     }
 
 }
+
