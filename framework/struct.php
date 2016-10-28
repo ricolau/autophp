@@ -7,8 +7,12 @@
  * 
  * @uses below
 
+    
+
     //@uses ======================= style one ======================= 
     class b extends struct {
+        
+        //public $age = 18;//this will throw exception
 
         protected $_propertyDefine = array(
             'gender' => struct::type_bool,
@@ -64,13 +68,13 @@
         var_dump($e);
     }
 
-
  */
 
 
 class struct implements IteratorAggregate {
 
     const err_property_not_exist = 5;
+    const err_property_type_invalid = 2;
     const err_init = 1;
     const err_recursive_limit = 6;
     
@@ -112,6 +116,12 @@ class struct implements IteratorAggregate {
         if($define) {
             $this->_propertyDefine = $define;
         }
+        
+        $rf = new ReflectionClass(get_called_class()); 
+        $vars  = $rf->getProperties(ReflectionProperty::IS_PUBLIC); //获取类中方法
+        if(count($vars)>0){
+            throw new Exception('no public property declearation is allowed for class:'.get_called_class(),self::err_init);
+        }
 
         foreach($this->_propertyDefine as $name => $type) {
             if(!isset(self::$_typeList[$type])) {
@@ -134,7 +144,7 @@ class struct implements IteratorAggregate {
         }
 
         if($this->_strictMode && gettype($value) != $this->_propertyDefine[$name]) {
-            throw new Exception('property type not match for:' . get_called_class() . '->' . $name, self::err_property_not_exist);
+            throw new Exception('property type not match to set for:' . get_called_class() . '->' . $name, self::err_property_type_invalid);
         }
         $this->_data[$name] = $value;
     }
@@ -178,5 +188,9 @@ class struct implements IteratorAggregate {
     }
 
 }
+
+
+
+
 
 
