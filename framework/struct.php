@@ -14,7 +14,7 @@
         
         //public $age = 18;//this will throw exception
 
-        protected $_propertyDefine = array(
+        protected $_structDefine = array(
             'gender' => struct::type_bool,
             'age' => struct::type_int,
             'obj' => struct::type_object,
@@ -84,8 +84,8 @@ class struct implements IteratorAggregate {
     const type_string = 'string';
     const type_float = 'double'; //float also returns double with gettype()
     const type_double = 'double';
-    const type_array = 'array';
-    const type_object = 'object';
+    //const type_array = 'array';//array type is not allowed
+    const type_struct = 'struct';
 
     private static $_typeList = array(
         self::type_null => true,
@@ -94,14 +94,14 @@ class struct implements IteratorAggregate {
         self::type_string => true,
         self::type_float => true,
         self::type_double => true,
-        self::type_array => true,
-        self::type_object => true,
+        //self::type_array => true,
+        self::type_struct => true,
     );
     
     private $_data = array();
     const recursive_depth_limit = 8;    
     
-    protected $_propertyDefine = array(
+    protected $_structDefine = array(
     );
     protected $_strictMode = true;//whether throw exception when property type not match with definations
 
@@ -110,11 +110,11 @@ class struct implements IteratorAggregate {
         if(!is_array($define)) {
             throw new Exception('class construct argument[0] should be an array', self::err_init);
         }
-        if($this->_propertyDefine && $define){
+        if($this->_structDefine && $define){
             throw new Exception('property has been defined! can not define it with ::__construct() !', self::err_init);
         }
         if($define) {
-            $this->_propertyDefine = $define;
+            $this->_structDefine = $define;
         }
         
         $rf = new ReflectionClass(get_called_class()); 
@@ -123,7 +123,7 @@ class struct implements IteratorAggregate {
             throw new Exception('no public property declearation is allowed for class:'.get_called_class(),self::err_init);
         }
 
-        foreach($this->_propertyDefine as $name => $type) {
+        foreach($this->_structDefine as $name => $type) {
             if(!isset(self::$_typeList[$type])) {
                 throw new Exception('type :' . $type . ' not valid for class struct!', self::err_init);
             }
@@ -139,33 +139,52 @@ class struct implements IteratorAggregate {
     }
 
     public function __set($name, $value) {
-        if(!isset($this->_propertyDefine[$name])) {
+        if(!isset($this->_structDefine[$name])) {
             throw new Exception('set property not exist for:' . get_called_class() . '->' . $name, self::err_property_not_exist);
         }
 
-        if($this->_strictMode && gettype($value) != $this->_propertyDefine[$name]) {
-            throw new Exception('property type not match to set for:' . get_called_class() . '->' . $name, self::err_property_type_invalid);
+        if($this->_strictMode) {
+            $valid = false;
+            $type = gettype($value);
+            if($type == $this->_structDefine[$name] || ($type == 'object' && ($value instanceof struct)) ){
+                $valid = true;
+            }
+            if(!$valid){
+                throw new Exception('property type not match to set for:' . get_called_class() . '->' . $name, self::err_property_type_invalid);
+            }
+            
         }
         $this->_data[$name] = $value;
     }
 
     public function __get($name) {
-        if(!isset($this->_propertyDefine[$name])) {
+        if(!isset($this->_structDefine[$name])) {
             throw new Exception('get property not exist for:' . get_called_class() . '->' . $name, self::err_property_not_exist);
         }
         return $this->_data[$name];
     }
+    
+    public function __isset($name){
+        return $this->propertyExist($name);
+    }
+    public function __unset($name){
+        if(isset($this->_structDefine[$name])){
+            unset($this->_data[$name]);
+            unset($this->_structDefine[$name]);
+            
+        }
+    }
 
     //递归实现针对子元素的 struct 数组转化
-    private static function _recursiveArrayConvert($dt, $recursiveLevel = 0) {
-        if($recursiveLevel > self::recursive_depth_limit){//递归深度控制
+    private static function _recursiveArrayConvert($dt, $recursiveDepth = 0) {
+        if($recursiveDepth > self::recursive_depth_limit){//递归深度控制
             throw new Exception('too much levels recursived, oversize :' . self::recursive_depth_limit, self::err_recursive_limit);
         }
         
-        if(is_array($dt) || $dt instanceof struct) {
+        if(is_object($dt) && $dt instanceof struct) {
             $ret = array();
             foreach($dt as $k => $v) {
-                $ret[$k] = self::_recursiveArrayConvert($v, $recursiveLevel+1);
+                $ret[$k] = self::_recursiveArrayConvert($v, $recursiveDepth+1);
             }
             return $ret;
         } else {
@@ -174,7 +193,16 @@ class struct implements IteratorAggregate {
     }
     
     public function propertyExist($name){
-        return isset($this->_propertyDefine[$name]);
+        return isset($this->_structDefine[$name]);
+    }
+    
+    public function getPropertyType($name){
+        if(isset($this->_structDefine[$name])){
+            return $this->_structDefine[$name];
+        }else{
+            return false;
+        }
+        
     }
 
     public function toJson() {
