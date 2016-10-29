@@ -2,14 +2,28 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-10-27
+ * @version 2016-10-29
  * @desc struct base
+ * 
+ * @comment 特性: 期望可完全替代php 的弱类型数组,当做强类型靠谱使用;
+ *              1.使用前,struct 的所有property 必须声明才可以;不声明的 set 和 get 都将throw exception;
+ *              2.赋值时,类型检测,强类型检测;
+ *              3.property默认值均为 null;
+ *              4.json 转换支持;
+ *              5.数组转换支持,支持最高8维数组!!性能考虑;
+ *              6.子类struct,无法定义 public 的property,必须使用 struct 规定的声明方式;
+ *              7.支持iterator 数组形式的遍历;
+ *              8.支持unset(),可以将实例化的 struct 中某个property unset 掉.但不影响struct 定义,可以重新赋值.
+ *              9.禁用 isset()支持,由于 php 语言没有 undefined,对于 null和 undefined 都认为是false,所以直接禁用.
+ *              10. 继承自 class base,支持  struct::instance() 形式的初始化;
  * 
  * @uses below
 
     
 
-    //@uses ======================= style one ======================= 
+
+
+    //@uses ======================= style one, with recommendation ======================= 
     class b extends struct {
         
         //public $age = 18;//this will throw exception
@@ -17,39 +31,63 @@
         protected $_structDefine = array(
             'gender' => struct::type_bool,
             'age' => struct::type_int,
-            'obj' => struct::type_object,
+            'obj' => struct::type_int,
         );
-        protected $_strictMode = false;     //whether throw exception when property type not match with definations
+        protected $_strictMode = true;     //whether throw exception when property type not match with definations
 
     }
 
     try {
-        $pa = new b();
+        
+        echo "######### demo use one ############\n";
         $b2 = new b();
         $b2->age = 20000;
 
-
-        $pa->age = '20';
+        $pa = new b();
+        $pa->age = 20;
         $pa->obj = $b2;
 
-        //var_dump($a->fff); // this will throw exception
+       
 
-        var_dump(isset($pa->fff), $pa->toJson(), $pa->toArray());
+        echo "=======================\n";
+        echo "convert to json:";
+        var_dump($pa->toJson());
 
 
+        
+        
+        echo "=======================\n";
+        echo "convert to array:";
+        var_dump($pa->toArray());
+        
+        echo "=======================\n";
+        echo "each property show in list:\n";
         foreach($pa as $k => $v) {
-            var_dump("============", $k, $v);
+            var_dump($k,'=>', $v);
+            echo "----------\n";
         }
+        
+        
+        
+        echo "=======================\n";
+        echo "exception test: \n";
+        
+        $b2->age = '20';
+        $a->fff = 2222; // this will throw exception
+        isset($a->fffff);
+        
     } catch(Exception $e) {
-        var_dump($e);
+        var_dump("exception caught :",$e);
     }
-
-
-    //@uses =======================  the other style ======================= 
+    //exit;
+    //@uses =======================  the other style, deprecated ======================= 
 
 
     try {
-        $st = array('name' => struct::type_string, 'age' => struct::type_int, 'gender' => struct::type_int);
+        
+        echo "######### demo use the other one  ############\n";
+
+        $st = array("name" => struct::type_string, 'age' => struct::type_int, 'gender' => struct::type_int);
         $a = new struct($st);
 
 
@@ -57,26 +95,55 @@
         $a->name = 'rico,hahahahaha';
         //var_dump($a->fff); // this will throw exception
 
+        echo "=======================\n";
+        echo "test property exist age:";
+        var_dump($a->propertyExist('age'));
+        
+        
+        
 
-        var_dump(isset($a->fff), $a->propertyExist('age'),$a->toJson());
+        echo "=======================\n";
+        echo "convert to json:";
+        var_dump($a->toJson());
+        
+        
+        
+        echo "=======================\n";
+        echo "after unset property of this object (will not affect the struct defination):\n";
+        unset($a->age);
+        var_dump($a->toJson());
 
 
+
+        echo "=======================\n";
+        echo "each property show in list:\n";
         foreach($a as $k => $v) {
-            var_dump("============", $k, $v);
+            var_dump($k,'=>', $v);
+            echo "----------\n";
         }
+        
+         
+        echo "=======================\n";
+        echo "exception test: \n";
+        
+        var_dump(isset($a->age));//will throw exception, 
+        
+        
     } catch(Exception $e) {
         var_dump($e);
     }
+ 
 
  */
 
 
-class struct implements IteratorAggregate {
+class struct extends base implements IteratorAggregate {
 
     const err_property_not_exist = 5;
     const err_property_type_invalid = 2;
     const err_init = 1;
     const err_recursive_limit = 6;
+    const err_base = 0;
     
     const type_null = 'NULL';
     const type_bool = 'boolean';
@@ -164,14 +231,20 @@ class struct implements IteratorAggregate {
         return $this->_data[$name];
     }
     
+    /**
+     * @description php语言的 isset()  和null 配合, 设计得不合理, 针对于 $a = array('name'=>null);  isset($a['name']) 和 isset($a['age']) 都返回false
+     *              所以,禁用 isset() 了,直接可以使用  struct::propertyExist($name) 来判断一个属性是否存在
+     * @param type $name
+     * @throws Exception
+     */
     public function __isset($name){
-        return $this->propertyExist($name);
+        throw new Exception('can not use isset() for stuct property', self::err_base);
+        //return array_key_exists($name, $this->_data);
     }
     public function __unset($name){
-        if(isset($this->_structDefine[$name])){
+        if(isset($this->_structDefine[$name]) && array_key_exists($name, $this->_data)){
             unset($this->_data[$name]);
-            unset($this->_structDefine[$name]);
-            
+            //unset($this->_structDefine[$name]);
         }
     }
 
@@ -180,12 +253,12 @@ class struct implements IteratorAggregate {
         if($recursiveDepth > self::recursive_depth_limit){//递归深度控制
             throw new Exception('too much levels recursived, oversize :' . self::recursive_depth_limit, self::err_recursive_limit);
         }
-        
-        if(is_object($dt) && $dt instanceof struct) {
+        if(is_array($dt) || (is_object($dt) && $dt instanceof struct)) {
             $ret = array();
             foreach($dt as $k => $v) {
                 $ret[$k] = self::_recursiveArrayConvert($v, $recursiveDepth+1);
             }
+            
             return $ret;
         } else {
             return $dt;
@@ -216,9 +289,4 @@ class struct implements IteratorAggregate {
     }
 
 }
-
-
-
-
-
 
