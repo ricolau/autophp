@@ -185,8 +185,7 @@ class struct extends base implements IteratorAggregate {
         }
         
         $rf = new ReflectionClass(get_called_class()); 
-        $vars  = $rf->getProperties(ReflectionProperty::IS_PUBLIC); //获取类中方法
-        if(count($vars)>0){
+        if($rf->getProperties(ReflectionProperty::IS_PUBLIC)){//禁止声明 public property
             throw new Exception('no public property declearation is allowed for class:'.get_called_class(),self::err_init);
         }
 
@@ -213,7 +212,7 @@ class struct extends base implements IteratorAggregate {
         if($this->_strictMode) {
             $valid = false;
             $type = gettype($value);
-            if($type == $this->_structDefine[$name] || ($type == 'object' && ($value instanceof struct)) ){
+            if($type == $this->_structDefine[$name] || ($this->_structDefine[$name] == struct::type_struct && $type == 'object' && ($value instanceof struct)) ){
                 $valid = true;
             }
             if(!$valid){
