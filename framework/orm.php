@@ -2,10 +2,8 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-12
+ * @version 2016-11-02
  * @desc orm, need PDO extension !
- *            there's no plan for supporting "active record", cause "active record" has too much limit.
- *            may someday support object in return value, with the "struct" of this framework
  *           
  *
  */
@@ -287,29 +285,30 @@ class orm extends base {
         return $this;
     }
     public function selectObject() {
-        $res = $this->select();
-        return $this->_formatObject($res);
+        return $this->_formatObject($this->select());
     }
 
     protected function _formatObject($res){
-        if(is_array($res) && !empty($res)){
-            $st = array();
-            foreach($res[0] as $k=>$v){
-                $vtype = gettype($v);
-                $st[$k] = struct::typeExist($vtype) ? $vtype : struct::type_string;
-            }
-            $dt = array();
-            foreach($res as $k=>$v){
-                $tmp = new struct($st, false);
-                foreach($v as $kk=>$vv){
-                    $tmp->$kk = $vv;
-                }
-                $dt[] = $tmp;
-                unset($res[$k]);
-            }
-            $res = $dt;
+        if(!is_array($res) || empty($res)){
+            return $res;
         }
-        return $res;
+        $st = array();
+        foreach($res[0] as $k=>$v){
+            $vtype = gettype($v);
+            $st[$k] = struct::typeExist($vtype) ? $vtype : struct::type_string;
+        }
+        $dt = array();
+        foreach($res as $k=>$v){
+            $tmp = new struct($st, false);
+            foreach($v as $kk=>$vv){
+                $tmp->$kk = $vv;
+            }
+            $dt[] = $tmp;
+            unset($res[$k]);
+        }
+        //$res = $dt;
+        
+        return $dt;
     }
     public function select() {
         $_debugMicrotime = microtime(true);
@@ -540,8 +539,7 @@ class orm extends base {
     }
 
     public function queryFetchObject($sql,$data = array(), $forceMaster = false){
-        $res= $this->queryFetch($sql, $data, $forceMaster);
-        return $this->_formatObject($res);
+        return $this->_formatObject($this->queryFetch($sql, $data, $forceMaster));
     }
     
     public function queryFetch($sql, $data = array(), $forceMaster = false) {

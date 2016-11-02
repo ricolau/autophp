@@ -15,7 +15,8 @@
  *              7.支持iterator 数组形式的遍历;
  *              8.支持unset(),可以将实例化的 struct 中某个property unset 掉.但不影响struct 定义,可以重新赋值.
  *              9.禁用 isset()支持,由于 php 语言没有 undefined,对于 null和 undefined 都认为是false,所以直接禁用.
- *              10. 继承自 class base,支持  struct::instance() 形式的初始化;
+ *              10.继承自 class base,支持  struct::instance() 形式的初始化;
+ *              11.暂时不考虑对于 __serialize()  __clone() 等的处理
  * 
  * @uses below
 
