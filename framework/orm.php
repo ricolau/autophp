@@ -4,6 +4,9 @@
  * @author ricolau<ricolau@qq.com>
  * @version 2016-08-12
  * @desc orm, need PDO extension !
+ *            there's no plan for supporting "active record", cause "active record" has too much limit.
+ *            may someday support object in return value, with the "struct" of this framework
+ *           
  *
  */
 class orm extends base {
@@ -395,11 +398,11 @@ class orm extends base {
 
     /**
      * 
-     * @param array $match as = array('name'=>'rico', 'age'=>20)
-     * @param array $in as = array(12,5,68,58)
-     * @param array $notIn as = array(12, 545, 6, 878)
-     * @param array $like as = array('name'=>'rico%', 'address'=>'haidian area%')
-     * @param array $between as = array('age'=>array(12, 23), ...)
+     * @param array $match as  array('name'=>'rico', 'age'=>20)
+     * @param array $in as  array('id'=>array(12,5,68,58), 'name'=>array('jim','tom'))
+     * @param array $notIn as array('id'=>array(1,2,3,4), 'name'=>array('lily','tom'))
+     * @param array $like as  array('name'=>'rico%', 'address'=>'haidian area%')
+     * @param array $between as  array('age'=>array(12, 23), 'time'=>array(1478034707,1478054707))
      * @return \orm
      */
     public function whereMatch($match = array(), $in = array(), $notIn = array(), $like=array(), $between = array()) {
@@ -421,7 +424,8 @@ class orm extends base {
         if($in && is_array($in)){
             foreach($in as $k=>$v){
                 if(!is_array($v)){
-                    continue;
+                    $this->_raiseError('sql param error for "in" clause of '.__METHOD__.', [value of '.$k.' is not an array]', exception_mysqlpdo::type_input_data_error);
+                    break;
                 }
                 $insteads = array_fill(0, count($v), '?');
                 $sql .= ' AND '.$k.' IN( '.implode(',',$insteads).') ';
@@ -431,7 +435,8 @@ class orm extends base {
         if($notIn && is_array($notIn)){
             foreach($notIn as $k=>$v){
                 if(!is_array($v)){
-                    continue;
+                    $this->_raiseError('sql param error for "notIn" clause of '.__METHOD__.', [value of '.$k.' is not an array]', exception_mysqlpdo::type_input_data_error);
+                    break;
                 }
                 $insteads = array_fill(0, count($v), '?');
                 $sql .= ' AND '.$k.' NOT IN( '.implode(',',$insteads).') ';
