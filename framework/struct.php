@@ -277,6 +277,10 @@ class struct extends base implements IteratorAggregate {
         
     }
 
+    public static function typeExist($name){
+        return isset(self::$_typeList[$name]);
+    }
+
     public function toJson() {
         $dt = $this->toArray();
         return json_encode($dt);

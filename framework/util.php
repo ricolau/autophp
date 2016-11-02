@@ -10,6 +10,7 @@ final class util {
     private static $_vars;
     
     private static $_classSingleton = array();
+    private static $_r = "\n";
 
     /**
      * @description to set a value for a special key

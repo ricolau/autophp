@@ -45,6 +45,7 @@ $dev = array(
     ),
     'entStock' => array(
         'type' => 'mysqlpdo',
+        'balance'=>db::balance_single,
         'servers'=>array(
             db::server_type_slave => array('host' => '127.0.0.1', 'user' => 'database_username_slave', 'pwd' => '222222', 'dbname' => 'database_name22', 'charset' => 'utf8'),
             db::server_type_master => array('host' => '127.0.0.1', 'user' => 'database_username', 'pwd' => '111111', 'dbname' => 'database_name1', 'charset' => 'utf8')

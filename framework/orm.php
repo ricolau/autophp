@@ -27,7 +27,7 @@ class orm extends base {
     protected $_lastQuery = null;
     
     protected $_queryObj = null;
-            
+
     protected static $_tableStructure = array();
 
     public function __construct($dbAlias = null, $tablename = null) {
@@ -286,12 +286,36 @@ class orm extends base {
         $this->_sql['fields'] = $fields;
         return $this;
     }
+    public function selectObject() {
+        $res = $this->select();
+        return $this->_formatObject($res);
+    }
 
+    protected function _formatObject($res){
+        if(is_array($res) && !empty($res)){
+            $st = array();
+            foreach($res[0] as $k=>$v){
+                $vtype = gettype($v);
+                $st[$k] = struct::typeExist($vtype) ? $vtype : struct::type_string;
+            }
+            $dt = array();
+            foreach($res as $k=>$v){
+                $tmp = new struct($st, false);
+                foreach($v as $kk=>$vv){
+                    $tmp->$kk = $vv;
+                }
+                $dt[] = $tmp;
+                unset($res[$k]);
+            }
+            $res = $dt;
+        }
+        return $res;
+    }
     public function select() {
         $_debugMicrotime = microtime(true);
         $where = $this->_getWhere();
-        $sql = $where['sql'];
-        $sqlData = $where['data'];
+        $sql = isset($where['sql']) ? $where['sql'] : '';
+        $sqlData = isset($where['data']) ? $where['data'] : array();
         $values = array();
         if (is_array($sqlData)) {
             $values = util::array_merge($values, $sqlData);
@@ -327,10 +351,9 @@ class orm extends base {
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)) ) ;
-
+        
         $this->_clearStat();
-
+        ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)) ) ;
         return $res;
     }
 
@@ -515,6 +538,11 @@ class orm extends base {
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)));
         return $res;
     }
+
+    public function queryFetchObject($sql,$data = array(), $forceMaster = false){
+        $res= $this->queryFetch($sql, $data, $forceMaster);
+        return $this->_formatObject($res);
+    }
     
     public function queryFetch($sql, $data = array(), $forceMaster = false) {
         $_debugMicrotime = microtime(true);
@@ -533,6 +561,7 @@ class orm extends base {
             $this->_raiseError('select query failed~', exception_mysqlpdo::type_query_error);
         }
         $res = $sth->fetchAll(PDO::FETCH_ASSOC);
+        
         $this->_clearStat();
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($res,__METHOD__)));
         return $res;
