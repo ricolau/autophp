@@ -14,6 +14,8 @@ class request{
     protected static $_cookie = array();
     protected static $_antiXssMode = true;
     protected static $_addslashesMode = false;
+    
+    protected static $_requestTime = null;
 
     public static function init($antiXssModeOn = true, $addslashesModeOn = false){
         if(!self::$_hasInit){
@@ -28,6 +30,8 @@ class request{
         self::$_getData = self::_formatDeep($_GET);
         self::$_postData = self::_formatDeep($_POST);
         self::$_cookie = self::_formatDeep($_COOKIE);
+        
+        self::$_requestTime = auto::getRuntimeStart() ?: time();
         self::_destroyOriginalData();
     }
     
@@ -39,6 +43,11 @@ class request{
         if(!self::$_hasInit){
             self::init(true, true);
         }
+    }
+    
+    public static function time(){
+        self::_checkInit();
+        return self::$_requestTime;
     }
 
     public static function getAntiXssMode(){
