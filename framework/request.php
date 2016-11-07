@@ -32,7 +32,7 @@ class request{
         self::$_postData = self::_formatDeep($_POST);
         self::$_cookie = self::_formatDeep($_COOKIE);
         
-        self::$_requestTime = auto::getRuntimeStart() ?: time();
+        self::$_requestTime = auto::getRuntimeStart() ?: microtime(true);
         self::$_requestTimeInt = intval(self::$_requestTime);
         self::_destroyOriginalData();
     }
