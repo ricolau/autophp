@@ -243,13 +243,16 @@ class orm extends base {
     public function update($data, $returnAffectedRows = false) {
         $_debugMicrotime = microtime(true);
         $this->_checkDanger(__FUNCTION__);
-        if (empty($data) || !is_array($data)) {
+        if (empty($data)) {
             $this->_raiseError('empty data for update function query', exception_mysqlpdo::type_input_data_error);
         }
         $fields = $values = array();
         foreach($data as $k=>$v){//support array and struct
             $fields[] = $k . '= ? ';
             $values[] = $v;
+        }
+        if (empty($values)) {
+            $this->_raiseError('empty data for update function query', exception_mysqlpdo::type_input_data_error);
         }
         $where = $this->_getWhere();
         $sql = 'UPDATE ' . $this->_table . ' SET ' . implode(',', $fields) . $where['sql'];
