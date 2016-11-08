@@ -14,9 +14,8 @@
  *              6.子类struct,无法定义 public 的property,必须使用 struct 规定的声明方式;
  *              7.支持iterator 数组形式的遍历;
  *              8.支持unset(),可以将实例化的 struct 中某个property unset 掉.但不影响struct 定义,可以重新赋值.
- *              9.禁用 isset()支持,由于 php 语言没有 undefined,对于 null和 undefined 都认为是false,所以直接禁用.
- *              10.继承自 class base,支持  struct::instance() 形式的初始化;
- *              11.暂时不考虑对于 __serialize()  __clone() 等的处理
+ *              9.继承自 class base,支持  struct::instance() 形式的初始化;
+ *              10.暂时不考虑对于 __serialize()  __clone() 等的处理
  * 
  * @uses below
 
@@ -75,7 +74,7 @@
         
         $b2->age = '20';
         $a->fff = 2222; // this will throw exception
-        isset($a->fffff);
+   
         
     } catch(Exception $e) {
         var_dump("exception caught :",$e);
@@ -127,7 +126,6 @@
         echo "=======================\n";
         echo "exception test: \n";
         
-        var_dump(isset($a->age));//will throw exception, 
         
         
     } catch(Exception $e) {
@@ -194,11 +192,25 @@ class struct extends base implements IteratorAggregate {
             if(!isset(self::$_typeList[$type])) {
                 throw new Exception('type :' . $type . ' not valid for class struct!', self::err_init);
             }
-            $this->_data[$name] = null;
+            if(!self::_checkPropertyName($name)){
+                throw new Exception('property name has special chars not allowed, for:' . $name, self::err_init);
+            }
+            //$this->_data[$name] = null;
         }
         if($strictMode !== null) {
             $this->_strictMode = $strictMode;
         }
+    }
+    
+    
+    private static function _checkPropertyName($str){
+        $base = '1234567890_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $left = trim($str, $base);
+        if($left===''){
+            return true;
+        }
+        return false;
     }
 
     public function getIterator() {
@@ -219,7 +231,6 @@ class struct extends base implements IteratorAggregate {
             if(!$valid){
                 throw new Exception('property type not match to set for:' . get_called_class() . '->' . $name, self::err_property_type_invalid);
             }
-            
         }
         $this->_data[$name] = $value;
     }
@@ -232,13 +243,13 @@ class struct extends base implements IteratorAggregate {
     }
     
     /**
-     * @description php语言的 isset()  和null 配合, 设计得不合理, 针对于 $a = array('name'=>null);  isset($a['name']) 和 isset($a['age']) 都返回false
-     *              所以,禁用 isset() 了,直接可以使用  struct::propertyExist($name) 来判断一个属性是否存在
+     * @description 
      * @param type $name
      * @throws Exception
      */
     public function __isset($name){
-        throw new Exception('can not use isset() for stuct property', self::err_base);
+        return isset($this->_data[$name]);
+        //throw new Exception('can not use isset() for stuct property', self::err_base);
         //return array_key_exists($name, $this->_data);
     }
     public function __unset($name){
@@ -275,11 +286,66 @@ class struct extends base implements IteratorAggregate {
         }else{
             return false;
         }
-        
+    }
+    public function getPropertyList(){
+        return $this->_structDefine;
     }
 
     public static function typeExist($name){
         return isset(self::$_typeList[$name]);
+    }
+    
+    public function fromArray($data){
+        if(!is_array($data) || empty($data)){
+            return false;
+        }
+        foreach($this->_structDefine as $name=>$type){
+            if(!isset($data[$name])){
+                continue;
+            }
+            if($type!=self::type_struct ){
+                if($this->_strictMode){
+                    $data[$name] = $this->_formatValue($data[$name],$type);
+                }
+            }else{
+                if($this->_strictMode && (!is_object($data[$name]) || !($data[$name] instanceof struct) )    ){
+                    throw new Exception('struct::fromArray() do not support property type of struct!',self::err_property_type_invalid);
+                }
+            }
+            $this->$name = $data[$name];
+        }
+    }
+    
+    public function formatValue($val, $type){
+        $ret = null;
+        switch($type){
+            
+            case self::type_int:
+                $ret = intval($val);
+                break;
+            
+            case self::type_string:
+                $ret = strval($val);
+                break;
+            
+            case self::type_bool:
+                $ret = is_scalar($val) ? boolval($val) : true;
+                break;
+            
+            case self::type_null:
+                $ret = null;
+                break;
+            
+            case self::type_float:
+                $ret = floatval($val);
+                break;
+            
+            default:
+                break;
+            
+        }
+        return $ret;
+        
     }
 
     public function toJson() {

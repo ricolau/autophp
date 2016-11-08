@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-11-02
+ * @version 2016-11-08
  * @desc orm, need PDO extension !
  *           
  *
@@ -142,13 +142,26 @@ class orm extends base {
         
     }
 
+    /**
+     * 
+     * @param array/struct $data
+     * @param bool $getLastInsertId
+     * @return bool/int
+     */
     public function insert($data, $getLastInsertId = false) {
         $_debugMicrotime = microtime(true);
-        if (empty($data) || !is_array($data)) {
+        if (empty($data)) {
             $this->_raiseError('insert query data empty~', exception_mysqlpdo::type_input_data_error);
         }
-        $fields = array_keys($data);
-        $values = array_values($data);
+        $fields = $values = array();
+        foreach($data as $k=>$v){
+            $fields[] = $k;
+            $values[] = $v;
+        }
+        if (empty($values)) {
+            $this->_raiseError('insert query data empty 2!', exception_mysqlpdo::type_input_data_error);
+        }
+        
         $insteads = array_fill(0, count($values), '?');
 
         $sql = 'INSERT INTO ' . $this->_table . '(' . implode(',', $fields) . ') VALUE(' . implode(',', $insteads) . ')';
@@ -179,45 +192,64 @@ class orm extends base {
         return $res;
     }
 
-    public function autoUpdate($data) {
+    /**
+     * 
+     * @param array/struct $data
+     * @param bool $returnAffectedRows
+     * @return bool/int
+     */
+    public function autoUpdate($data, $returnAffectedRows = false) {
+        
         $structure = $this->structure();
         if (!is_array($structure)) {
             $this->_raiseError('get data structure empty', exception_mysqlpdo::type_input_data_error);
         }
+        $dt = array();
         foreach ($data as $k => $v) {
-            if (!in_array($k, $structure)){
-                unset($data[$k]);
+            if (in_array($k, $structure)){
+                $dt[$k] = $v;
             }
         }
-        $ret = $this->update($data);
+        $ret = $this->update($dt,$returnAffectedRows);
         return $ret;
     }
-
+    /**
+     * 
+     * @param array/struct $data
+     * @param bool $getLastInsertId
+     * @return type
+     */
     public function autoInsert($data, $getLastInsertId = false) {
         $structure = $this->structure();
         if (!is_array($structure)) {
             $this->_raiseError('get data structure failed', exception_mysqlpdo::type_input_data_error);
         }
+        $dt = array();
         foreach ($data as $k => $v) {
-            if (!in_array($k, $structure)){
-                unset($data[$k]);
+            if (in_array($k, $structure)){
+                $dt[$k] = $v;
             }
         }
-        $ret = $this->insert($data, $getLastInsertId);
+        $ret = $this->insert($dt, $getLastInsertId);
         return $ret;
     }
 
+    /**
+     * 
+     * @param array/struct $data
+     * @param bool $returnAffectedRows
+     * @return bool/int
+     */
     public function update($data, $returnAffectedRows = false) {
         $_debugMicrotime = microtime(true);
         $this->_checkDanger(__FUNCTION__);
         if (empty($data) || !is_array($data)) {
             $this->_raiseError('empty data for update function query', exception_mysqlpdo::type_input_data_error);
         }
-        $fields = array_keys($data);
-        $values = array_values($data);
-
-        foreach ($fields as $k => $f) {
-            $fields[$k] = $f . '= ? ';
+        $fields = $values = array();
+        foreach($data as $k=>$v){//support array and struct
+            $fields[] = $k . '= ? ';
+            $values[] = $v;
         }
         $where = $this->_getWhere();
         $sql = 'UPDATE ' . $this->_table . ' SET ' . implode(',', $fields) . $where['sql'];

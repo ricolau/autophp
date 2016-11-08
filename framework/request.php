@@ -32,7 +32,7 @@ class request{
         self::$_postData = self::_formatDeep($_POST);
         self::$_cookie = self::_formatDeep($_COOKIE);
         
-        self::$_requestTime = auto::getRuntimeStart() ?: microtime(true);
+        self::$_requestTime = auto::getRuntimeStart();
         self::$_requestTimeInt = intval(self::$_requestTime);
         self::_destroyOriginalData();
     }
@@ -73,6 +73,7 @@ class request{
      * @return
      */
     public static function get($key, $type = 'str', $default = null){
+        self::_checkInit();
         return self::_deal(self::$_getData, $key, $type, $default);
     }
 
@@ -90,6 +91,7 @@ class request{
      * @desc get post data
      */
     public static function post($key, $type = 'str', $default = null){
+        self::_checkInit();
         return self::_deal(self::$_postData, $key, $type, $default);
     }
 
@@ -108,6 +110,7 @@ class request{
      * @return array
      */
     public static function getArray($key){
+        self::_checkInit();
         return self::_deal(self::$_getData, $key, 'array', array());
     }
 
@@ -119,6 +122,7 @@ class request{
      * @return type
      */
     public static function cookie($key, $type = 'str', $default = null){
+        self::_checkInit();
         return self::_deal(self::$_cookie, $key, $type, $default);
     }
 
@@ -133,6 +137,7 @@ class request{
      * @return type
      */
     public static function postArray($key){
+        self::_checkInit();
         return self::_deal(self::$_postData, $key, 'array', null);
     }
 
@@ -156,12 +161,8 @@ class request{
      */
     public static function setParam($key, $val, $type = 'get'){
         self::_checkInit();
-        if($type == 'get'){
-            self::$_getData[$key] = $val;
-        }else{
-            self::$_postData[$key] = $val;
-        }
-        return true;
+        
+        self::setParams(array($key=>$val), $type);
     }
 
     /**
@@ -186,7 +187,6 @@ class request{
     }
 
     protected static function _deal($data, $key, $type, $default){
-        self::_checkInit();
         if($key == null || !isset($data[$key])){
             return $default;
         }
@@ -207,7 +207,6 @@ class request{
     }
 
     public static function formatText($txt){
-        self::_checkInit();
         $txt = trim($txt);
         if(self::$_antiXssMode){
             $txt = htmlspecialchars($txt);
