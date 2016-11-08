@@ -4,11 +4,37 @@
  * @version 2016-11-02
  * @desc autophp core, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
+ * 
+ * 
+ * @comment  本框架两点和特性
+ * 
+ * ########### 基础和通用特性 ##############
+ * ## MVC 分层;
+ * ## 单一入口;
+ * ## View 层独立的模板引擎,不使用smarty, 为了追求高效的执行效率.
+ * ## i18n 多语言支持;
+ * ## pdo 支持;
+ * ## 支持 develop/test/online 三种模式,可以配置三种配置问价;
+ * 
+ * 
+ * ########### 独立特性 ##############
+ * ## 支持url 的二级或 三级 path 深度解析,即:支持 controler/action 和  module/controller/action 两种方式的url;
+ * ## 全面的autoload,支持无限中间层扩展,MVC to  DMVC  MVVM等任何数量的层次扩展支持;
+ * ## 完善的 performance 性能log布点,能够获取到任何的 db/cache/http 等外部资源消耗的请求参数/耗时/返回结果,也支持用户自定义的布点,通过plugin 支持自定义记录log和过滤. 便于各种报警和监控;
+ * ## php 的强类型支持, 独立的struct 定义,可完美替代php array, 使得php 也支持强类型.
+ * ## 高效独立的 orm 封装,链式操作,并全面支持struct 方式的query; orm 具有自动支持主从等众多特性;
+ * ## 完善的 storage driver 分层, 灵活支持 memcache/ memcached,  redis/codis 等多种存储的驱动,实现单例资源连接,调用方不需要关心底层连接.
+ * ## 支持钩子,定义为plugin,提供framework 级别的钩子,用户也可以自定义plugin;(db 错误/cache各种错误 等都有plugin 可以用来定义,增加报警或重试, 且一个action 可以注册多个钩子)
+ * ## 所有class 都支持单例模式,在base class 中实现了 base::instance()  和  base::singleton() 方法,可全局支持任何class 单例;
+ * ## db 驱动支持多种方式: 读写主从/单实例/随机的负载均衡 等;
+ * ## url "路由过程" 高度可定制化; dispatcher 执行流程简洁清晰,方便支持各种自定义的路由分发和执行过程;
+ * ## 完善的安全防护, 对request 数据进行安全过滤处理, 销毁原生的  $_GET/$_POST/$_COOKIE 
  *
+ * ## 简洁,性能超越同类框架一倍以上;
  */
 class auto {
 
-    const version = '2.1.52';
+    const version = '2.1.53';
     
     const author = 'ricolau<ricolau@qq.com>';
 
