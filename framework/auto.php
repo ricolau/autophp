@@ -6,7 +6,7 @@
  * @link https://github.com/ricolau/autophp
  * 
  * 
- * @comment  本框架两点和特性
+ * @comment  本框架特性描述
  * 
  * ########### 基础和通用特性 ##############
  * ## MVC 分层;
