@@ -309,7 +309,7 @@ class struct extends base implements IteratorAggregate {
                 }
             }else{
                 if($this->_strictMode && (!is_object($data[$name]) || !($data[$name] instanceof struct) )    ){
-                    throw new Exception('struct::fromArray() do not support property type of struct!',self::err_property_type_invalid);
+                    throw new Exception('type error for:'.$name,', struct type required!',self::err_property_type_invalid);
                 }
             }
             $this->$name = $data[$name];

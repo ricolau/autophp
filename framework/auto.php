@@ -29,12 +29,13 @@
  * ## db 驱动支持多种方式: 读写主从/单实例/随机的负载均衡 等;
  * ## url "路由过程" 高度可定制化; dispatcher 执行流程简洁清晰,方便支持各种自定义的路由分发和执行过程;
  * ## 完善的安全防护, 对request 数据进行安全过滤处理, 销毁原生的  $_GET/$_POST/$_COOKIE 
+ * ## 先进强大的debug 模式,打开 auto::setDebug(true) 之后,可以看到所有的 performance 布点信息,极其方便开发过程中的调试!
  *
  * ## 简洁,性能超越同类框架一倍以上;
  */
 class auto {
 
-    const version = '2.1.53';
+    const version = '2.1.54';
     
     const author = 'ricolau<ricolau@qq.com>';
 
