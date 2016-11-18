@@ -165,10 +165,14 @@ class struct extends base implements IteratorAggregate {
     );
     
     private $_data = array();
-    const recursive_depth_limit = 8;    
+    const recursive_depth_limit = 8;
+    
+    
+    private static $_sonList = array('struct'=>true);
     
     protected $_structDefine = array(
     );
+    protected $_className = 'struct';
     protected $_strictMode = true;//whether throw exception when property type not match with definations
 
     public function __construct($define = array(), $strictMode = null) {
@@ -182,11 +186,15 @@ class struct extends base implements IteratorAggregate {
         if($define) {
             $this->_structDefine = $define;
         }
-        
-        $rf = new ReflectionClass(get_called_class()); 
-        if($rf->getProperties(ReflectionProperty::IS_PUBLIC)){//禁止声明 public property
-            throw new Exception('no public property declearation is allowed for class:'.get_called_class(),self::err_init);
+        $className = get_called_class();
+        if(!isset(self::$_sonList[$className])){
+            $rf = new ReflectionClass($className); 
+            if($rf->getProperties(ReflectionProperty::IS_PUBLIC)){//禁止声明 public property
+                throw new Exception('no public property declearation is allowed for class:'.$className,self::err_init);
+            }
+            $this->_className = self::$_sonList[$className] = true;
         }
+        
 
         foreach($this->_structDefine as $name => $type) {
             if(!isset(self::$_typeList[$type])) {
@@ -286,6 +294,9 @@ class struct extends base implements IteratorAggregate {
         }else{
             return false;
         }
+    }
+    public function getStructName(){
+        return $this->_className;
     }
     public function getPropertyList(){
         return $this->_structDefine;
