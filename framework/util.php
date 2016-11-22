@@ -2,15 +2,19 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-09-08
+ * @version 2016-11-22
  * @desc utils, just some tools here~
  *
  */
 final class util {
+    
+    const recursive_depth_limit = 15;
+    
     private static $_vars;
     
     private static $_classSingleton = array();
     private static $_r = "\n";
+    
 
     /**
      * @description to set a value for a special key
@@ -239,7 +243,10 @@ final class util {
         array_map(array('self', '_dump'), $args, array_fill(0, $nums, ''), array_fill(0, $nums, true));
     }
 
-    private static function _dump($obj, $name = '', $isPrint = true) {
+    private static function _dump($obj, $name = '', $isPrint = true, $depth=0) {
+        if($depth>self::recursive_depth_limit){
+            return __METHOD__.'/error, recursive depth too much than'.self::recursive_depth_limit.self::$_r;
+        }
         $str = $pre = '';
         if (!is_array($obj)) {
             if (is_string($obj)) {
@@ -258,7 +265,7 @@ final class util {
         } else {
             $str .= 'array(' . count($obj) . '){' . self::$_r;
             foreach ($obj as $key => $value) {
-                $str .= $name . '["' . $key . '"]=>' . self::_dump($value, $name . '["' . $key . '"]', false);
+                $str .= $name . '["' . $key . '"]=>' . self::_dump($value, $name . '["' . $key . '"]', false, $depth+1);
             }
             $str .= '}' . self::$_r;
         }
@@ -286,7 +293,10 @@ final class util {
         }
     }
 
-    private static function _array2line($obj, $name, $isPrint = false) {
+    private static function _array2line($obj, $name, $isPrint = false, $depth=0) {
+        if($depth>self::recursive_depth_limit){
+            return '\''.__METHOD__.'/error, recursive depth too much than'.self::recursive_depth_limit.'\';'.self::$_r;
+        }
         $str = $pre = '';
         if (!is_array($obj)) {
             if (is_string($obj)) {
@@ -302,7 +312,7 @@ final class util {
         } else {
             foreach ($obj as $key => $value) {
                 if (!is_array($value)) {
-                    $str .= $name . '[\'' . $key . '\'] = ' . self::_array2Line($value, $name . '[\'' . $key . '\']', false);
+                    $str .= $name . '[\'' . $key . '\'] = ' . self::_array2Line($value, $name . '[\'' . $key . '\']', false, $depth+1);
                     $str .= self::$_r;
                 } else {
                     $str .= self::_array2Line($value, $name . '[\'' . $key . '\']', false);

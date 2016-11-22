@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-10-29
+ * @version 2016-11-22
  * @desc struct base
  * 
  * @comment 特性: 期望可完全替代php 的弱类型数组,当做强类型靠谱使用;
@@ -325,6 +325,14 @@ class struct extends base implements IteratorAggregate {
             }
             $this->$name = $data[$name];
         }
+    }
+    
+    public function formatSet($name, $value){
+        if($name === null || !isset($this->_structDefine[$name])){
+            throw new Exception('type not exist of :'.$name, self::err_property_not_exist);
+        }
+        $this->$name = $this->formatValue($value, $this->_structDefine[$name]);
+        return true;
     }
     
     public function formatValue($val, $type){
