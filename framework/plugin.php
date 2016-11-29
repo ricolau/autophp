@@ -49,7 +49,7 @@ final class plugin {
             foreach (self::$_plugins[$tag] as $pluginName=>&$plugin) {
                 
                 $_debugMicrotime = microtime(true);
-                call_user_func_array(array($plugin,'call'), array($tag, $ptx));
+                call_user_func_array(array($plugin,'call'), array($tag, &$ptx));
                 
                 ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('plugin'=>$pluginName));
             }
