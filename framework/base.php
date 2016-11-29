@@ -20,7 +20,8 @@ class base {
     
     /**
      * get class instance,support multiple arguments ...
-     * @return called class instance
+     * @return static
+     * @description "return static" is friendly to IDE!
      */
     public static function instance(){
         $args = func_get_args();
@@ -32,7 +33,8 @@ class base {
     
     /**
      * get singleton class instance, without any arguments!
-     * @return called class instance
+     * @return static
+     * @description "return static" is friendly to IDE!
      */
     public static function singleton(){
         $className = get_called_class();
