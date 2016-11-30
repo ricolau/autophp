@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-11-08
+ * @version 2016-11-30
  * @desc orm, need PDO extension !
  *           
  *
@@ -606,9 +606,10 @@ class orm extends base {
      * @return type
      */
     public function structure($fullType = false) {
+        $fullType  = intval($fullType);
         $_debugMicrotime = microtime(true);
-        if (isset(self::$_tableStructure[$this->_dbAlias][$this->_table])) {
-            return self::$_tableStructure[$this->_dbAlias][$this->_table];
+        if (isset(self::$_tableStructure[$this->_dbAlias][$this->_table][$fullType])) {
+            return self::$_tableStructure[$this->_dbAlias][$this->_table][$fullType];
         }
         $sql = "DESC " . $this->_table;
         $this->_lastQuery = $sql;
@@ -633,7 +634,7 @@ class orm extends base {
         }
 
 
-        self::$_tableStructure[$this->_dbAlias][$this->_table] = $dt;
+        self::$_tableStructure[$this->_dbAlias][$this->_table][$fullType] = $dt;
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias'=>$this->_dbAlias,'lastQuery'=>$this->_lastQuery,'ret'=>  performance::summarize($dt,__METHOD__)))  ;
         return $dt;
     }
