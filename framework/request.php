@@ -43,7 +43,7 @@ class request{
 
     protected static function _checkInit(){
         if(!self::$_hasInit){
-            self::init(true, true);
+            throw new exception_base('request has not been inited! ',exception_base::error);
         }
     }
     
@@ -73,12 +73,10 @@ class request{
      * @return
      */
     public static function get($key, $type = 'str', $default = null){
-        self::_checkInit();
         return self::_deal(self::$_getData, $key, $type, $default);
     }
 
     public static function getAll(){
-        self::_checkInit();
         return self::$_getData;
     }
 
@@ -91,7 +89,6 @@ class request{
      * @desc get post data
      */
     public static function post($key, $type = 'str', $default = null){
-        self::_checkInit();
         return self::_deal(self::$_postData, $key, $type, $default);
     }
 
@@ -100,7 +97,6 @@ class request{
      * @return just as the original $_POST
      */
     public static function postAll(){
-        self::_checkInit();
         return self::$_postData;
     }
 
@@ -110,7 +106,6 @@ class request{
      * @return array
      */
     public static function getArray($key){
-        self::_checkInit();
         return self::_deal(self::$_getData, $key, 'array', array());
     }
 
@@ -122,12 +117,10 @@ class request{
      * @return type
      */
     public static function cookie($key, $type = 'str', $default = null){
-        self::_checkInit();
         return self::_deal(self::$_cookie, $key, $type, $default);
     }
 
     public static function cookieAll(){
-        self::_checkInit();
         return self::$_cookie;
     }
 
@@ -137,7 +130,6 @@ class request{
      * @return type
      */
     public static function postArray($key){
-        self::_checkInit();
         return self::_deal(self::$_postData, $key, 'array', null);
     }
 
