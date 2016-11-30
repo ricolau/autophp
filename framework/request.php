@@ -140,9 +140,9 @@ class request{
      * @param type $default, default value
      * @return null
      */
-    public function request($key, $type = 'int', $default = null){
-        return null;
-    }
+//    public function request($key, $type = 'int', $default = null){
+//        return null;
+//    }
 
     /**
      * @set request arguments by key/value
