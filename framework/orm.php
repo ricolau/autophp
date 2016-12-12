@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-11-30
+ * @version 2016-12-08
  * @desc orm, need PDO extension !
  *           
  *
@@ -315,6 +315,11 @@ class orm extends base {
         return $res;
     }
 
+    /**
+     * 
+     * @param array/string $fields
+     * @return $this
+     */
     public function fields($fields = array()) {
         $this->_sql['fields'] = $fields;
         return $this;
@@ -364,7 +369,7 @@ class orm extends base {
             $sql .= ' LIMIT ' . $this->_sql['limit'];
         }
         if (isset($this->_sql['fields'])) {
-            $fields = implode(',', $this->_sql['fields']);
+            $fields = is_array($this->_sql['fields']) ? implode(',', $this->_sql['fields']) : $fields;
         } else {
             $fields = '*';
         }
@@ -529,8 +534,18 @@ class orm extends base {
         }
     }
 
-    public function limit($limit) {
-        $this->_sql['limit'] = $limit;
+    /**
+     * 
+     * @param int $limit
+     * @param int $offset
+     * @return $this
+     */
+    public function limit($limit, $offset = null) {
+        if($offset===null){
+            $this->_sql['limit'] = $limit;
+        }else{
+            $this->_sql['limit'] = $limit.','.$offset;
+        }
         return $this;
     }
 

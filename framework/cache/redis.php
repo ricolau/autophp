@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-18
+ * @version 2016-12-12
  * @desc redis
  *
  */
@@ -40,6 +40,12 @@ class cache_redis extends cache_abstract{
         try{
             $this->_redis = new Redis();
             $con = $this->_redis->connect($this->_confs['host'], $this->_confs['port'], $this->_confs['connectTimeout']);
+            if($con && isset($server['options'])){
+                foreach($server['options'] as $ok=>$ov){
+                    $this->_redis->setOption($ok,$ov);
+                }
+            }
+            
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias' => $this->_alias));
         }catch(Exception $e){
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__ . '::error', $timeCost, array('alias' => $this->_alias, 'line' => __LINE__));

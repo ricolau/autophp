@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-18
+ * @version 2016-12-12
  * @desc codis
  *
  */
@@ -118,8 +118,15 @@ class cache_codis extends cache_abstract{
                 $this->_redis = null;
                 $this->_redis = new Redis();
                 $con = $this->_redis->connect($server['server']['host'], $server['server']['port'], $server['server']['timeout']);
+                if($con && isset($server['options'])){
+                    foreach($server['options'] as $ok=>$ov){
+                        $this->_redis->setOption($ok,$ov);
+                    }
+                }
                 ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias' => $this->_alias, 'hitServer' => $server, 'ret' => performance::summarize($con)));
             }catch(Exception $e){
+                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__.'::error', $timeCost, array('alias' => $this->_alias, 'hitServer' => $server, 'ret' => performance::summarize($e),'line'=>__LINE__));
+
                 //catch exception just ignore and take it to the below flow
                 //continue;
             }
