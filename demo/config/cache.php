@@ -6,6 +6,9 @@
  * @desc default config file
  *
  */
+
+$options = array(Redis::OPT_READ_TIMEOUT=> 1);
+
 return array(
 //配置一个memcache 的集群
     'default' => array(
@@ -20,9 +23,9 @@ return array(
     'codis' => array(
         'type' => 'codis',//codis
         'servers' => array(
-            array('host' => '127.0.0.1', 'port' => 6379, 'weight' => 10,'connectTimeout'=>0.05),
-            array('host' => '127.0.0.1', 'port' => 6379, 'weight' => 40,'connectTimeout'=>0.05),
-            array('host' => '127.0.0.1', 'port' => 6379, 'weight' => 50,'connectTimeout'=>0.05),
+            array('host' => '127.0.0.1', 'port' => 6379, 'weight' => 10,'connectTimeout'=>0.05,'options'=>$options),
+            array('host' => '127.0.0.1', 'port' => 6379, 'weight' => 40,'connectTimeout'=>0.05,'options'=>$options),
+            array('host' => '127.0.0.1', 'port' => 6379, 'weight' => 50,'connectTimeout'=>0.05,'options'=>$options),
         )
     ),
     //配置第二个memcache 的集群
@@ -40,12 +43,15 @@ return array(
         'host'=>'127.0.0.1',
         'port'=>6379,
         'connectTimeout'=>0.05,
+        'options'=>$options
+        
     ),
     'rs2' => array(
         'type' => 'redis',
         'host'=>'127.0.0.1',
         'port'=>6379,
         'connectTimeout'=>0.01,
+        'options'=>$options
     )
 );
 

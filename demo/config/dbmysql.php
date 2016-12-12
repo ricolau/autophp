@@ -6,7 +6,12 @@
  * @desc default config file
  *
  */
-return 
+
+$pdo_server_options = array(
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_TIMEOUT=>2,
+);
+
 
 $dev = array(
     'default' => array(
@@ -19,9 +24,10 @@ $dev = array(
                 'pwd' => '',
                 'dbname' => 'test',
                 'port'=>3306,
-                'charset' => 'utf8'
+                'charset' => 'utf8',
+                'options'=>$pdo_server_options
             ),
-            db::server_type_master => array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8')
+            db::server_type_master => array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8','options'=>$pdo_server_options)
 
         ),
 
@@ -30,8 +36,8 @@ $dev = array(
         'type' => 'mysqlpdo',
         'balance'=>db::balance_random,
         'servers'=>array(
-            array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
-            array('host' => '127.0.0.1', 'user' => 'user_test', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
+            array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test','options'=>$pdo_server_options),
+            array('host' => '127.0.0.1', 'user' => 'user_test', 'pwd' => '', 'port' => 3306, 'dbname' => 'test','options'=>$pdo_server_options),
         )
     ),
     
@@ -39,7 +45,7 @@ $dev = array(
         'type' => 'mysqlpdo',
         'balance'=>db::balance_single,
         'servers'=>array(
-            array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
+            array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test','options'=>$pdo_server_options),
         )
 
     ),
@@ -47,8 +53,8 @@ $dev = array(
         'type' => 'mysqlpdo',
         'balance'=>db::balance_single,
         'servers'=>array(
-            db::server_type_slave => array('host' => '127.0.0.1', 'user' => 'database_username_slave', 'pwd' => '222222', 'dbname' => 'database_name22', 'charset' => 'utf8'),
-            db::server_type_master => array('host' => '127.0.0.1', 'user' => 'database_username', 'pwd' => '111111', 'dbname' => 'database_name1', 'charset' => 'utf8')
+            db::server_type_slave => array('host' => '127.0.0.1', 'user' => 'database_username_slave', 'pwd' => '222222', 'dbname' => 'database_name22', 'charset' => 'utf8','options'=>$pdo_server_options),
+            db::server_type_master => array('host' => '127.0.0.1', 'user' => 'database_username', 'pwd' => '111111', 'dbname' => 'database_name1', 'charset' => 'utf8','options'=>$pdo_server_options)
 
         )
 
@@ -68,9 +74,10 @@ $online = array(
                 'pwd' => '',
                 'dbname' => 'test',
                 'port'=>3306,
-                'charset' => 'utf8'
+                'charset' => 'utf8',
+                'options'=>$pdo_server_options
             ),
-            db::server_type_master => array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8')
+            db::server_type_master => array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test', 'charset' => 'utf8','options'=>$pdo_server_options)
 
         ),
 
@@ -79,8 +86,8 @@ $online = array(
         'type' => 'mysqlpdo',
         'balance'=>db::balance_random,
         'servers'=>array(
-            array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
-            array('host' => '127.0.0.1', 'user' => 'user_test', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
+            array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test','options'=>$pdo_server_options),
+            array('host' => '127.0.0.1', 'user' => 'user_test', 'pwd' => '', 'port' => 3306, 'dbname' => 'test','options'=>$pdo_server_options),
         )
     ),
     
@@ -88,7 +95,7 @@ $online = array(
         'type' => 'mysqlpdo',
         'balance'=>db::balance_single,
         'servers'=>array(
-            array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test'),
+            array('host' => '127.0.0.1', 'user' => 'root', 'pwd' => '', 'port' => 3306, 'dbname' => 'test','options'=>$pdo_server_options),
         )
 
     ),
