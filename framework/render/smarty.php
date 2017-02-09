@@ -18,7 +18,7 @@ class render_smarty extends render_abstract {
         if (file_exists($smartyFile)) {
             include_once $smartyFile;
         }
-        if (class_exists('Smarty')) {
+        if (!class_exists('Smarty')) {
             throw new exception_render('render engine of Smarty not exist!', exception_render::type_render_engine_not_exist);
         }
         $this->_smarty = new Smarty();
