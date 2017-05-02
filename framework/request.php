@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-09-06
+ * @version 2017-4-2
  * @desc client request lib
  *
  */
