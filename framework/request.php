@@ -188,9 +188,18 @@ class request{
                 return intval($data[$key]);
                 break;
 
-            case 'str' || 'string' || 'array':
+            case 'str'://不能用, case 'str' || 'string' || 'array'  php会当做 case ('str' || 'string' || 'array')执行
                 return $data[$key];
                 break;
+            
+            case 'string':
+                return $data[$key];
+                break;
+            
+            case 'array':
+                return $data[$key];
+                break;
+           
 
             default:
                 return $default;
