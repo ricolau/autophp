@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-09
+ * @version 2017-5-3
  * @desc autophp dispatcher
  *
  */
@@ -94,9 +94,9 @@ class dispatcher {
                 request::setParams($data, 'get');
             }
         }
-        $moduleName = util::baseChars($moduleName);
-        $controllerName = util::baseChars($controllerName);
-        $actionName = util::baseChars($actionName);
+        $moduleName = util::baseCharsAndNumbers($moduleName);
+        $controllerName = util::baseCharsAndNumbers($controllerName);
+        $actionName = util::baseCharsAndNumbers($actionName);
 
         self::$_instance->setModuleName($moduleName);
         self::$_instance->setControllerName($controllerName);

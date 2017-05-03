@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-11-22
+ * @version 2017-5-3
  * @desc utils, just some tools here~
  *
  */
@@ -65,6 +65,25 @@ final class util {
         if ($onlyCharacterBase) {
             $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         }
+        $left = trim($str, $base);
+        if ($left === '') {
+            return $str;
+        } else {
+            //$ret = str_replace($left,'',$str);
+            $ret = '';//return empty value, 2015-11-16
+        }
+        return $ret;
+    }
+    
+    
+    /**
+     * 此处不要用正则，正则表达式效率太差
+     * 用这个方法，得到的不是正则替换的期望值，但是还是可以用的
+     * @param type $str
+     * @return type
+     */
+    public static function baseCharsAndNumbers($str) {
+        $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         $left = trim($str, $base);
         if ($left === '') {
             return $str;
