@@ -29,7 +29,7 @@ try {
     
     plugin::register( auto::plugin_shutdown, new plugin_performance());
     
-    plugin::register('error::db_mysqlpdo::_connect', new plugin_dbconnecterror());
+    plugin::register('db_mysqlpdo::_connect::error', new plugin_dbconnecterror());
     
     
     plugin::register( 'cache_codis::__call::error', new plugin_codiserror());
@@ -96,8 +96,9 @@ try {
             run();                          //开始执行上一步路由后的 controller 和 action
     //dispatcher::instance()->setControllerName('index')->setActionName('index')->run();
     //============================ 几种常见的异常 ============================
-//} catch (TException_404 $e) {               //当 controller 和 action 不存在时，捕获到的 404 错误。daemon 状态下应该没有
-//    tools_exceptionhandler::topDeal404($e);
+    
+} catch (exception_404 $e) {          //action not found!
+    tools_exceptionhandler::topDeal404($e);  
 } catch (ReflectionException $e) {          //一般来说，这种情况不太可能发生
     tools_exceptionhandler::topDeal404($e);
 } catch (Exception $e) {                    //做个最后的兼容

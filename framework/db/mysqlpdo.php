@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-09-05
+ * @version 2017-05-15
  * @desc database mysql with php pdo extension
  * @example
  *         db::instance($dbAlias)->connect(db::server_type_slave);
@@ -33,13 +33,13 @@ class db_mysqlpdo extends db_abstract {
 
         $_debugMicrotime = microtime(true);
         //every time run "new db_mysqlpdo($conf)->connect($type)" would reconnect the mysql database!
-        $this->_pdoCon = $this->_getPdo($type);
+        $this->_pdoCon = $this->_connect($type);
 
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('alias' => $this->_alias,'balance'=>$this->_confs['balance'],'connectType'=>$type));
         return $this->_pdoCon;
     }
 
-    protected function _getPdo($type) {
+    protected function _connect($type) {
         if($this->_confs['balance'] == db::balance_random) {
             $id = array_rand($this->_confs['servers']);
             $server = $this->_confs['servers'][$id];

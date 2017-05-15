@@ -39,7 +39,7 @@ try {
     plugin::register( auto::plugin_shutdown, new plugin_performance());
 
     
-    plugin::register('error::db_mysqlpdo::_connect', new plugin_dbconnecterror());
+    plugin::register('db_mysqlpdo::_connect::error', new plugin_dbconnecterror());
     
     plugin::register( 'cache_codis::__call::error', new plugin_codiserror());
     plugin::register( 'cache_redis::__call::error', new plugin_codiserror());
