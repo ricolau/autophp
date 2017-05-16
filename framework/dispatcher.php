@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2017-5-3
+ * @version 2017-05-16
  * @desc autophp dispatcher
  *
  */
@@ -223,6 +223,9 @@ class dispatcher {
         
         $ptx = new plugin_context(__METHOD__,array());
         plugin::call(dispatcher::plugin_before_run, $ptx);
+        if($ptx->breakOut !== null){
+            return $ptx->breakOut;
+        }
 
         $_debugMicrotime = microtime(true);
 
@@ -250,7 +253,11 @@ class dispatcher {
         
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('controller'=>$className,'action'=>$actionName)) ;
 
-        plugin::call(dispatcher::plugin_after_run, new plugin_context(__METHOD__,array()));
+        $ptxe = new plugin_context(__METHOD__,array());
+        plugin::call(dispatcher::plugin_after_run, $ptxe);
+        if($ptxe->breakOut !== null){
+            return $ptxe->breakOut;
+        }
     }
 
 }
