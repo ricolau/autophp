@@ -34,8 +34,9 @@ try {
     
     plugin::register( 'cache_codis::__call::error', new plugin_codiserror());
     plugin::register( 'cache_redis::__call::error', new plugin_codiserror());
-
-
+    
+    plugin::register( 'orm::__myCall::error', new plugin_ormcall());
+    
     
     //============================ 对request 的数据进行处理 ============================
     //（必要）此处主要是为了提高一些获取效率，进行一次读入，同时也对原生 $_POST 等做了销毁

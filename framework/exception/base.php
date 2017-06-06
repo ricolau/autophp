@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2012-04
+ * @version 2017-06-06
  * @desc autophp base exception
  *           any exception may extends of this class
  *
@@ -18,8 +18,8 @@ class exception_base extends Exception {
 
 
 
-    public function __construct($message, $code) {
-        parent::__construct($message, $code);
+    public function __construct($message, $code,$previous = null) {
+        parent::__construct($message, $code,$previous);
     }
 
 }

@@ -21,12 +21,16 @@ class orm extends base {
     protected $_currentDbCon = null;
     protected $_sql = null;
     protected $_dangerCheck = null;
-    protected $_pages = null;
     protected $_lastQuery = null;
     
     protected $_queryObj = null;
 
     protected static $_tableStructure = array();
+    
+    protected static $_reentrantErrorTimes = array();
+    protected static $_reentrantErrorTimesLimit = 5;
+    
+    protected $_forceDbReconnect = false;
 
     public function __construct($dbAlias = null, $tablename = null) {
         if ($dbAlias) {
@@ -38,40 +42,140 @@ class orm extends base {
         $this->_clearStat();
         parent::__construct();
     }
+    
+    
 //
 //    public static function instance($dbAlias) {
 //        return new self($dbAlias);
 //    }
+    
+    
+    protected function __myCall($func, $args){
+        try{
+            $ret = call_user_func_array(array($this,'_'.$func), $args);
+            return $ret;
+        } catch (Exception $e) {
+            //设置重入次数上限,防止程序陷入死循环重入崩溃
+            $seqid = md5($func . serialize($args));
+            if(isset(self::$_reentrantErrorTimes[$seqid]) && self::$_reentrantErrorTimes[$seqid] >= self::$_reentrantErrorTimesLimit) {
+                throw $e;
+            }
+            if(!isset(self::$_reentrantErrorTimes[$seqid])) {
+                self::$_reentrantErrorTimes[$seqid] = 0;
+            }
+            self::$_reentrantErrorTimes[$seqid] += 1;
 
+            $ptx = new plugin_context(__METHOD__.'::error', array('alias' => $this->_dbAlias, 'env'=>auto::getMode(),'exception' => &$e, 'obj' => &$this, 'func'=>$func,'args'=>$args));
+            plugin::call(__METHOD__ . '::error', $ptx);
+            if($ptx->breakOut !== null) {
+                return $ptx->breakOut;
+            }
+            throw $e;
+
+        }
+    }
+    /**
+     * 
+     * @param array/struct $data
+     * @param bool $getLastInsertId
+     * @return bool/int
+     */
+    public function insert($data, $getLastInsertId = false){
+        return $this->__myCall(__FUNCTION__, func_get_arg());
+    }
+    /**
+     * 
+     * @param array/struct $data
+     * @param bool $returnAffectedRows
+     * @return bool/int
+     */
+    public function update($data, $returnAffectedRows = false) {
+        return $this->__myCall(__FUNCTION__, func_get_arg());
+    }
+    
+    
+    public function select(){
+        return $this->__myCall(__FUNCTION__, array());
+    }
+    
+    public function count(){
+        return $this->__myCall(__FUNCTION__, array());
+    }
+    
+    public function delete(){
+        return $this->__myCall(__FUNCTION__, array());
+    }
+    
+    public function queryFetch($sql, $data = array(), $forceMaster = false) {
+        return $this->__myCall(__FUNCTION__, func_get_arg());
+        
+    }
+    
+    
+    public function forceDbReconnect(){
+        $this->_forceDbReconnect = true;
+        return $this;
+    }
+    /**
+     * run query
+     * @param type $sql
+     * @return type
+     */
+    public function query($sql, $data, $returnAffectedRows = false) {
+        return $this->__myCall(__FUNCTION__, func_get_arg());
+    }
+
+    /**
+     * get table structure
+     * @param type $fullType
+     * @return type
+     */
+    public function structure($fullType = false) {
+        return $this->__myCall(__FUNCTION__, func_get_arg());
+    }
+    
+    
+    
     private function _clearStat() {
         $this->_sql = array();
         $this->_dangerCheck = true;
         //$this->_dbObjMode = 'auto';
-        $this->_pages = false;
+        $this->_forceDbReconnect = false;
     }
 
     /**
      * @usage
-     *      after                           orm::instance($dbAlias)->getPdo(db_mysqlpdo::TYPE_SERVER_MASTER);  to get your pdo object
-     *          this equals to              new db_mysqlpdo($alias, $conf)->connectSlave();
+     *    after   orm::instance($dbAlias)->getPdo(db::server_type_master);  to get your pdo object
+     *    this equals to   new db_mysqlpdo($alias, $conf)->connect(db::server_type_master);
      * @param type $type
      * @return type
      */
-    public function getPdo($type = null) {
+    public function getPdo($type = null, $forceNewConnection = false) {
         if ($type === null) {
             $type = ($this->_dbObjMode !== self::db_type_master) ? self::db_type_slave : self::db_type_master;
         }
         if ($type != self::db_type_master) {
             return isset($this->_dbObj[self::db_type_slave]) ? $this->_dbObj[self::db_type_slave] :
-                    ($this->_dbObj[self::db_type_slave] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_slave));
+                    ($this->_dbObj[self::db_type_slave] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_slave, $forceNewConnection));
         } else {
             return isset($this->_dbObj[self::db_type_master]) ? $this->_dbObj[self::db_type_master] :
-                    ($this->_dbObj[self::db_type_master] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_master));
+                    ($this->_dbObj[self::db_type_master] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_master, $forceNewConnection));
         }
     }
+    
+//    public function refreshPdoConnection(){
+//        $forceNewConnection = true;
+//        if(isset($this->_dbObj[self::db_type_slave])){
+//            $this->_dbObj[self::db_type_slave] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_slave, $forceNewConnection);
+//        }
+//        if(isset($this->_dbObj[self::db_type_master])){
+//            $this->_dbObj[self::db_type_master] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_master, $forceNewConnection);
+//        }
+//        
+//    }
 
-    protected function _getPdoServerWithAlias($alias, $type = self::db_type_slave) {
-        $dataDriver = db::instance($alias, $type);
+    protected function _getPdoServerWithAlias($alias, $type = self::db_type_slave, $forceNewConnection = false) {
+        $dataDriver = db::instance($alias, $type, $forceNewConnection);
         return $dataDriver;
     }
 
@@ -84,10 +188,10 @@ class orm extends base {
         if ($this->_dbObjMode !== self::db_type_auto) {
             return $this->getPdo($this->_dbObjMode);
         }
-        if (in_array($operationType, array('insert', 'update', 'delete'))) {
-            return $this->getPdo(self::db_type_master);
+        if (in_array($operationType, array('_insert', '_update', '_delete'))) {
+            return $this->getPdo(self::db_type_master, $this->_forceDbReconnect);
         } else {
-            return $this->getPdo(self::db_type_slave);
+            return $this->getPdo(self::db_type_slave, $this->_forceDbReconnect);
         }
     }
 
@@ -148,7 +252,7 @@ class orm extends base {
      * @param bool $getLastInsertId
      * @return bool/int
      */
-    public function insert($data, $getLastInsertId = false) {
+    protected function _insert($data, $getLastInsertId = false) {
         $_debugMicrotime = microtime(true);
         if (empty($data)) {
             $this->_raiseError('insert query data empty~', exception_mysqlpdo::type_input_data_error);
@@ -240,7 +344,7 @@ class orm extends base {
      * @param bool $returnAffectedRows
      * @return bool/int
      */
-    public function update($data, $returnAffectedRows = false) {
+    protected function _update($data, $returnAffectedRows = false) {
         $_debugMicrotime = microtime(true);
         $this->_checkDanger(__FUNCTION__);
         if (empty($data)) {
@@ -283,7 +387,7 @@ class orm extends base {
         return $ret;
     }
 
-    public function delete() {
+    protected function _delete() {
         $_debugMicrotime = microtime(true);
         $this->_checkDanger(__FUNCTION__);
 
@@ -350,7 +454,8 @@ class orm extends base {
         
         return $dt;
     }
-    public function select() {
+    
+    protected function _select() {
         $_debugMicrotime = microtime(true);
         $where = $this->_getWhere();
         $sql = isset($where['sql']) ? $where['sql'] : '';
@@ -408,7 +513,7 @@ class orm extends base {
         return $data;
     }
 
-    public function count($key = '') {
+    protected function _count($key = '') {
         $_debugMicrotime = microtime(true);
         $countKey = empty($key) ? '*' : $key;
 
@@ -445,12 +550,6 @@ class orm extends base {
         throw new exception_mysqlpdo('mysql ' . $msg . ' || ' . json_encode($this->getLastQuery()), $code);
     }
 
-    /*
-      public function page(&$pageinfo){
-      $this->_pages = $pageinfo;
-      }
-
-     */
 
     public function where($where, $data = null) {
         $this->_sql['where'] = $where;
@@ -564,7 +663,7 @@ class orm extends base {
      * @param type $sql
      * @return type
      */
-    public function query($sql, $data, $returnAffectedRows = false) {
+    protected function _query($sql, $data, $returnAffectedRows = false) {
         $_debugMicrotime = microtime(true);
 
         $subSql = strtolower(trim(substr(trim($sql), 0, 7)));
@@ -592,7 +691,7 @@ class orm extends base {
         return $this->_formatObject($this->queryFetch($sql, $data, $forceMaster));
     }
     
-    public function queryFetch($sql, $data = array(), $forceMaster = false) {
+    protected function _queryFetch($sql, $data = array(), $forceMaster = false) {
         $_debugMicrotime = microtime(true);
         $this->_lastQuery = array($sql, $data);
         if ($forceMaster) {
@@ -620,7 +719,7 @@ class orm extends base {
      * @param type $fullType
      * @return type
      */
-    public function structure($fullType = false) {
+    protected function _structure($fullType = false) {
         $fullType  = intval($fullType);
         $_debugMicrotime = microtime(true);
         if (isset(self::$_tableStructure[$this->_dbAlias][$this->_table][$fullType])) {
