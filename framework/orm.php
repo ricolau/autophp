@@ -81,7 +81,7 @@ class orm extends base {
      * @return bool/int
      */
     public function insert($data, $getLastInsertId = false){
-        return $this->__myCall(__FUNCTION__, func_get_arg());
+        return $this->__myCall(__FUNCTION__, func_get_args());
     }
     /**
      * 
@@ -90,7 +90,7 @@ class orm extends base {
      * @return bool/int
      */
     public function update($data, $returnAffectedRows = false) {
-        return $this->__myCall(__FUNCTION__, func_get_arg());
+        return $this->__myCall(__FUNCTION__, func_get_args());
     }
     
     
@@ -107,7 +107,7 @@ class orm extends base {
     }
     
     public function queryFetch($sql, $data = array(), $forceMaster = false) {
-        return $this->__myCall(__FUNCTION__, func_get_arg());
+        return $this->__myCall(__FUNCTION__, func_get_args());
         
     }
     
@@ -131,7 +131,7 @@ class orm extends base {
      * @return type
      */
     public function structure($fullType = false) {
-        return $this->__myCall(__FUNCTION__, func_get_arg());
+        return $this->__myCall(__FUNCTION__, func_get_args());
     }
     
     
