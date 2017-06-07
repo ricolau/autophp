@@ -65,6 +65,9 @@ try {
     plugin::register( auto::plugin_shutdown, new plugin_performance());// 脚本结束运行时,log 拿出来
     plugin::register('performance::add::notice', new plugin_performance());// 因为脚本跑的时间可能会很长
     
+    plugin::register( 'orm::_exceptionHandle::error', new plugin_ormcall());
+
+    
     //============================ 开始定义database 和 cache相关资源 ============================
     //定义database server
     $dbconf = config::get('dbmysql');//读取配置文件，注意配置文件中的格式

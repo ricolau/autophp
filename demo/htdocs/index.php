@@ -35,7 +35,7 @@ try {
     plugin::register( 'cache_codis::__call::error', new plugin_codiserror());
     plugin::register( 'cache_redis::__call::error', new plugin_codiserror());
     
-    plugin::register( 'orm::__myCall::error', new plugin_ormcall());
+    plugin::register( 'orm::_exceptionHandle::error', new plugin_ormcall());
     
     
     //============================ 对request 的数据进行处理 ============================
