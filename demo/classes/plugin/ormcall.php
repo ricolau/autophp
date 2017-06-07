@@ -8,9 +8,11 @@ class plugin_ormcall extends plugin_abstract{
 
     
     public function call($tag, plugin_context &$ptx){
-        if(self::_isGoneAway($ptx['exception']) || self::_lostConnection($ptx['exception'])){
-            $this->breakOut =  call_user_func_array(array($ptx['obj']->forceDbReconnect(), $ptx['func']),$ptx['args']);
-            return $this->breakOut;
+        $data = $ptx->getData();
+        if(self::_isGoneAway($data['exception']) || self::_lostConnection($data['exception'])){
+            $obj = $data['obj']->forceDbReconnect();
+            $ptx->breakOut =  call_user_func_array(array($obj, $data['func']),$data['args']);
+            return true;
         }
 //        else{
 //            //do nothing, and the exception will throw

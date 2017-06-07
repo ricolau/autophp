@@ -65,7 +65,7 @@ class orm extends base {
             }
             self::$_reentrantErrorTimes[$seqid] += 1;
 
-            $ptx = new plugin_context(__METHOD__.'::error', array('alias' => $this->_dbAlias, 'env'=>auto::getMode(),'exception' => &$e, 'obj' => &$this, 'func'=>$func,'args'=>$args));
+            $ptx = new plugin_context(__METHOD__.'::error', array('alias' => $this->_dbAlias, 'env'=>auto::getMode(),'exception' => $e, 'obj' => $this, 'func'=>$func,'args'=>$args));
             plugin::call(__METHOD__ . '::error', $ptx);
             if($ptx->breakOut !== null) {
                 return $ptx->breakOut;
@@ -186,7 +186,7 @@ class orm extends base {
 
     protected function _getPdoByMethodName($operationType = null) {
         if ($this->_dbObjMode !== self::db_type_auto) {
-            return $this->getPdo($this->_dbObjMode);
+            return $this->getPdo($this->_dbObjMode,$this->_forceDbReconnect);
         }
         if (in_array($operationType, array('_insert', '_update', '_delete'))) {
             return $this->getPdo(self::db_type_master, $this->_forceDbReconnect);
