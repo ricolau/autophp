@@ -17,6 +17,23 @@ class model_demo extends orm{
     
     
     public function getUserInfo($uin){
+
+        $user = new struct(array('age'=>struct::type_int,'name'=>struct::type_string));
+        $u1 = $user;
+        $u1->age = 20+rand(1,20);
+        $u1->name= 'st_name_'.rand(1,200);
+
+        $u2 = array('age'=>222+rand(1,20),'name'=>'ar_name_'.rand(1,200));
+
+
+        //de($this->insert($u1), $this->insert($u2));
+        //de($this->autoInsert($u1), $this->autoInsert($u2));
+
+        de($this->where('id=15')->autoUpdate($u1), $this->where('id=16')->autoUpdate($u2), $this->where('id=15')->selectObject());
+
+
+
+
         $keyTpl = 's_tframework_debug_cache_key_%s';
         $key  = sprintf($keyTpl, $uin);
         try{

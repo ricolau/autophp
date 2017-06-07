@@ -93,25 +93,14 @@ class orm extends base {
             $type = ($this->_dbObjMode !== self::db_type_master) ? self::db_type_slave : self::db_type_master;
         }
         if ($type != self::db_type_master) {
-            return isset($this->_dbObj[self::db_type_slave]) ? $this->_dbObj[self::db_type_slave] :
+            return (isset($this->_dbObj[self::db_type_slave]) && !$forceNewConnection) ? $this->_dbObj[self::db_type_slave] :
                     ($this->_dbObj[self::db_type_slave] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_slave, $forceNewConnection));
         } else {
-            return isset($this->_dbObj[self::db_type_master]) ? $this->_dbObj[self::db_type_master] :
+            return (isset($this->_dbObj[self::db_type_master]) && !$forceNewConnection) ? $this->_dbObj[self::db_type_master] :
                     ($this->_dbObj[self::db_type_master] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_master, $forceNewConnection));
         }
     }
     
-//    public function refreshPdoConnection(){
-//        $forceNewConnection = true;
-//        if(isset($this->_dbObj[self::db_type_slave])){
-//            $this->_dbObj[self::db_type_slave] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_slave, $forceNewConnection);
-//        }
-//        if(isset($this->_dbObj[self::db_type_master])){
-//            $this->_dbObj[self::db_type_master] = $this->_getPdoServerWithAlias($this->_dbAlias, self::db_type_master, $forceNewConnection);
-//        }
-//        
-//    }
-
     protected function _getPdoServerWithAlias($alias, $type = self::db_type_slave, $forceNewConnection = false) {
         $dataDriver = db::instance($alias, $type, $forceNewConnection);
         return $dataDriver;
