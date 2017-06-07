@@ -18,7 +18,8 @@ class plugin_ormcall extends plugin_abstract{
     }
     
     private static function _isGoneAway($e){
-        return ($e->getMessage() == self::gone_away) ? true : false;
+        $msg = $e->getMessage();
+        return ( $msg == self::gone_away || strpos($msg,'gone away') > 0) ? true : false;
         
     }
     
