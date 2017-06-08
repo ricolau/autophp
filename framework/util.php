@@ -236,11 +236,13 @@ final class util {
             $ret = $var;
         }elseif(is_string($var)){
             $ret = 'string('.strlen($var).')';
+        }elseif(is_array($var)){
+            $ret = 'array('.count($var).')';
         }else{
             $ret = gettype($var);
         }
         return $ret;
-        
+
     }
     
     public static function export($data) {
