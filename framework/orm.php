@@ -29,6 +29,7 @@ class orm extends base {
     
     protected static $_reentrantErrorTimes = array();
     protected static $_reentrantErrorTimesLimit = 5;
+    protected static $_reentrantErrorStartTime = array();
     
     protected $_forceDbReconnect = false;
 
@@ -49,9 +50,11 @@ class orm extends base {
         //设置重入次数上限,防止程序陷入死循环重入崩溃
         $seqid = md5($func . serialize($args));
         if(isset(self::$_reentrantErrorTimes[$seqid]) && self::$_reentrantErrorTimes[$seqid] >= self::$_reentrantErrorTimesLimit) {
+            ($timeCost = microtime(true) - self::$_reentrantErrorStartTime[$seqid]) && performance::add(__METHOD__.'::errorMax', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'exception'=>$e   ));
             throw $e;
         }
         if(!isset(self::$_reentrantErrorTimes[$seqid])) {
+            self::$_reentrantErrorStartTime[$seqid] = microtime(true);
             self::$_reentrantErrorTimes[$seqid] = 0;
         }
         self::$_reentrantErrorTimes[$seqid] += 1;
@@ -61,6 +64,7 @@ class orm extends base {
         if($ptx->breakOut !== null) {
             return $ptx->breakOut;
         }
+        ($timeCost = microtime(true) - self::$_reentrantErrorStartTime[$seqid]) && performance::add(__METHOD__.'::errorAbort', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'exception'=>$e   ));
         throw $e;
     }
    
