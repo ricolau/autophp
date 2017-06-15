@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-12-08
+ * @version 2017-06-15
  * @desc orm, need PDO extension !
  *           
  *
@@ -51,6 +51,7 @@ class orm extends base {
         $seqid = md5($func . serialize($args));
         if(isset(self::$_reentrantErrorTimes[$seqid]) && self::$_reentrantErrorTimes[$seqid] >= self::$_reentrantErrorTimesLimit) {
             ($timeCost = microtime(true) - self::$_reentrantErrorStartTime[$seqid]) && performance::add(__METHOD__.'::errorMax', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'exception'=>$e   ));
+            self::$_reentrantErrorStartTime[$seqid] = null;
             throw $e;
         }
         if(!isset(self::$_reentrantErrorTimes[$seqid])) {
