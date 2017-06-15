@@ -117,9 +117,9 @@ class cache_codis extends cache_abstract{
             try{
                 $this->_redis = null;
                 $this->_redis = new Redis();
-                $con = $this->_redis->connect($server['server']['host'], $server['server']['port'], $server['server']['timeout']);
-                if($con && isset($server['options'])){
-                    foreach($server['options'] as $ok=>$ov){
+                $con = $this->_redis->connect($server['server']['host'], $server['server']['port'], $server['server']['connectTimeout']);
+                if($con && isset($server['server']['options'])){
+                    foreach($server['server']['options'] as $ok=>$ov){
                         $this->_redis->setOption($ok,$ov);
                     }
                 }

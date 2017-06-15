@@ -40,8 +40,8 @@ class cache_redis extends cache_abstract{
         try{
             $this->_redis = new Redis();
             $con = $this->_redis->connect($this->_confs['host'], $this->_confs['port'], $this->_confs['connectTimeout']);
-            if($con && isset($server['options'])){
-                foreach($server['options'] as $ok=>$ov){
+            if($con && isset($this->_confs['options'])){
+                foreach($this->_confs['options'] as $ok=>$ov){
                     $this->_redis->setOption($ok,$ov);
                 }
             }
