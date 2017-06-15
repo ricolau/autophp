@@ -28,6 +28,7 @@ try {
     plugin::register(auto::plugin_shutdown, new plugin_end());
     
     plugin::register( auto::plugin_shutdown, new plugin_performance());
+    plugin::register( performance::plugin_flush, new plugin_performance());
     
     plugin::register('db_mysqlpdo::_connect::error', new plugin_dbconnecterror());
     

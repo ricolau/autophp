@@ -35,7 +35,7 @@
  */
 class auto {
 
-    const version = '2.2.8';
+    const version = '2.2.9';
     
     const author = 'ricolau<ricolau@qq.com>';
 
@@ -100,6 +100,7 @@ class auto {
         }
         
         performance::add(__METHOD__, 0, array('runId'=>self::$_runId,'sapi'=>self::$_sapiName,'reqPath'=>(!self::$_isCli ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : $_SERVER['PHP_SELF'])    ));
+        performance::flush();
 
     }
         

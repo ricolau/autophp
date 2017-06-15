@@ -37,7 +37,7 @@ try {
     plugin::register(dispatcher::plugin_before_run, new plugin_init());
     plugin::register(auto::plugin_shutdown, new plugin_end());
     
-    plugin::register('performance::add::notice', new plugin_performance());
+    plugin::register( performance::plugin_flush, new plugin_performance());
     plugin::register( auto::plugin_shutdown, new plugin_performance());
 
     

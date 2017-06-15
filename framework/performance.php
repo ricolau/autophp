@@ -31,6 +31,8 @@ class performance {
     const summarize_mode_default = 0;
     const summarize_mode_fully = 1;
     
+    const plugin_flush = 'performance::flush::notice';
+    
     protected static $_summarizeMode = self::summarize_mode_default;
     
     /**
@@ -117,21 +119,26 @@ class performance {
         }
         if(self::$_currentSize - self::$_sizeLimit > 0 && self::$_currentSize % self::$_flushStep==0){
 
-            $ptx = new plugin_context(__METHOD__, array());
-            plugin::call(__METHOD__.'::notice',$ptx);
-            if($ptx->breakOut!==null){
-                return $ptx->breakOut;
+            $flush = self::flush();
+            if($flush || self::$_currentSize===0){
+                return true;
             }
-            if(self::$_currentSize===0){
-                return true;   
-            }
-  
             for($i=0;$i<self::$_flushStep;$i++){
                 queue::out(self::$_hostKey);
             }
             self::$_currentSize -= self::$_flushStep;
         }
         return true;
+    }
+    
+    
+    public static function flush(){
+        $ptx = new plugin_context(__METHOD__, array());
+        plugin::call(self::plugin_flush,$ptx);
+        if($ptx->breakOut!==null){
+            return $ptx->breakOut;
+        }
+        
     }
     
 //    
