@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-08-24
+ * @version 2017-06=18
  * @desc performance log
  *
  */
@@ -133,6 +133,9 @@ class performance {
     
     
     public static function flush(){
+        if(false === self::$_openStatus){
+            return true;
+        }
         $ptx = new plugin_context(__METHOD__, array());
         plugin::call(self::plugin_flush,$ptx);
         if($ptx->breakOut!==null){
