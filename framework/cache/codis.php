@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-12-12
+ * @version 2017-06-20
  * @desc codis
  *
  */
@@ -11,6 +11,7 @@ class cache_codis extends cache_abstract{
     protected $_reentrantTimes = array();
     protected $_reentrantTimesLimit = 5;
     protected $_redis = null;
+    protected $_reentrantErrorStartTime = array();
 
     const connect_timeout_default = 0.05;
 
@@ -165,14 +166,18 @@ class cache_codis extends cache_abstract{
             $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
         }catch(RedisException $e){
 
-            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method . '::error', $timeCost, array('alias' => $this->_alias, 'line' => __LINE__));
+            ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method . '::error', $timeCost, array('conf' => $this->_confs, 'alias' => $this->_alias, 'exception' => $e, 'func' => $funcName, 'args' => $arguments));
 
             //设置重入次数上限,防止程序陷入死循环重入崩溃
             $seqid = md5($this->_alias . serialize($arguments) . $funcName);
             if(isset($this->_reentrantTimes[$seqid]) && $this->_reentrantTimes[$seqid] >= $this->_reentrantTimesLimit){
+                ($timeCost = microtime(true) - $this->_reentrantErrorStartTime[$seqid]) && performance::add(__METHOD__.'::errorMax', $timeCost, array('conf' => $this->_confs, 'alias' => $this->_alias, 'exception' => $e, 'func' => $funcName, 'args' => $arguments));
+                
+                $this->_reentrantErrorStartTime[$seqid] = null;
                 throw $e;
             }
             if(!isset($this->_reentrantTimes[$seqid])){
+                $this->_reentrantErrorStartTime[$seqid] = microtime(true);
                 $this->_reentrantTimes[$seqid] = 0;
             }
             $this->_reentrantTimes[$seqid] += 1;
