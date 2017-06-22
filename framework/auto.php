@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2017-06-15
+ * @version 2017-06-18
  * @desc autophp core, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
  * 
