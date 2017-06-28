@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2017-06-20
+ * @version 2017-06-28
  * @desc codis
  *
  */
@@ -173,7 +173,7 @@ class cache_codis extends cache_abstract{
             if(isset($this->_reentrantTimes[$seqid]) && $this->_reentrantTimes[$seqid] >= $this->_reentrantTimesLimit){
                 ($timeCost = microtime(true) - $this->_reentrantErrorStartTime[$seqid]) && performance::add(__METHOD__.'::errorMax', $timeCost, array('conf' => $this->_confs, 'alias' => $this->_alias, 'exception' => $e, 'func' => $funcName, 'args' => $arguments));
                 
-                $this->_reentrantErrorStartTime[$seqid] = null;
+                $this->_reentrantTimes[$seqid] = null;
                 throw $e;
             }
             if(!isset($this->_reentrantTimes[$seqid])){
