@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2017-06-28
+ * @version 2017-06-30
  * @desc autophp core, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
  * 
@@ -35,7 +35,7 @@
  */
 class auto {
 
-    const version = '2.2.11';
+    const version = '2.2.12';
     
     const author = 'ricolau<ricolau@qq.com>';
 
@@ -99,7 +99,11 @@ class auto {
             performance::setSummarizeMode(performance::summarize_mode_fully);
         }
         
-        performance::add(__METHOD__, 0, array('runId'=>self::$_runId,'sapi'=>self::$_sapiName,'reqPath'=>(!self::$_isCli ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : $_SERVER['PHP_SELF'])    ));
+        performance::add(__METHOD__, 0, 
+                array('runId'=>self::$_runId,'sapi'=>self::$_sapiName,
+                    'reqPath'=>(!self::$_isCli ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) : implode(' ',$GLOBALS['argv']))
+                )
+                );
         performance::flush();
 
     }

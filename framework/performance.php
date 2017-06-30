@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2017-06=18
+ * @version 2017-06-18
  * @desc performance log
  *
  */

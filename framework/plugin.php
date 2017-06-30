@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-09-05
+ * @version 2017-06-30
  * @desc autophp plugin tool
  *
  */
@@ -21,24 +21,7 @@ final class plugin {
         $pluginName = get_class($plugin);
         self::$_plugins[$tag][$pluginName] = &$plugin;
     }
-    
-//    
-//    public static function init($plugins){
-//        if(self::$_hasInit){
-//            throw new exception_plugin('plugins has init!', exception_plugin::type_plugin_has_init);
-//        }
-//        if(!is_array($plugins)|| empty($plugins)){
-//            throw new exception_plugin('plugins empty!', exception_plugin::type_plugin_empty);
-//        }
-//        foreach($plugins as $tag =>&$plugin){
-//            if(!($plugin instanceof plugin_abstract)){
-//                throw new exception_plugin('bad plugin!', exception_plugin::type_bad_plugin);
-//            }
-//            $pluginName = get_class($plugin);
-//            self::$_plugins[$tag][$pluginName] = &$plugin;
-//        }
-//    }
-
+ 
     /**
      * run plugins for this tag
      * @param string $tag
@@ -51,7 +34,7 @@ final class plugin {
                 $_debugMicrotime = microtime(true);
                 call_user_func_array(array($plugin,'call'), array($tag, &$ptx));
                 
-                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('plugin'=>$pluginName));
+                ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('tag'=>$tag,'plugin'=>$pluginName, 'context'=>$ptx));
             }
         }
     }
