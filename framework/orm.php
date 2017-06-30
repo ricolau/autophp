@@ -65,6 +65,7 @@ class orm extends base {
         if($ptx->breakOut !== null) {
             return $ptx->breakOut;
         }
+        self::$_reentrantErrorTimes[$seqid] = null;
         ($timeCost = microtime(true) - self::$_reentrantErrorStartTime[$seqid]) && performance::add(__METHOD__.'::errorAbort', $timeCost, array('alias'=>$this->_dbAlias,'line'=>__LINE__,'lastQuery'=>$this->_lastQuery,'exception'=>$e   ));
         throw $e;
     }

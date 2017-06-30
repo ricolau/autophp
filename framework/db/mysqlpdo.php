@@ -12,6 +12,7 @@ class db_mysqlpdo extends db_abstract {
 
     protected static $_reentrantTimes = array();
     protected static $_reentrantTimesLimit = 3;
+    protected static $_reentrantErrorStartTime = array();
     protected $_confs = null;
     protected $_pdoCon = null;
     protected $_alias = null;
@@ -69,10 +70,13 @@ class db_mysqlpdo extends db_abstract {
                 //设置重入次数上限,防止程序陷入死循环重入崩溃
                 $seqid = md5($this->_alias . $type);
                 if(isset(self::$_reentrantTimes[$seqid]) && self::$_reentrantTimes[$seqid] >= self::$_reentrantTimesLimit) {
+                    ($timeCost = microtime(true) - self::$_reentrantErrorStartTime[$seqid]) && performance::add(__METHOD__.'::errorMax', $timeCost, array('alias'=>$this->_alias,'line'=>__LINE__, 'type' => $type, 'exception' => $e, 'obj' => $this));
+                    self::$_reentrantTimes[$seqid] = null;
                     throw $e;
                 }
                 if(!isset(self::$_reentrantTimes[$seqid])) {
                     self::$_reentrantTimes[$seqid] = 0;
+                    self::$_reentrantErrorStartTime[$seqid] = microtime(true);
                 }
                 self::$_reentrantTimes[$seqid] += 1;
 
@@ -82,6 +86,8 @@ class db_mysqlpdo extends db_abstract {
                 if($ptx->breakOut !== null) {
                     return $ptx->breakOut;
                 }
+                self::$_reentrantTimes[$seqid] = null;
+                ($timeCost = microtime(true) - self::$_reentrantErrorStartTime[$seqid]) && performance::add(__METHOD__.'::errorAbort', $timeCost,  array('alias'=>$this->_alias,'line'=>__LINE__, 'type' => $type, 'exception' => $e, 'obj' => $this));
                 throw $e;
             }
         }

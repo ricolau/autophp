@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2017-06-28
+ * @version 2017-06-30
  * @desc codis
  *
  */
@@ -137,12 +137,17 @@ class cache_codis extends cache_abstract{
             //设置重入次数上限,防止程序陷入死循环重入崩溃
             $seqid = md5($this->_alias . __METHOD__);
             if(isset($this->_reentrantTimes[$seqid]) && $this->_reentrantTimes[$seqid] >= $this->_reentrantTimesLimit){
+                
+                ($timeCost = microtime(true) - $this->_reentrantErrorStartTime[$seqid]) && performance::add(__METHOD__.'::errorMax', $timeCost, array('alias' => $this->_alias, 'hitServer' => $server, 'ret' => performance::summarize($e),'line'=>__LINE__));
+                $this->_reentrantTimes[$seqid] = null;
+                
                 throw new exception_cache(
                 'codis connection error too many times!' . (auto::isDebug() ? var_export($this->_confs, true) : ''), exception_cache::type_server_connection_error
                 );
             }
             if(!isset($this->_reentrantTimes[$seqid])){
                 $this->_reentrantTimes[$seqid] = 0;
+                $this->_reentrantErrorStartTime[$seqid] = microtime(true);
             }
             $this->_reentrantTimes[$seqid] += 1;
 
@@ -165,7 +170,6 @@ class cache_codis extends cache_abstract{
         try{
             $ret = call_user_func_array(array($this->_redis, $funcName), $arguments);
         }catch(RedisException $e){
-
             ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method . '::error', $timeCost, array('conf' => $this->_confs, 'alias' => $this->_alias, 'exception' => $e, 'func' => $funcName, 'args' => $arguments));
 
             //设置重入次数上限,防止程序陷入死循环重入崩溃
@@ -190,6 +194,7 @@ class cache_codis extends cache_abstract{
             }
             throw $e;
         }
+        $this->_reentrantTimes[$seqid] = null;
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add($method, $timeCost, array('alias' => $this->_alias, 'args' => $arguments, 'ret' => performance::summarize($ret, $method)));
 
         return $ret;
