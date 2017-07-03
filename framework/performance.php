@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2017-06-18
+ * @version 2017-07-03
  * @desc performance log
  *
  */
@@ -109,7 +109,7 @@ class performance {
             self::$_samplingCounts[$tag] = 0;
         }
         
-        $pf = array('time'=>time(),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
+        $pf = array('time'=>microtime(true),'tag'=>$tag,'timecost'=>$timecost, 'info'=>$info);
         queue::in(self::$_hostKey, $pf);
         
         if(self::$_currentSize<=0){
