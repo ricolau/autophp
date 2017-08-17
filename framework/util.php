@@ -31,7 +31,7 @@ final class util {
      * @return type
      */
     public static function get($key) {
-        return self::$_vars[$key];
+        return isset(self::$_vars[$key]) ? self::$_vars[$key] : null;
     }
 
     public static function incr($key, $step = 1) {
