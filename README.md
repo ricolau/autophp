@@ -6,7 +6,7 @@
 * [>>简体中文版介绍](https://ricolau.gitbooks.io/autophp/content/)
 
 
-## >>简体中文版介绍
+## >>[简体中文版介绍](https://www.gitbook.com/book/ricolau/autophp/details)
 * [README](https://ricolau.gitbooks.io/autophp/content/README.html)
 * [新建一个APP](https://ricolau.gitbooks.io/autophp/content/create_new.html)
 * [APP目录树解释](https://ricolau.gitbooks.io/autophp/content/app_tree.html)
@@ -15,6 +15,8 @@
 * [request封装](https://ricolau.gitbooks.io/autophp/content/request.html)
 * [config](https://ricolau.gitbooks.io/autophp/content/config.html)
 * [db wrapper](https://ricolau.gitbooks.io/autophp/content/db_wrapper.html)
-* [debug](https://ricolau.gitbooks.io/autophp/content/debug.html)
+* [debug调试](https://ricolau.gitbooks.io/autophp/content/debug.html)
+* [三种run mode](https://ricolau.gitbooks.io/autophp/content/san-zhong-run-mode.html)
+* ……
 
-持续更新中~
+更多内容已更新，请见：[https://www.gitbook.com/book/ricolau/autophp/details](https://www.gitbook.com/book/ricolau/autophp/details)
