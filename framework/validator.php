@@ -21,8 +21,6 @@ class validator {
     const required = 'required';//是否允许为空
     const maxLen = 'maxlen';//最大长度
     const minLen = 'minlen';//最小长度
-    
-    
     const mbMaxLen = 'mbMaxLen';
     const mbMinLen = 'mbMinLen';
     
@@ -35,16 +33,67 @@ class validator {
     
     protected $_errors = array();
     
+    //检索特性定义,白名单
+    protected $_ruleIndexes = array(self::type,self::required, 
+        self::maxLen, self::minLen, 
+        self::mbMaxLen, self::mbMinLen,
+        self::maxValue, self::minValue);
+    
+    protected $_typeMap = array();
+    
     protected function _parseRules($rules){
-        $ret = array();
         foreach($rules as $field=>$r){
-            $tmp = array();
-            foreach($r as $k=>$v){
+            
+            /*
+             * array(
+             *  array(validator::type=>validator::string,),
+                array(validator::required =>true,'code'=>111,'message'=>'can not empty!'),
+             * )
+             */
+            $parse = array();
+            $i=0;
+            $uniqIndex = array();
+            foreach($r as $item){
+                $tmp = array();
+                if(isset($item['code'])){
+                    $tmp['code'] = $item['code'];
+                    unset($item['code']);
+                }
+                if(isset($item['message'])){
+                    $tmp['message'] = $item['message'];
+                    unset($item['message']);
+                }
+                //除了 message、code以外,应该只有一个index 定义了,再多就是错的
+                if(count($item)>1){
+                    throw new exception_validator(array(array('message'=>'rules format error for "'.$field.'", index ,'.$i,'code'=> exception_validator::error_rules)));
+                }
+                $ruleIndex = array_keys($item)[0];
+                $ruleIndexValue = array_values($item)[0];
+                //除了 $this->_ruleIndexes 之外的,不允许写进来
+                if(!in_array($ruleIndex,$this->_ruleIndexes)){
+                     throw new exception_validator(array(array('message'=>'undefined ruleIndex for "'.$field.'", index ,'.$i,'code'=> exception_validator::error_rules)));
+                }
+                $tmp['index'] = $ruleIndex;
+                $tmp['indexValue'] = $ruleIndexValue;
+                
+                //规则不允许重复,比如不允许写 两个 array(validator::type=>validator::string,)
+                if(isset($uniqIndex[$ruleIndex])){
+                    throw new exception_validator(array(array('message'=>'rules duplicated for "'.$field.'",'.$k,'code'=> exception_validator::error_rules)));
+                }
+                $uniqIndex[$ruleIndex] = true;
+                if($ruleIndex== self::type){
+                    $this->_typeMap[$field] = $ruleIndexValue;
+                }
+                $i++;
+                $parse[] = $tmp;
                 
             }
-            
+            //每一个field 的 validator::type 必须定义!
+            if(!isset($this->_typeMap[$field])){
+                throw new exception_validator(array(array('message'=>'type not defined for "'.$field.'"','code'=> exception_validator::error_rules)));
+            }
+            $this->_rules[$field] = $parse;
         }
-        //type, required 需要声明
         
     }
     /**
@@ -53,13 +102,15 @@ class validator {
      */
     public function setRules($rules){
         $this->_originalRules = $rules;
-        $pr = $this->_parseRules($rules);
-        $this->_rules = $pr;
-        
+        $this->_parseRules($rules);
+        return true;
     }
     public function getRules(){
+        return $this->_originalRules;
+    }
+    
+    public function getParsedRules(){
         return $this->_rules;
-       
     }
     
     
@@ -100,7 +151,7 @@ class validator {
             
             
             //start check value range
-            $cv = $this->checkValue($rule, $v);
+            $cv = $this->checkValue($rule, $f, $v);
             if($cv !==true){
                 $this->_errors[$f] = $cv;
             }
@@ -116,10 +167,9 @@ class validator {
     
     
     public function checkType($type, $v){
-        $types = array();
         $func = 'is'.ucfirst($type);
         if(!method_exists($this, $func)){
-            $errors = array(array('code'=>1,'message'=>'type may not defined for:'.$type));
+            $errors = array(array('code'=> exception_validator::error_rules,'message'=>'type not defined for:'.$type));
             throw new exception_validator($errors);
         }
         return self::$func($v);
@@ -162,6 +212,13 @@ class validator {
         return preg_match($pattern, $v);        
     }
     
+    /**
+     * 
+     * @param array $rule
+     * @param string $f
+     * @param mixed $v
+     * @return bool true / array('code'=>122,  'message'=>'error message')
+     */
     public function checkValue($rule, $f, $v){
         
     }
@@ -171,7 +228,9 @@ class validator {
 
 class exception_validator extends exception_base{
     
-    const error_input = 1;
+    const error_rules = 1;
+
+    const error_input = 5;
     protected $_errors = array();
     
     public function __construct($errors, $count = null, $previous = null) {
