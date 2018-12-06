@@ -202,7 +202,7 @@ class orm extends base {
 
             $insteads = array_fill(0, count($values), '?');
 
-            $sql = 'INSERT INTO ' . $this->_table . '(' . implode(',', $fields) . ') VALUE(' . implode(',', $insteads) . ')';
+            $sql = 'INSERT INTO ' . $this->_table . '(`' . implode('`, `', $fields) . '`) VALUE(' . implode(',', $insteads) . ')';
             $this->_lastQuery = array($sql, $values);
 
             $this->_queryObj = $this->_getPdoByMethodName(__FUNCTION__);
