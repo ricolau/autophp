@@ -17,6 +17,6 @@
 * [db wrapper](https://ricolau.gitbooks.io/autophp/content/db_wrapper.html)
 * [debug调试](https://ricolau.gitbooks.io/autophp/content/debug.html)
 * [三种run mode](https://ricolau.gitbooks.io/autophp/content/san-zhong-run-mode.html)
-* [……](https://git.xiaojukeji.com/sofa-server/dsm.git)
+* [……](https://ricolau.gitbooks.io/autophp/content/README.html)
 
 更多内容已更新，请见：[https://www.gitbook.com/book/ricolau/autophp/details](https://www.gitbook.com/book/ricolau/autophp/details)
