@@ -14,6 +14,8 @@ class exception_base extends Exception {
     const type_app_path_not_defined = -2;
     const type_autophp_path_not_defined = -3;
 
+    const type_class_not_exist = -4;
+
     const error = -10;
 
 

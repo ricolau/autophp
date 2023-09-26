@@ -1,7 +1,7 @@
 <?php
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2017-08-17
+ * @version 2023-09-26
  * @desc autophp core, check running enviroment and more closer to base layer
  * @link https://github.com/ricolau/autophp
  * 
@@ -35,7 +35,7 @@
  */
 class auto {
 
-    const version = '2.2.15';
+    const version = '2.2.16';
     
     const author = 'ricolau<ricolau@qq.com>';
 
@@ -183,19 +183,18 @@ class auto {
 
         if (!$className) {
             if(auto::isDebug()){
-                throw new exception_base('class name error' . $className, exception_base::TYPE_CLASS_NOT_EXISTS);
+                throw new exception_base('class name error' . $className, exception_base::type_class_not_exist);
             }
         }else{
             $file = self::_getClassPath($className);
-
-            if (!file_exists($file)) {
-                //to enable multi autoloader~
-//                if(auto::isDebugMode()){
-//                    throw new exception_base('class "'.$className.'" file not exist in path: '.$file, exception_base::error);
-//                }
-            }else{
+            if (file_exists($file)) {
                 require $file;
             }
+        }
+        //namespace support
+        if(!class_exists($className) && strpos('\\', $className) !== false){
+            $filename = str_replace('\\','/');
+
         }
         return class_exists($className);
     }
@@ -229,43 +228,57 @@ class auto {
         'logger_default'=>true,
     );
     protected static function _getClassPath($className) {
-        //framework class with no _ in class name
-        if (!strpos($className, '_')) {
-            $file = AUTOPHP_PATH . DS . $className . '.php';
+        $ret = '';
+        $filename = $className;
+        if (strpos($className, '_')===false && !strpos($className, '\\')===false) {
+            $file = AUTOPHP_PATH . DS . $filename . '.php';
+            if(file_exists($file)){
+                return $file;
+            }
+        }
+
+        //replace '_' in classname to '/'
+        if(strpos($className, '_')!==false){
+            $filename = str_replace('_', '/', $className);
+        }
+        //classname as demo,  or controller_demo, can be found here
+        $ret = self::_findClassFileInClassPath($filename, $className);
+        if($ret !=''){
+            return $ret;
+        }
+
+        //classname with namespace
+        if(strpos($className, '\\')!==false){
+            $filename = str_replace('\\', '/', $className);
+        }
+        $ret = self::_findClassFileInClassPath($filename, $className);
+        if($ret !=''){
+            return $ret;
+        }
+        return $ret;
+    }
+
+    protected static function _findClassFileInClassPath($filename, $className){
+        $file = '';
+        $filePath = AUTOPHP_PATH . DS . $filename. '.php';
+        if(isset(self::$_frameworkClass[$className]) && file_exists($filePath)){
             return $file;
         }
-        list($dir1, $dir2, $name) = explode('_', $className, 3);
-        $dir1 = strtolower($dir1);
-        $dir2 = strtolower($dir2);
-        if($name===null){
-            $dir = $dir1;
-            $name  = $dir2;
-        }else{
-            $dir = $dir1 .DS. $dir2;
-            $name = strtolower($name);
-        }
-        //framework class with _ in class name
-        if(isset(self::$_frameworkClass[$className])){
-            $file = AUTOPHP_PATH . DS . $dir . DS . $name . '.php';
-            return $file;
-        }
-        //user class in APP_PATH
-        $file = APP_PATH . DS . 'classes' . DS . $dir . DS . $name . '.php';
+        //find class in project class path
+        $file = APP_PATH . DS . 'class' . DS . $filename . '.php';
         if(file_exists($file)){
             return $file;
         }
-        //user class in self::$_classPath, as public class
-        $file = null;
+        //find in user defined classPath
         if(self::$_classPath){
             foreach(self::$_classPath as $path){
-                $tmp = $path  . DS . $dir . DS . $name . '.php';
+                $tmp = $path  . DS . $filename . '.php';
                 if(file_exists($tmp)){
                     $file = $tmp;
                     break;
                 }
             }
         }
-
         return $file;
     }
 
@@ -281,7 +294,7 @@ class auto {
      * @return type
      */
     protected static function _parseClassname($str) {
-        $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-0123456789';
+        $base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-0123456789\\';
         $left = trim($str, $base);
         if ($left === '') {
             return $str;
