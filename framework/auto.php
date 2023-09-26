@@ -35,7 +35,7 @@
  */
 class auto {
 
-    const version = '2.2.16';
+    const version = '2.3.1';
     
     const author = 'ricolau<ricolau@qq.com>';
 
@@ -191,11 +191,7 @@ class auto {
                 require $file;
             }
         }
-        //namespace support
-        if(!class_exists($className) && strpos('\\', $className) !== false){
-            $filename = str_replace('\\','/');
 
-        }
         return class_exists($className);
     }
 
@@ -230,7 +226,7 @@ class auto {
     protected static function _getClassPath($className) {
         $ret = '';
         $filename = $className;
-        if (strpos($className, '_')===false && !strpos($className, '\\')===false) {
+        if (strpos($className, '_')===false && strpos($className, '\\')===false) {
             $file = AUTOPHP_PATH . DS . $filename . '.php';
             if(file_exists($file)){
                 return $file;
@@ -241,27 +237,27 @@ class auto {
         if(strpos($className, '_')!==false){
             $filename = str_replace('_', '/', $className);
         }
+        //classname with namespace
+        if(strpos($className, '\\')!==false){
+            $filename = str_replace('\\', '/', $className);
+            $ret = self::_findClassFileInClassPath($filename, $className);
+            if($ret !=''){
+                return $ret;
+            }
+        }
+
         //classname as demo,  or controller_demo, can be found here
         $ret = self::_findClassFileInClassPath($filename, $className);
         if($ret !=''){
             return $ret;
         }
 
-        //classname with namespace
-        if(strpos($className, '\\')!==false){
-            $filename = str_replace('\\', '/', $className);
-        }
-        $ret = self::_findClassFileInClassPath($filename, $className);
-        if($ret !=''){
-            return $ret;
-        }
         return $ret;
     }
 
     protected static function _findClassFileInClassPath($filename, $className){
-        $file = '';
-        $filePath = AUTOPHP_PATH . DS . $filename. '.php';
-        if(isset(self::$_frameworkClass[$className]) && file_exists($filePath)){
+        $file = AUTOPHP_PATH . DS . $filename. '.php';
+        if(isset(self::$_frameworkClass[$className]) && file_exists($file)){
             return $file;
         }
         //find class in project class path
