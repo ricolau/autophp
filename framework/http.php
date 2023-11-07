@@ -19,7 +19,7 @@ class http {
             referer = null,
             return_header = null,
             return_rich_info = null,
-            useragent = 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2041.4 Safari/537.36'
+            user_agent = 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2041.4 Safari/537.36'
             proxy = null,
             timeout = 10,
             retry_times=0, //retry times when fail
@@ -50,8 +50,8 @@ class http {
             $method = strtoupper($method);
             $ci = curl_init();
             $default_ua = 'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2041.4 Safari/537.36';
-            $useragent = $user_agent ? : $default_ua;
-            curl_setopt($ci, CURLOPT_USERAGENT, $useragent);
+            $user_agent = $user_agent ? : $default_ua;
+            curl_setopt($ci, CURLOPT_USERAGENT, $user_agent);
 
             curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, 3);
             curl_setopt($ci, CURLOPT_TIMEOUT, $timeout);
