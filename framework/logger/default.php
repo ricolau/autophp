@@ -85,6 +85,9 @@ class logger_default extends logger_abstract {
                 return false;
             }
         }
+        if($level){
+            $rotation = $level.'-'.$rotation;
+        }
         $logFile = $dir.DS.$rotation.'.log';
         if(!is_scalar($msg)){
             $msg = var_export($msg, true);
