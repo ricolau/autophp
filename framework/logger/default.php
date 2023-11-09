@@ -2,7 +2,7 @@
 
 /**
  * @author ricolau<ricolau@qq.com>
- * @version 2016-04-07
+ * @version 2023-11-09
  * @desc logger
  *
  */
@@ -92,7 +92,15 @@ class logger_default extends logger_abstract {
         if(!is_scalar($msg)){
             $msg = var_export($msg, true);
         }
-        $msg = date('Y-m-d H:i:s')."\t".$level."\t".$msg."\n";
+        $msg = $this->getDateStrWithMilliSecond()."\t".$level."\t".$msg."\n";
         file_put_contents($logFile, $msg, FILE_APPEND);
+    }
+    public function getDateStrWithMilliSecond(){
+        $mtime = explode(' ',microtime());
+        $dates = date('Y-m-d H:i:s', $mtime[1]);
+        $sub = round($mtime[0],6);
+        $sub = substr($sub, strpos($sub,'.'));
+        $all = $dates.$sub;
+        return $all;
     }
 }
