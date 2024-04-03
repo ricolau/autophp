@@ -8,6 +8,103 @@
  */
 class http {
 
+    const arg_url = 'url';
+    const arg_method = 'method';
+    const arg_proxy = 'proxy';
+    const arg_proxy_port = 'proxyport';
+    const arg_proxy_type = 'proxytype';
+    const arg_user_agent = 'user_agent';
+
+    const arg_connect_timeout = 'connect_timeout';
+    const arg_timeout = 'timeout';
+
+    const arg_return_rich_info = 'return_rich_info';
+
+    const arg_retry_times_on_failure = 'retry_times';
+
+
+
+    public static function getResponseCode($response){
+        if(!$response){
+            return false;
+        }
+        if(!isset($response['info']) || !isset($response['info']['http_code'])){
+            return false;
+        }
+        return $response['info']['http_code'];
+    }
+
+    public static function getResponseError($response){
+        if(!$response){
+            return false;
+        }
+        if(!isset($response['info']) || !isset($response['info']['error'])){
+            return false;
+        }
+        return $response['info']['error'];
+        
+
+    }
+
+    public static function getResponseInfo($response){
+        if(!$response){
+            return false;
+        }
+        if(!isset($response['info'])){
+            return false;
+        }
+        return $response['info'];
+
+    }
+    public static function getResponseBody($response){
+        if(!$response){
+            return false;
+        }
+        if(!isset($response['response']) || !isset($response['response']['content'])){
+            return false;
+        }
+        return $response['response']['content'];
+    }
+    public static function is200Response($response){
+        if(!$response){
+            return false;
+        }
+        $code = self::getResponseCode($response);
+        return ($code == 200);
+    }
+    public static function is30xResponse($response){
+        if(!$response){
+            return false;
+        }
+        $code = self::getResponseCode($response);
+        //if($code == 301 || $code == 302 || $code ==307){
+        return ($code >=300 && $code<=399);
+
+    }
+    public static function is50xResponse($response){
+        $code = self::getResponseCode($response);
+        return ($code >=500 && $code<=599);
+
+    }
+    public static function is404Response($response){
+        if(!$response){
+            return false;
+        }
+        $code = self::getResponseCode($response);
+        return ($code == 400 || $code == 404);
+    }
+
+    public static function is403Response($response){
+        if(!$response){
+            return false;
+        }
+        $code = self::getResponseCode($response);
+        return $code == 403;
+    }
+
+
+
+    
     /**
      * $args = array(
             url,
@@ -28,6 +125,7 @@ class http {
             retry_times=0, //retry times when fail
       );
      */
+
     public static function requestHigh($args) {
         if (!function_exists('curl_init')){
             throw new exception_base('curl module not exist~!', -1);
@@ -36,7 +134,7 @@ class http {
             return false;
         }
         extract($args);
-        $request_times_max = ($retry_times ?:0)+1;
+        $request_times_max = (isset($retry_times) ?$retry_times:0)+1;
         while($request_times_max>0){
             $request_times_max--;
 
@@ -69,7 +167,7 @@ class http {
             if ($proxy && $proxyport) {
                 curl_setopt($ci, CURLOPT_PROXY, $proxy);
                 curl_setopt($ci, CURLOPT_PROXYPORT, $proxyport);
-                curl_setopt($ci, CURLOPT_PROXYTYPE, $proxytype == CURLPROXY_SOCKS5 ? CURLPROXY_SOCKS5:  CURLPROXY_HTTP );  // CURLPROXY_SOCKS5
+                curl_setopt($ci, CURLOPT_PROXYTYPE, $proxytype ? $proxytype :  CURLPROXY_HTTP );  // CURLPROXY_SOCKS5
             }
             $cookie = isset($cookie) ? $cookie : '';
             if ($cookie){
@@ -148,6 +246,62 @@ class http {
 
 // end function 
 
+
+
+    public static function isTimeout($response){
+        if(!$response){
+            return false;
+        }
+        if(!isset($response['info']) || !isset($response['info']['error'])){
+            return false;
+        }
+        return self::isTimeoutError($response['info']['error']);
+    }
+
+    public static function isTimeoutError($errMsg){
+        if(!$errMsg){
+            return false;
+        }
+        //$is = preg_match('/\stimed\sout/i' , $errMsg);
+        $is = self::isConnectTimeoutError($errMsg) || self::isOperationTimeoutError($errMsg);
+        return $is;
+    }
+
+    public static function isOperationTimeoutError($errMsg){
+        if(!$errMsg){
+            return false;
+        }
+        $is = preg_match('/Operation\stimed\sout/i' , $errMsg);
+        return $is;
+    }
+
+    public static function isConnectTimeoutError($errMsg){
+        if(!$errMsg){
+            return false;
+        }
+        $is = preg_match('/Connection\stimed\sout/i' , $errMsg);
+        return $is;
+    }
+
+    public static function isResetByPeerError($errMsg){
+        if(!$errMsg){
+            return false;
+        }
+
+        $is = preg_match('/Connection\sreset\sby\speer/i' , $errMsg);
+        return $is;
+
+    }
+    public static function isConnectError($errMsg){
+        if(!$errMsg){
+            return false;
+        }
+
+        $is = (strpos('Failed to connect to' , $errMsg)!==false)
+        || (strpos('Couldn\'t connect to server' , $errMsg)!==false);
+        return $is;
+
+    }
     /**
      * 
      * @param string $url
@@ -176,10 +330,6 @@ class http {
         curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ci, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ci, CURLOPT_HEADER, false);
-
-        if ($proxy) {
-            curl_setopt($ci, CURLOPT_PROXY, $proxy);
-        }
 
         if ($cookie){
             curl_setopt($ci, CURLOPT_COOKIE, $cookie);
@@ -225,7 +375,7 @@ class http {
         curl_close($ci);
         
         $tmpArgs = array('url'=>$url,'method'=>$method,'params'=>$params,'timeout'=>$timeout,'cookie'=>$cookie,'referer'=>$referer,'extheaders'=>$extheaders,
-                    'multi'=>$multi,'proxy'=>$proxy);
+                    'multi'=>$multi);
         
         ($timeCost = microtime(true) - $_debugMicrotime) && performance::add(__METHOD__, $timeCost, array('args'=>$tmpArgs,'ret'=>performance::summarize($response,__METHOD__) ) ) ;
 
