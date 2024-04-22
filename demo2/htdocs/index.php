@@ -45,7 +45,9 @@ try {
     
     //add log conf
     $logconf = config::get('logger.default');
-    log::addLogger(new logger_default($logconf));
+    $logger = new logger_default($logconf);
+    $logger->setConsoleOutput(!isset($_SERVER['REQUEST_METHOD']));
+    log::addLogger($logger);
 
 
     //============================ 定义一些快捷的function 别名之类，此处非必须 ============================

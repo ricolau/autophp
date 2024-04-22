@@ -47,7 +47,9 @@ try {
     
     //add log conf
     $logconf = config::get('logger.default');
-    log::addLogger(new logger_default($logconf));
+    $logger = new logger_default($logconf);
+    $logger->setConsoleOutput(!isset($_SERVER['REQUEST_METHOD']));
+    log::addLogger($logger);
     
     
      //auto::run() 当前主要负责加载autoload 和一些常量定义的检测

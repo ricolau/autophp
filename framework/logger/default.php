@@ -12,6 +12,8 @@ class logger_default extends logger_abstract {
     protected $_logPath = '';
     protected $_conf = array();
     
+    protected $_consoleOutput = false;
+
     protected $_rotationPeriod = '';
 
     /**
@@ -42,9 +44,11 @@ class logger_default extends logger_abstract {
         }
         
     }
+
+    public function setConsoleOutput($isOn = false){
+        $this->_consoleOutput = $isOn;
+    }
  
-    
-    
     protected function _getRotationByLevel($level){
         
         if(isset($this->_conf[$level]['rotation']) && $this->_conf[$level]['rotation']){
@@ -93,6 +97,9 @@ class logger_default extends logger_abstract {
             $msg = var_export($msg, true);
         }
         $msg = $this->getDateStrWithMilliSecond()."\t".$level."\t".$msg."\n";
+	if($this->_consoleOutput){
+            echo $msg;
+        }
         file_put_contents($logFile, $msg, FILE_APPEND);
     }
     public function getDateStrWithMilliSecond(){
