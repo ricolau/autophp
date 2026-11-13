@@ -21,4 +21,4 @@
 *   [orm数据表操作封装](github.com/ricolau/autophp-manual/blob/master/ormshu-ju-biao-cao-zuo-feng-zhuang.md)
 *   [全局变量的util支持方案](github.com/ricolau/autophp-manual/blob/master/quan-ju-bian-liang-de-util-zhi-chi-fang-an.md)
 
-更多内容已更新，请见：[github.com/ricolau/autophp-manual/blob/master/README.md](github.com/ricolau/autophp-manual/blob/master/README.md)
+更多内容持续更新中，请见：[github.com/ricolau/autophp-manual/blob/master/README.md](github.com/ricolau/autophp-manual/blob/master/README.md)
